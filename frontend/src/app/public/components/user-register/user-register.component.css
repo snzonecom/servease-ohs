@@ -1,0 +1,248 @@
+.upload-container {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+}
+
+.file-input {
+    display: none;
+}
+
+.upload-button {
+    background-color: #d0e4ef;
+    color: #888;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.3s ease;
+}
+
+.upload-button:hover {
+    background-color: #ccc;
+}
+
+.image-preview {
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    object-fit: cover;
+    height: 150px;
+    margin-top: 10px;
+}
+
+/* Title Section */
+.dashboard-header {
+    text-align: center;
+    margin: 40px 20px 5px 20px;
+}
+
+.dashboard-title {
+    font-size: 36px;
+    color: #333;
+}
+
+.dashboard-description {
+    font-size: 16px;
+    color: #888;
+    margin-top: 10px;
+}
+
+@media(max-width: 450px) {
+    .dashboard-description {
+        font-size: 13px;
+    }
+}
+
+/* Dialog Box Styling */
+::ng-deep .p-dialog {
+    margin: 0 2rem;
+}
+
+::ng-deep .p-dialog .p-dialog-content {
+    padding: 0 2rem 2rem 2rem;
+}
+
+::ng-deep .p-dialog-header {
+    padding: 1.5rem 1.5rem 0.5rem 2rem;
+}
+
+/* Label text styling */
+.review-text {
+    padding-bottom: 12px;
+    display: block;
+}
+
+/* Buttons */
+.register-options {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.customer-button,
+.provider-button {
+    width: 100%;
+    padding: 0.5rem 0;
+    background-color: #428eba;
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+    ::ng-deep .p-dialog .p-dialog-content {
+        padding: 1rem;
+    }
+
+    ::ng-deep .p-dialog-header {
+        padding: 1rem;
+    }
+}
+
+@media (max-width: 450px) {
+
+    /* Dialog Content */
+    ::ng-deep .p-dialog .p-dialog-content {
+        padding: 0.5rem;
+    }
+
+    ::ng-deep .p-dialog-header {
+        padding: 0.5rem;
+    }
+}
+
+.divider {
+    height: 1px;
+    background-color: #ccc;
+    margin: 10px 0;
+    width: 90%;
+    align-self: center;
+}
+
+/* Profile Card Container */
+.profile-card-container {
+    margin: 2rem auto;
+    max-width: 700px;
+    width: 100%;
+}
+
+.profile-card {
+    margin-top: 20px;
+}
+
+.card-content {
+    display: flex;
+    flex-direction: column;
+    padding: 1rem 3rem 3rem 3rem;
+}
+
+.header-content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    text-align: center;
+    padding-top: 2rem;
+}
+
+.header-icon {
+    font-size: 32px;
+    color: #428eba;
+}
+
+.header-title {
+    font-size: 22px;
+    font-weight: 600;
+}
+
+.info-row {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    padding: 0.5rem;
+}
+
+.info-row label {
+    font-weight: bold;
+}
+
+.info-row input,
+.info-row textarea {
+    padding: 8px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    font-size: 14px;
+    background: #d0e4ef;
+}
+
+.info-row textarea {
+    width: 100%;
+    resize: vertical;
+}
+
+.info-row-terms {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    padding: 0.5rem;
+}
+
+.terms-row {
+    display: flex;
+    align-items: flex-start;
+    margin-top: 10px;
+}
+
+.terms-row input[type="checkbox"] {
+    margin-top: 5px;
+}
+
+.terms-label {
+    font-size: 14px;
+    line-height: 1.5;
+    color: #555;
+    font-weight: 500;
+}
+
+.terms-condi {
+    font-weight: bold;
+    color: #555;
+    text-decoration: underline;
+}
+
+
+/* Mobile responsiveness */
+@media(max-width: 768px) {
+    .profile-card-container {
+        max-width: 80%;
+        width: 80%;
+    }
+
+    .card-content {
+        display: flex;
+        flex-direction: column;
+        padding: 1rem 1rem 1rem 1rem;
+    }
+}
+
+.buttons-below {
+    padding: 0.5rem 1rem;
+    background-color: #67b9e1;
+    color: white;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    margin-right: 10px;
+    gap: 0.5rem;
+}
+
+.buttons-below:hover {
+    background-color: #c1c1c1;
+}
+
+.button-container {
+    display: flex;
+    justify-content: center;
+    padding-top: 10px;
+    padding-bottom: 30px;
+}

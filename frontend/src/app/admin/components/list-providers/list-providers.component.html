@@ -1,0 +1,128 @@
+<body>
+    <div class="header-title">
+        <div class="section-header">All Verified Service Providers</div>
+        <div class="search-container">
+            <input type="text" [(ngModel)]="searchQuery" placeholder="Search Here" class="search-bar" />
+        </div>
+    </div>
+
+    <div class="reports-table">
+        <p-table [value]="filteredSuspendedAccounts">
+          <ng-template pTemplate="header">
+            <tr>
+              <th pSortableColumn="provider_id">ID <p-sortIcon field="provider_id"></p-sortIcon></th>
+              <th class="provider_name">Provider Name</th>
+              <th class="contact_no">Contact Number</th>
+              <th class="created_at">Created At</th>
+              <th class="action-column">Action</th>
+            </tr>
+          </ng-template>
+    
+          <ng-template pTemplate="body" let-provider>
+            <tr>
+              <td>{{ provider.provider_id }}</td>
+              <td>{{ provider.provieder_name }}</td>
+              <td>{{ provider.contact_no }}</td>
+              <td>{{ provider.created_at | date:'shortDate' }}</td> <!-- Format date as needed -->
+              <td class="action-column">
+                <button p-button (click)="showDialog(provider)">See Details</button>
+              </td>
+            </tr>
+          </ng-template>
+        </p-table>
+      </div>
+
+
+    <!-- Dialog displaying the details of the application -->
+    <div class="card flex justify-content-center">
+        <p-dialog header="Service Provider Information" [modal]="true" [(visible)]="visible"
+            [style]="{ width: '40rem'}">
+            <!-- Introduction text and instructions for reviewing the application -->
+            <span class="p-text-secondary block mb-5">Please note that the information displayed is confidential and
+                should only be accessed by authorized personnel.</span>
+
+
+            <!-- Form Fields displaying service provider details -->
+            <div class="mb-3"></div>
+            <div class="flex flex-column align-items-start gap-3 mb-3">
+                <label for="name" class="font-semibold">
+                    <i class="pi pi-building" style="margin-right: 10px;"></i> Business Name
+                </label>
+                <input pInputText id="name" value="Global Enterprises Ltd." [disabled]="true" class="w-full" />
+            </div>
+
+            <div class="flex flex-column align-items-start gap-3 mb-3">
+                <label for="brn" class="font-semibold">
+                    <i class="pi pi-id-card" style="margin-right: 10px;"></i> Business Registration Number (BRN)
+                </label>
+                <input pInputText id="brn" value="BRN9876543210" [disabled]="true" class="w-full" />
+            </div>
+
+            <div class="flex flex-column align-items-start gap-3 mb-3">
+                <label for="serviceType" class="font-semibold">
+                    <i class="pi pi-cog" style="margin-right: 10px;"></i> Service Type
+                </label>
+                <input pInputText id="serviceType" value="Cleaning" [disabled]="true" class="w-full" />
+            </div>
+
+            <div class="flex flex-column align-items-start gap-3 mb-3">
+                <label for="address" class="font-semibold">
+                    <i class="pi pi-map" style="margin-right: 10px;"></i> Address
+                </label>
+                <input pInputText id="address" rows="3" [disabled]="true" value="456 Market Street, Central City"
+                    class="w-full" />
+            </div>
+
+            <div class="flex flex-column align-items-start gap-3 mb-3">
+                <label for="contactName" class="font-semibold">
+                    <i class="pi pi-user" style="margin-right: 10px;"></i> Contact Person
+                </label>
+                <input pInputText id="contactName" value="John Smith" [disabled]="true" class="w-full" />
+            </div>
+
+            <div class="flex flex-column align-items-start gap-3 mb-3">
+                <label for="contactId" class="font-semibold">
+                    <i class="pi pi-id-card" style="margin-right: 10px;"></i> Contact Person ID
+                </label>
+                <img src="https://upload.wikimedia.org/wikipedia/commons/3/34/Philippine_Identification_System_%28PhilSys%29_card_sample.png"
+                    class="id-full">
+            </div>
+
+            <div class="flex flex-column align-items-start gap-3 mb-3">
+                <label for="contactEmail" class="font-semibold">
+                    <i class="pi pi-envelope" style="margin-right: 10px;"></i> Contact Email
+                </label>
+                <input pInputText id="contactEmail" value="john.smith@globalenterprises.com" [disabled]="true"
+                    class="w-full" />
+            </div>
+
+            <div class="flex flex-column align-items-start gap-3 mb-3">
+                <label for="contactNumber" class="font-semibold">
+                    <i class="pi pi-phone" style="margin-right: 10px;"></i> Contact Number
+                </label>
+                <input pInputText id="contactNumber" value="+321 654 9870" [disabled]="true" class="w-full" />
+            </div>
+
+            <div class="flex flex-column align-items-start gap-3 mb-3">
+                <label for="startDate" class="font-semibold">
+                    <i class="pi pi-calendar" style="margin-right: 10px;"></i> Business Started
+                </label>
+                <input pInputText id="startDate" value="2015-04-01" [disabled]="true" class="w-full" />
+            </div>
+
+            <div class="flex flex-column align-items-start gap-3 mb-3">
+                <label for="yearsOfOperation" class="font-semibold">
+                    <i class="pi pi-calendar-plus" style="margin-right: 10px;"></i> Years of Operation
+                </label>
+                <input pInputText id="yearsOfOperation" value="10" [disabled]="true" class="w-full" />
+            </div>
+
+            <div class="flex flex-column align-items-start gap-3 mb-3">
+                <label for="applicationDate" class="font-semibold">
+                    <i class="pi pi-calendar-times" style="margin-right: 10px;"></i> Application Date
+                </label>
+                <input pInputText id="applicationDate" value="2025-01-15" [disabled]="true" class="w-full" />
+            </div>
+        </p-dialog>
+    </div>
+</body>

@@ -1,0 +1,106 @@
+<body>
+  <div class="header-title">
+    <div class="section-header">List of Reports</div>
+    <div class="search-container">
+      <input type="text" [(ngModel)]="searchQuery" placeholder="Search Here" class="search-bar" />
+    </div>
+  </div>
+
+  <!-- Reports Table -->
+  <div class="reports-table">
+    <p-table [value]="filteredReports">
+      <ng-template pTemplate="header">
+        <tr>
+          <th pSortableColumn="reportId">Report ID <p-sortIcon field="reportId"></p-sortIcon></th>
+          <th pSortableColumn="complaintFrom">Complaint From <p-sortIcon field="complaintFrom"></p-sortIcon></th>
+          <th class="typeOfReport">Type of Report</th>
+          <th pSortableColumn="dateSubmitted">Date Submitted <p-sortIcon field="dateSubmitted"></p-sortIcon></th>
+          <th class="action-column">Action</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-report>
+        <tr>
+          <td>{{ report.reportId }}</td>
+          <td>{{ report.complaintFrom }}</td>
+          <td>{{ report.reportRegarding }}</td>
+          <td>{{ report.dateSubmitted | date }}</td>
+          <td class="action-column">
+            <!-- Button to view details of the report -->
+            <button p-button (click)="showDialog(allReports)">View Report</button>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+
+  <!-- Dialog displaying the details of the report -->
+  <div class="card flex justify-content-center">
+    <p-dialog header="Report Details" [modal]="true" [(visible)]="visible" [style]="{ width: '40rem'}">
+      <!-- Introduction text and instructions for reviewing the report -->
+      <span class="p-text-secondary block mb-5">Please review the report details thoroughly and evaluate the provided
+        information carefully before taking appropriate action.</span>
+
+      <!-- Form Fields displaying report details -->
+      <div class="mb-3"></div>
+      <div class="flex flex-column align-items-start gap-3 mb-3">
+        <label for="complainantName" class="font-semibold">
+          <i class="pi pi-user" style="margin-right: 10px;"></i> Complainant Name
+        </label>
+        <input pInputText id="complainantName" value="Jane Doe" [disabled]="true" class="w-full" />
+      </div>
+
+      <div class="flex flex-column align-items-start gap-3 mb-3">
+        <label for="accountReporting" class="font-semibold">
+          <i class="pi pi-id-card" style="margin-right: 10px;"></i> Account Reporting
+        </label>
+        <input pInputText id="accountReporting" value="John Smith" [disabled]="true" class="w-full" />
+      </div>
+
+      <div class="flex flex-column align-items-start gap-3 mb-3">
+        <label for="reportDate" class="font-semibold">
+          <i class="pi pi-calendar" style="margin-right: 10px;"></i> Report Date
+        </label>
+        <input pInputText id="reportDate" value="2025-01-15" [disabled]="true" class="w-full" />
+      </div>
+
+      <div class="flex flex-column align-items-start gap-3 mb-3">
+        <label for="reportRegarding" class="font-semibold">
+          <i class="pi pi-info-circle" style="margin-right: 10px;"></i> Report Regarding
+        </label>
+        <input pInputText id="reportRegarding" value="Unauthorized Service" [disabled]="true" class="w-full" />
+      </div>
+
+      <div class="flex flex-column align-items-start gap-3 mb-3">
+        <label for="detailsOfReport" class="font-semibold">
+          <i class="pi pi-align-left" style="margin-right: 10px;"></i> Details of Report
+        </label>
+        <textarea id="detailsOfReport" rows="5" [disabled]="true"
+          class="w-full">The complainant reported that the service provider attempted to deliver unauthorized services, which were not part of the agreed terms.</textarea>
+      </div>
+
+      <div class="flex flex-column align-items-start gap-3 mb-3">
+        <label for="attachedProof" class="font-semibold">
+          <i class="pi pi-paperclip" style="margin-right: 10px;"></i> Attached Proof
+        </label>
+        <img
+          src="https://images.preview.ph/preview/resize/images/2024/11/12/bini-mikha-red-hair-struggle-main-1731397326.webp"
+          class="id-full">
+      </div>
+
+      <!-- Instruction for review before decision -->
+      <span class="p-text-secondary block end-statement">Carefully review the report details and attached proof to
+        ensure an accurate evaluation before deciding on the necessary action.</span>
+
+      <!-- Buttons to take appropriate action -->
+      <div class="mb-3"></div>
+      <div class="flex justify-content-end gap-2">
+        <button p-button class="reject-button">Delete Report</button>
+        <button p-button class="approve-button">Suspend User</button>
+      </div>
+    </p-dialog>
+  </div>
+
+
+
+
+</body>

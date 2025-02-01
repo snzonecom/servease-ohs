@@ -1,0 +1,218 @@
+<!-- Landing Page Banner Section -->
+<div class="landing-banner">
+    <div class="banner-content">
+        <h1 class="banner-title">Find Household Services with Just a Few Clicks</h1>
+        <p class="banner-description">
+            Discover a wide range of household services tailored to your needs.
+            From cleaning and maintenance to specialized repairs, our platform connects you with trusted professionals.
+            Save time and enjoy peace of mind knowing you're working with experts who prioritize quality and
+            reliability.
+        </p>
+        <a [routerLink]="['/']" fragment="service" style="text-decoration: none; color: white;">
+            <button class="view-services-btn">
+                View Available Services
+            </button></a>
+    </div>
+</div>
+
+<!-- Recommended Carousel -->
+<div class="carousel-div">
+    <h2 class="recommended-services-header">Recommended Service Providers</h2>
+    <p-carousel [value]="businesses" [numVisible]="3" [numScroll]="3" [circular]="false"
+        [responsiveOptions]="responsiveOptions" autoplayInterval="3000">
+        <ng-template let-business pTemplate="item">
+            <div class="carousel-item">
+                <div class="carousel-card">
+                    <!-- Business Logo -->
+                    <div class="carousel-card-header">
+                        <img [src]="business.logo" [alt]="business.name" class="carousel-card-logo" />
+                    </div>
+
+                    <!-- Business Details -->
+                    <div class="carousel-card-body">
+                        <h4 class="carousel-card-title">{{ business.name }}</h4>
+                        <p class="carousel-card-description">
+                            {{ business.description }}
+                        </p>
+                    </div>
+
+                    <!-- Call-to-Action Button -->
+                    <div class="carousel-card-footer">
+                            <button icon="pi pi-calendar-plus" (click)="loginFirstVisible = true" class="carousel-card-button">
+                                Book Now</button>
+                    </div>
+                </div>
+            </div>
+        </ng-template>
+    </p-carousel>
+</div>
+
+<!-- About SERVEASE Section -->
+<div class="about-section" id="about">
+    <div class="about-columns">
+        <!-- Left Column: About Description -->
+        <div class="about-description">
+            <h2>About SERVEASE</h2>
+            <p class="description">
+                Lorem ipsum dolor sit amet consectetur adipisicing elit. Natus pariatur id doloribus nam distinctio
+                deserunt odio facere ullam alias, neque enim consectetur quisquam in maiores nulla quaerat ipsum porro
+                sint. Lorem ipsum dolor sit amet consectetur, adipisicing elit. Pariatur dolor distinctio a sequi
+                voluptates atque illum voluptatum nam, facilis nulla labore saepe cupiditate, maxime ipsam recusandae
+                nisi! Iusto, debitis atque! Lorem ipsum, dolor sit amet consectetur adipisicing elit. Corporis, repellat
+                sed, blanditiis tempora incidunt alias laudantium natus animi culpa ipsam nobis debitis dolores nulla
+                quibusdam enim quae suscipit nesciunt obcaecati? Lorem, ipsum dolor sit amet consectetur adipisicing
+                elit. Consequuntur ratione nesciunt dolore sequi odit illo nulla aut, alias rerum maiores iusto cum
+                soluta quidem aperiam laborum accusantium? Cumque, aspernatur a.
+            </p>
+            <button class="know-more-btn"><a [routerLink]="['/']" fragment="faq" style="text-decoration: none; color: white;">
+                    Know More
+                </a></button>
+        </div>
+
+        <!-- Right Column: Image -->
+        <div class="about-image">
+            <img src="https://placehold.co/500x650" alt="SERVEASE Overview Image" />
+        </div>
+    </div>
+</div>
+
+<!-- Offered Services Section -->
+<div class="offered-services" id="service">
+    <div class="offered-services-content">
+        <h2>We Offer You the Following Service Categories</h2>
+
+        <div class="service-columns">
+            <div *ngFor="let service of services" class="service-column">
+                <div class="service-card">
+                    <h3 class="service-name">{{ service.name }}</h3>
+                    <p class="service-description">{{ service.description }}</p>
+                    <a routerLink="/providers-list" style="text-decoration: none; color: white;"><button
+                            class="view-providers-btn">
+                            View Available Providers
+                        </button></a>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+
+</div>
+
+<!-- FAQs Section -->
+<div class="faq-section" id="faq">
+    <h2>Frequently Asked Questions</h2>
+    <div class="accordion">
+        <!-- Accordion Item 1 -->
+        <div class="accordion-item" [class.active]="activeAccordion === 0" (click)="toggleAccordion(0)">
+            <div class="accordion-header">
+                <span class="accordion-title">Question One</span>
+                <span class="accordion-icon">+</span>
+            </div>
+            <div class="accordion-content">
+                <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Enim ullam repellendus quisquam asperiores
+                    eaque non dignissimos quam iure illum quasi mollitia quo quae cumque unde incidunt, dolores
+                    consequuntur quibusdam tempore.</p>
+            </div>
+        </div>
+
+        <!-- Accordion Item 2 -->
+        <div class="accordion-item" [class.active]="activeAccordion === 1" (click)="toggleAccordion(1)">
+            <div class="accordion-header">
+                <span class="accordion-title">Question Two</span>
+                <span class="accordion-icon">+</span>
+            </div>
+            <div class="accordion-content">
+                <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Et totam similique magnam quisquam quo,
+                    doloremque reiciendis, tenetur, recusandae maxime quibusdam quasi sapiente quia fugit! Itaque illum
+                    quisquam quaerat nemo natus!</p>
+            </div>
+        </div>
+
+        <!-- Accordion Item 3 -->
+        <div class="accordion-item" [class.active]="activeAccordion === 2" (click)="toggleAccordion(2)">
+            <div class="accordion-header">
+                <span class="accordion-title">Question Three</span>
+                <span class="accordion-icon">+</span>
+            </div>
+            <div class="accordion-content">
+                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Illo vero dignissimos veniam laboriosam unde
+                    id vel quibusdam impedit quisquam ad delectus, tempore suscipit quos veritatis dolores explicabo et
+                    perspiciatis eum.</p>
+            </div>
+        </div>
+
+        <!-- Accordion Item 4 -->
+        <div class="accordion-item" [class.active]="activeAccordion === 3" (click)="toggleAccordion(3)">
+            <div class="accordion-header">
+                <span class="accordion-title">Question Four</span>
+                <span class="accordion-icon">+</span>
+            </div>
+            <div class="accordion-content">
+                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Illo vero dignissimos veniam laboriosam unde
+                    id vel quibusdam impedit quisquam ad delectus, tempore suscipit quos veritatis dolores explicabo et
+                    perspiciatis eum.</p>
+            </div>
+        </div>
+
+        <!-- Accordion Item 5 -->
+        <div class="accordion-item" [class.active]="activeAccordion === 4" (click)="toggleAccordion(4)">
+            <div class="accordion-header">
+                <span class="accordion-title">Question Five</span>
+                <span class="accordion-icon">+</span>
+            </div>
+            <div class="accordion-content">
+                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Illo vero dignissimos veniam laboriosam unde
+                    id vel quibusdam impedit quisquam ad delectus, tempore suscipit quos veritatis dolores explicabo et
+                    perspiciatis eum.</p>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!-- Footer Section -->
+<div class="footer">
+    <!-- First Column: App Logo and Description -->
+    <div class="footer-column">
+        <img src="https://placehold.co/250x250" alt="App Logo" class="footer-logo">
+        <p class="footer-description">
+            SERVEASE is a platform connecting you to reliable service providers for household needs. Our mission is to
+            simplify and streamline the process of finding trusted professionals.
+        </p>
+    </div>
+
+    <!-- Second Column: Links -->
+    <div class="footer-column">
+        <h3>Quick Links</h3>
+        <ul class="footer-links">
+            <li><a routerLink="/">Home</a></li>
+            <li><a [routerLink]="['/']" fragment="service">Services</a></li>
+            <li><a [routerLink]="['/']" fragment="about">About</a></li>
+            <li><a [routerLink]="['/']" fragment="faq">FAQs</a></li>
+        </ul>
+    </div>
+
+    <!-- Third Column: Contact Us -->
+    <div class="footer-column">
+        <h3>Contact Us</h3>
+        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quibusdam repudiandae magnam doloribus dolorum
+            dignissimos velit sunt, totam eos voluptatibus cumque veniam. Impedit temporibus laborum dicta doloremque
+            explicabo, dolorem aspernatur earum!</p>
+        <br>
+        <p>Email: contact_servease.com</p>
+    </div>
+</div>
+
+<!-- Dialog displaying Login First -->
+<p-dialog header="Have an account?" [modal]="true" [(visible)]="loginFirstVisible" [style]="{ width: '40rem'}">
+    <span class="review-text">
+        You need to log in first to book a service. If you have an account, please sign in using your credentials. If
+        you don't have an account yet, you can easily register to create a new one and start booking.
+    </span>
+    <div class="register-options">
+        <button pButton label="Log In" routerLink="/login" class="customer-button"></button>
+        <div class="divider"></div>
+        <button pButton label="Register" (click)="registerDialogVisible = true" class="provider-button"></button>
+    </div>
+</p-dialog>

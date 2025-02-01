@@ -1,0 +1,560 @@
+/* Container that holds the columns */
+.container {
+    margin: 20px;
+}
+
+/* Row that wraps columns */
+.row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+/* Columns that hold the cards */
+.column {
+    flex: 1;
+    min-width: 300px;
+    /* Ensures the columns shrink responsively */
+}
+
+/* Full width card inside the column */
+.full-width-card {
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+    .column {
+        flex: 100%;
+        /* Stacks columns on smaller screens */
+    }
+}
+
+/* Card Content */
+.card-content {
+    padding: 20px;
+}
+
+/* Business Information */
+.business-info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 15px;
+}
+
+.business-logo {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+}
+
+.business-name {
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+.business-email,
+.business-address {
+    font-size: 1rem;
+}
+
+.business-description {
+    font-size: 1rem;
+    color: #555;
+}
+
+
+
+/* Responsive Font Sizes */
+@media (max-width: 1200px) {
+    .business-name {
+        font-size: 1.8rem;
+    }
+
+    .business-email,
+    .business-address {
+        font-size: 1.1rem;
+    }
+
+    .business-description {
+        font-size: 0.95rem;
+    }
+
+    .book-now-btn {
+        font-size: 0.95rem;
+    }
+}
+
+@media (max-width: 992px) {
+    .business-name {
+        font-size: 1.6rem;
+    }
+
+    .business-email,
+    .business-address {
+        font-size: 1rem;
+    }
+
+    .business-description {
+        font-size: 0.9rem;
+    }
+
+    .book-now-btn {
+        font-size: 0.9rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .business-name {
+        font-size: 1.4rem;
+    }
+
+    .business-email,
+    .business-address {
+        font-size: 0.9rem;
+    }
+
+    .business-description {
+        font-size: 0.85rem;
+    }
+
+    .book-now-btn {
+        font-size: 0.85rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .business-name {
+        font-size: 1.2rem;
+    }
+
+    .business-email,
+    .business-address {
+        font-size: 0.8rem;
+    }
+
+    .business-description {
+        font-size: 0.75rem;
+    }
+
+    .book-now-btn {
+        font-size: 0.75rem;
+    }
+}
+
+
+/* Line separator */
+hr {
+    margin: 20px 0;
+    border: 0;
+    border-top: 1px solid #ddd;
+}
+
+/* Offered Services Section */
+.offered-services {
+    padding: 20px;
+    background-color: #f4f8fb;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.offered-services h2 {
+    font-size: 2rem;
+    /* Default size in rem */
+    font-weight: bold;
+    color: #2c3e50;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.service-card {
+    margin-bottom: 20px;
+    margin-right: 20px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+}
+
+.service-header {
+    padding: 10px 20px;
+    background-color: #f1f1f1;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+}
+
+.service-header h3 {
+    margin: 0;
+    font-size: 1.5rem;
+    /* Default size in rem */
+    font-weight: 600;
+}
+
+.service-card .service-content {
+    padding: 15px;
+}
+
+.service-card .service-description,
+.service-card .service-price,
+.service-card .service-action {
+    margin-bottom: 15px;
+}
+
+.service-card .price {
+    color: #2ecc71;
+    font-weight: bold;
+}
+
+/* Responsive font sizes */
+@media (max-width: 1200px) {
+    .offered-services h2 {
+        font-size: 1.8rem;
+    }
+
+    .service-header h3 {
+        font-size: 1.4rem;
+    }
+}
+
+@media (max-width: 992px) {
+    .offered-services h2 {
+        font-size: 1.6rem;
+    }
+
+    .service-header h3 {
+        font-size: 1.3rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .offered-services h2 {
+        font-size: 1.4rem;
+    }
+
+    .service-header h3 {
+        font-size: 1.2rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .offered-services h2 {
+        font-size: 1.2rem;
+    }
+
+    .service-header h3 {
+        font-size: 1rem;
+    }
+}
+
+
+
+/* Ratings and Feedback Section */
+.feedbacks {
+    padding: 20px;
+    background-color: #f7f9fc;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    margin-bottom: 30px;
+}
+
+.feedbacks h2 {
+    font-size: 2rem;
+    /* Default size in rem */
+    font-weight: bold;
+    color: #2c3e50;
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+/* Feedback Cards Container */
+.feedback-cards {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* Feedback Card */
+.feedback-card {
+    background-color: #ffffff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    padding: 20px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Hover Effect */
+.feedback-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.15);
+}
+
+/* Feedback Header (Client Name) */
+.feedback-header h3 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #34495e;
+}
+
+/* Feedback Content */
+.feedback-content {
+    font-size: 1.1rem;
+    color: #555;
+}
+
+/* Rating System */
+.rating {
+    font-size: 1.5rem;
+    margin-bottom: 15px;
+}
+
+/* Star Rating */
+.star {
+    color: #f39c12;
+    margin-right: 5px;
+}
+
+.star:empty {
+    color: #dcdcdc;
+}
+
+/* Feedback Text */
+.feedback-text {
+    font-size: 1rem;
+    color: #7f8c8d;
+}
+
+/* Show/Hide Button */
+.show-reviews-btn {
+    background-color: #2980b9;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 20px;
+    font-size: 1rem;
+}
+
+.show-reviews-btn:hover {
+    background-color: #649dc3;
+}
+
+/* Responsive font sizes */
+@media (max-width: 1200px) {
+    .feedbacks h2 {
+        font-size: 1.8rem;
+    }
+
+    .feedback-header h3 {
+        font-size: 1.4rem;
+    }
+
+    .rating {
+        font-size: 1.4rem;
+    }
+
+    .feedback-text {
+        font-size: 1rem;
+    }
+}
+
+@media (max-width: 992px) {
+    .feedbacks h2 {
+        font-size: 1.6rem;
+    }
+
+    .feedback-header h3 {
+        font-size: 1.3rem;
+    }
+
+    .rating {
+        font-size: 1.3rem;
+    }
+
+    .feedback-text {
+        font-size: 0.95rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .feedbacks h2 {
+        font-size: 1.4rem;
+    }
+
+    .feedback-header h3 {
+        font-size: 1.2rem;
+    }
+
+    .rating {
+        font-size: 1.2rem;
+    }
+
+    .feedback-text {
+        font-size: 0.9rem;
+    }
+
+    .show-reviews-btn {
+        font-size: 0.9rem;
+        padding: 8px 16px;
+    }
+}
+
+@media (max-width: 576px) {
+    .feedbacks h2 {
+        font-size: 1.2rem;
+    }
+
+    .feedback-header h3 {
+        font-size: 1rem;
+    }
+
+    .rating {
+        font-size: 1rem;
+    }
+
+    .feedback-text {
+        font-size: 0.85rem;
+    }
+
+    .show-reviews-btn {
+        font-size: 0.9rem;
+        padding: 8px 16px;
+    }
+}
+
+
+
+/* Book Now Section */
+.book-now {
+    padding: 20px;
+    background-color: #f7f9fc;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.book-now h2 {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #2c3e50;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+/* Book Now Services Grid */
+.book-now-services-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
+    margin-top: 15px;
+}
+
+.book-now-service-card {
+    background-color: #ffffff;
+    border: 2px solid #dcdcdc;
+    border-radius: 10px;
+    padding: 15px;
+    text-align: center;
+    transition: border-color 0.3s ease, transform 0.3s ease;
+    cursor: pointer;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.book-now-service-card:hover {
+    border-color: #3498db;
+    transform: translateY(-5px);
+}
+
+.book-now-service-card h3 {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #34495e;
+    margin-bottom: 10px;
+}
+
+.book-now-service-card p {
+    font-size: 0.95rem;
+    color: #555;
+    margin-bottom: 10px;
+}
+
+.book-now-service-card .price {
+    font-size: 1rem;
+    font-weight: bold;
+    color: #2ecc71;
+}
+
+/* Selected State for Book Now */
+.book-now-service-card.selected {
+    border-color: #2ecc71;
+    background-color: #eaffea;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Book Now Form Group */
+.book-now-form-group {
+    margin-bottom: 20px;
+}
+
+.book-now-form-group label {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #34495e;
+}
+
+.book-now-form-group input,
+.book-now-form-group select {
+    padding: 10px;
+    font-size: 0.95rem;
+    border: 1px solid #dcdcdc;
+    border-radius: 5px;
+    width: 100%;
+    background-color: #ffffff;
+    color: #555;
+}
+
+.book-now-form-group input:focus,
+.book-now-form-group select:focus {
+    border-color: #3498db;
+    outline: none;
+}
+
+/* Book Now Button */
+.book-now-btn {
+    background-color: #3498db;
+    color: white;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.3s ease;
+}
+
+.book-now-btn:hover {
+    background-color: #2980b9;
+}
+
+/* Responsive Design for Book Now Section */
+@media (max-width: 768px) {
+    .book-now h2 {
+        font-size: 1.4rem;
+    }
+
+    .book-now-service-card h3 {
+        font-size: 1rem;
+    }
+
+    .book-now-service-card p {
+        font-size: 0.85rem;
+    }
+
+    .book-now-service-card .price {
+        font-size: 0.9rem;
+    }
+
+    .book-now-btn {
+        font-size: 0.9rem;
+        padding: 10px 15px;
+    }
+}

@@ -1,0 +1,276 @@
+body {
+  width: 100%;
+  margin: 1rem;
+}
+
+.header-message {
+  text-align: left;
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+.cards-container {
+  display: flex;
+  justify-content: space-between;
+  gap: auto;
+}
+
+.custom-card {
+  width: 24%;
+  background-color: #93c9ed;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+.card-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.number-container h2 {
+  font-size: 2rem;
+  margin: 0;
+}
+
+.icon-container i {
+  font-size: 2rem;
+}
+
+.description-container p {
+  font-size: 1rem;
+  text-align: center;
+}
+
+.services-container {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 2rem;
+}
+
+.left-division p-chart {
+  flex-grow: 1;  /* This will make the chart grow to take up the available space */
+  width: 100%;   /* Fill the entire width of the parent */
+  height: 100%;  /* Fill the entire height of the parent */
+  min-height: 400px;  /* Ensure it never gets smaller than 400px */
+}
+
+
+.left-division, .right-division {
+  width: calc(50% - 0.5rem);
+  padding: 1rem;
+  background-color: #f9f9f9;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  height: auto; /* Define a fixed height for the left division */
+}
+
+.left-division h3, .right-division h3 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+.left-division ul, .right-division ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.left-division li, .right-division li {
+  font-size: 1.1rem;
+  margin-bottom: 0.5rem;
+}
+
+.rank-box {
+  display: inline-block;
+  width: 2rem;
+  height: 2rem;
+  background-color: #66b9e1;
+  color: #fff;
+  text-align: center;
+  line-height: 2rem;
+  border-radius: 4px;
+  font-weight: bold;
+}
+
+.right-division p-table {
+  width: 100%;
+  margin-top: 1rem;
+}
+
+.right-division .p-datatable-wrapper {
+  overflow-y: auto;
+  max-height: 200px;
+}
+
+.right-division th, .right-division td {
+  text-align: center;
+  padding: 0.8rem;
+}
+
+.right-division .p-table thead {
+  background-color: #f1f1f1;
+}
+
+.right-division p-table .p-datatable-tbody > tr {
+  border: none;
+}
+
+.right-division p-table th, .right-division p-table td {
+  border: none;
+}
+
+.right-division p-table .p-datatable-tbody > tr:hover {
+  background-color: #f4f4f4;
+}
+
+.third-section {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 2rem;
+}
+
+.current-status {
+  width: 33%;
+  padding: 1rem;
+  background-color: #f9f9f9;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.current-status p {
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+.status-card {
+  display: flex;
+  flex-direction: column;
+}
+
+.status-inner-card {
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.status-inner-card h4 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.status-inner-card p {
+  font-size: 1rem;
+  margin: 0;
+}
+
+.accumulated-bookings {
+  width: 66%;
+  padding: 1rem;
+  background-color: #f9f9f9;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.accumulated-bookings p-chart {
+  width: 100%;
+  height: 100%;
+}
+
+.status-inner-card .status-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.pi {
+  font-size: 2rem;
+  color: #007ad9;
+  margin-bottom: 0.5rem;
+}
+
+.status-inner-card h2 {
+  font-size: 3rem;
+  color: #333;
+  margin: 0;
+}
+
+.status-inner-card .status-info {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 0.5rem;
+}
+
+.status-inner-card .status-info h4 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-right: 0.5rem;
+}
+
+.status-inner-card .status-info i {
+  font-size: 1.5rem;
+  color: #005f7f;
+}
+
+.status-inner-cards-container {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+}
+
+.status-inner-card {
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  padding: 1rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.status-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.status-icon i {
+  font-size: 2rem;
+  margin-bottom: 10px;
+}
+
+h2 {
+  font-size: 2rem;
+  margin: 0;
+}
+
+.status-info {
+  font-size: 1.2rem;
+  margin-top: 10px;
+}
+
+.status-inner-card:hover {
+  background-color: #b8dbf1;
+}
+
+.custom-card:hover {
+  background-color: #b8dbf1;
+}

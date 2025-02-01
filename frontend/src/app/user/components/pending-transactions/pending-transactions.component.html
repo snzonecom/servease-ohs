@@ -1,0 +1,103 @@
+<!-- Pending Transactions Title Section -->
+<div class="dashboard-header">
+    <h1 class="dashboard-title">
+        Pending Bookings</h1>
+    <p class="dashboard-description">Here are the bookings that are currently awaiting confirmation by the service
+        provider.
+        <br>Please note that these bookings are not yet confirmed and will only be finalized once the provider reviews
+        and approves them.
+</div>
+
+<!-- Pending Bookings Section -->
+<div class="pending-bookings-content">
+    <div class="columns-container">
+        <!-- Loop through bookings array and generate cards -->
+        <div *ngFor="let booking of bookings" class="card">
+            <div class="card-content">
+                <h3>{{ booking.servicesRequested }}</h3>
+                <div class="info">
+                    <i class="pi pi-users"></i>
+                    <p>{{ booking.serviceProvider }}</p>
+                </div>
+                <div class="info">
+                    <i class="pi pi-calendar"></i>
+                    <p>{{ booking.selectedDate }}</p>
+                </div>
+                <div class="info">
+                    <i class="pi pi-clock"></i>
+                    <p>{{ booking.selectedTime }}</p>
+                </div>
+                <button class="see-booking-btn" (click)="showBookingDetails(booking)">See Booking</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Dialog displaying the details of the booking -->
+<p-dialog header="Requested Booking Details" [modal]="true" [(visible)]="visible" [style]="{ width: '40rem'}">
+    <span class="review-text">
+        Here are the information about the booking request you have submitted. Please note that your booking is pending
+        confirmation and is not finalized until the service provider accepts it.
+    </span>
+
+    <!-- Form Fields displaying booking details -->
+    <div class="flex flex-column gap-3 mb-3">
+        <label for="serviceProvider" class="field-label">
+            <span class="label-text">
+                <i class="pi pi-id-card"></i> Service Provider
+            </span>
+            <input pInputText id="serviceProvider" [(ngModel)]="selectedBooking.serviceProvider" [disabled]="true"
+                class="field-input" />
+        </label>
+    </div>
+
+    <div class="flex flex-column gap-3 mb-3">
+        <label for="servicesRequested" class="field-label">
+            <span class="label-text">
+                <i class="pi pi-wrench"></i> Services Requested
+            </span>
+            <input pInputText id="servicesRequested" [(ngModel)]="selectedBooking.servicesRequested" [disabled]="true"
+                class="field-input" />
+        </label>
+    </div>
+
+    <div class="flex flex-column gap-3 mb-3">
+        <label for="selectedDate" class="field-label">
+            <span class="label-text">
+                <i class="pi pi-calendar"></i> Selected Date
+            </span>
+            <input pInputText id="selectedDate" [(ngModel)]="selectedBooking.selectedDate" [disabled]="true"
+                class="field-input" />
+        </label>
+    </div>
+
+    <div class="flex flex-column gap-3 mb-3">
+        <label for="selectedTime" class="field-label">
+            <span class="label-text">
+                <i class="pi pi-clock"></i> Selected Time
+            </span>
+            <input pInputText id="selectedTime" [(ngModel)]="selectedBooking.selectedTime" [disabled]="true"
+                class="field-input" />
+        </label>
+    </div>
+
+    <div class="flex flex-column gap-3 mb-3">
+        <label for="remarks" class="field-label">
+            <span class="label-text">
+                <i class="pi pi-comment"></i> Booking Remarks
+            </span>
+            <textarea pInputTextarea id="remarks" [(ngModel)]="selectedBooking.remarks" [disabled]="true"
+                class="field-input" rows="4"></textarea>
+        </label>
+    </div>
+
+    <div class="flex flex-column gap-3 mb-3">
+        <label for="dateOfSubmission" class="field-label">
+            <span class="label-text">
+                <i class="pi pi-calendar-plus"></i> Date of Submission
+            </span>
+            <input pInputText id="dateOfSubmission" [(ngModel)]="selectedBooking.dateOfSubmission" [disabled]="true"
+                class="field-input" />
+        </label>
+    </div>
+</p-dialog>

@@ -1,0 +1,140 @@
+<body>
+  <!-- Header for Service Provider Verification and Search Bar -->
+  <div class="header-title">
+    <div class="section-header">Service Provider Verification</div>
+    <!-- Search Bar for Filtering Applicants -->
+    <div class="search-container">
+      <input type="text" [(ngModel)]="searchQuery" placeholder="Search Here" class="search-bar" />
+    </div>
+  </div>
+
+  <!-- Table for displaying applicants and their details -->
+  <div class="application-table">
+    <p-table [value]="filteredApplicants">
+      <ng-template pTemplate="header">
+        <tr>
+          <th pSortableColumn="name">Applicant Name <p-sortIcon field="name"></p-sortIcon></th>
+          <th class="category">Category</th>
+          <th pSortableColumn="dateOfApplication">Date of Application <p-sortIcon
+              field="dateOfApplication"></p-sortIcon>
+          </th>
+          <th class="action-column">Action</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-applicant>
+        <tr>
+          <td>{{ applicant.name }}</td>
+          <td>{{ applicant.category }}</td>
+          <td>{{ applicant.dateOfApplication | date }}</td>
+          <td class="action-column">
+            <!-- Button to view details of the applicant's application -->
+            <button p-button (click)="showDialog(applicants)">View Application</button>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+
+  <!-- Dialog displaying the details of the application -->
+  <div class="card flex justify-content-center">
+    <p-dialog header="Application Details" [modal]="true" [(visible)]="visible" [style]="{ width: '40rem'}">
+      <!-- Introduction text and instructions for reviewing the application -->
+      <span class="p-text-secondary block mb-5">Please take a moment to thoroughly review and evaluate the application
+        details before making a decision on whether to approve or reject the submission.</span>
+
+      <!-- Form Fields displaying service provider details -->
+      <div class="mb-3"></div>
+      <div class="flex flex-column align-items-start gap-3 mb-3">
+        <label for="name" class="font-semibold">
+          <i class="pi pi-building" style="margin-right: 10px;"></i> Business Name
+        </label>
+        <input pInputText id="name" value="Global Enterprises Ltd." [disabled]="true" class="w-full" />
+      </div>
+
+      <div class="flex flex-column align-items-start gap-3 mb-3">
+        <label for="brn" class="font-semibold">
+          <i class="pi pi-id-card" style="margin-right: 10px;"></i> Business Registration Number (BRN)
+        </label>
+        <input pInputText id="brn" value="BRN9876543210" [disabled]="true" class="w-full" />
+      </div>
+
+      <div class="flex flex-column align-items-start gap-3 mb-3">
+        <label for="serviceType" class="font-semibold">
+          <i class="pi pi-cog" style="margin-right: 10px;"></i> Service Type
+        </label>
+        <input pInputText id="serviceType" value="Cleaning" [disabled]="true" class="w-full" />
+      </div>
+
+      <div class="flex flex-column align-items-start gap-3 mb-3">
+        <label for="address" class="font-semibold">
+          <i class="pi pi-map" style="margin-right: 10px;"></i> Address
+        </label>
+        <input pInputText id="address" rows="3" [disabled]="true" value="456 Market Street, Central City"
+          class="w-full" />
+      </div>
+
+      <div class="flex flex-column align-items-start gap-3 mb-3">
+        <label for="contactName" class="font-semibold">
+          <i class="pi pi-user" style="margin-right: 10px;"></i> Contact Person
+        </label>
+        <input pInputText id="contactName" value="John Smith" [disabled]="true" class="w-full" />
+      </div>
+
+      <div class="flex flex-column align-items-start gap-3 mb-3">
+        <label for="contactId" class="font-semibold">
+          <i class="pi pi-id-card" style="margin-right: 10px;"></i> Contact Person ID
+        </label>
+        <img
+          src="https://upload.wikimedia.org/wikipedia/commons/3/34/Philippine_Identification_System_%28PhilSys%29_card_sample.png"
+          class="id-full">
+      </div>
+
+      <div class="flex flex-column align-items-start gap-3 mb-3">
+        <label for="contactEmail" class="font-semibold">
+          <i class="pi pi-envelope" style="margin-right: 10px;"></i> Contact Email
+        </label>
+        <input pInputText id="contactEmail" value="john.smith@globalenterprises.com" [disabled]="true" class="w-full" />
+      </div>
+
+      <div class="flex flex-column align-items-start gap-3 mb-3">
+        <label for="contactNumber" class="font-semibold">
+          <i class="pi pi-phone" style="margin-right: 10px;"></i> Contact Number
+        </label>
+        <input pInputText id="contactNumber" value="+321 654 9870" [disabled]="true" class="w-full" />
+      </div>
+
+      <div class="flex flex-column align-items-start gap-3 mb-3">
+        <label for="startDate" class="font-semibold">
+          <i class="pi pi-calendar" style="margin-right: 10px;"></i> Business Started
+        </label>
+        <input pInputText id="startDate" value="2015-04-01" [disabled]="true" class="w-full" />
+      </div>
+
+      <div class="flex flex-column align-items-start gap-3 mb-3">
+        <label for="yearsOfOperation" class="font-semibold">
+          <i class="pi pi-calendar-plus" style="margin-right: 10px;"></i> Years of Operation
+        </label>
+        <input pInputText id="yearsOfOperation" value="10" [disabled]="true" class="w-full" />
+      </div>
+
+      <div class="flex flex-column align-items-start gap-3 mb-3">
+        <label for="applicationDate" class="font-semibold">
+          <i class="pi pi-calendar-times" style="margin-right: 10px;"></i> Application Date
+        </label>
+        <input pInputText id="applicationDate" value="2025-01-15" [disabled]="true" class="w-full" />
+      </div>
+
+      <!-- Instruction for review before decision -->
+      <span class="p-text-secondary block end-statement">Kindly double-check the application details carefully to ensure
+        all information is accurate and complete before making your final decision on approval or rejection. It's
+        important to verify every aspect to avoid any oversight.</span>
+
+      <!-- Buttons to approve or reject the application -->
+      <div class="mb-3"></div>
+      <div class="flex justify-content-end gap-2">
+        <button p-button class="reject-button">Reject Application</button>
+        <button p-button class="approve-button">Approve Application</button>
+      </div>
+    </p-dialog>
+  </div>
+</body>

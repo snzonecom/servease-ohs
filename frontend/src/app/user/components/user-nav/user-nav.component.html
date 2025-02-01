@@ -1,0 +1,45 @@
+<!-- NAVIGATION BAR SECTION -->
+<nav>
+    <input type="checkbox" id="sidebar-active">
+    <label for="sidebar-active" class="open-sidebar-button">
+        <svg xmlns="http://www.w3.org/2000/svg" height="32" viewBox="0 -960 960 960" width="32">
+            <path d="M120-240v-80h720v80H120Zm0-200v-80h720v80H120Zm0-200v-80h720v80H120Z" />
+        </svg>
+    </label>
+    <label id="overlay" for="sidebar-active"></label>
+    <div class="links-container">
+        <label for="sidebar-active" class="close-sidebar-button">
+            <svg xmlns="http://www.w3.org/2000/svg" height="32" viewBox="0 -960 960 960" width="32">
+                <path
+                    d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z" />
+            </svg>
+        </label>
+
+        <a class="home-link" [routerLink]="['/user/home']">LOGO GOES HERE</a>
+        <a [routerLink]="['/user/home']">Home</a>
+        <a [routerLink]="['/user/home']" fragment="service">Service Categories</a>
+        <a [routerLink]="['/user/home']" fragment="about">About</a>
+        <a [routerLink]="['/user/home']" fragment="faq">FAQs</a>
+
+        <!-- Dropdown for My Transactions -->
+        <div class="dropdown">
+            <input type="checkbox" id="dropdown-active" class="dropdown-checkbox" [checked]="dropdownOpen">
+            <label for="dropdown-active" class="dropdown-toggle">
+                Hello, Name Here!
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" viewBox="0 0 24 24" fill="none" stroke="white"
+                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+            </label>
+            <div class="dropdown-menu" [ngClass]="{'show': dropdownOpen}">
+                <a (click)="closeDropdown()" [routerLink]="['/user/user-profile']">My Profile</a>
+                <a (click)="closeDropdown()" [routerLink]="['/user/pending-bookings']">Pending Bookings</a>
+                <a (click)="closeDropdown()" [routerLink]="['/user/confirmed-bookings']">Scheduled Bookings</a>
+                <a (click)="closeDropdown()" [routerLink]="['/user/completed-bookings']">Completed Bookings</a>
+                <a (click)="closeDropdown()" [routerLink]="['/user/rate-provider']">Rate Providers</a>
+                <a (click)="closeDropdown()" [routerLink]="['/']">Logout</a>
+            </div>
+        </div>
+
+    </div>
+</nav>

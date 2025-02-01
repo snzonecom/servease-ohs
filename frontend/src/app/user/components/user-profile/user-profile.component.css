@@ -1,0 +1,145 @@
+/* Dashboard Title Section */
+.dashboard-header {
+    text-align: center;
+    margin: 40px 20px 5px 20px;
+}
+
+.dashboard-title {
+    font-size: 36px;
+    color: #333;
+}
+
+.dashboard-description {
+    font-size: 16px;
+    color: #888;
+    margin-top: 10px;
+}
+
+@media(max-width: 450px) {
+    .dashboard-description {
+        font-size: 13px;
+    }
+}
+
+/* Profile Card Container */
+.profile-card-container {
+    margin: 2rem auto;
+    max-width: 700px;
+    width: 100%;
+}
+
+/* Profile Card */
+.profile-card {
+    margin-top: 20px;
+}
+
+/* Card Content */
+.card-content {
+    display: flex;
+    flex-direction: column;
+    padding: 1rem 3rem 3rem 3rem;
+}
+
+/* Header Content Styling */
+.header-content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    text-align: center;
+    padding-top: 2rem;
+}
+
+/* Header Icon Styling */
+.header-icon {
+    font-size: 32px;
+    color: #428eba;
+}
+
+/* Header Title Styling */
+.header-title {
+    font-size: 22px;
+    font-weight: 600;
+}
+
+/* Info Row */
+.info-row {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    padding: 0.5rem;
+}
+
+.info-row label {
+    font-weight: bold;
+}
+
+.info-row input,
+.info-row textarea {
+    padding: 8px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    font-size: 14px;
+}
+
+/* TextArea Styling */
+.info-row textarea {
+    width: 100%;
+    resize: vertical;
+}
+
+/* Button Container */
+.button-container {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+/* Mobile responsiveness */
+@media(max-width: 768px) {
+    .profile-card-container {
+        max-width: 80%;
+        width: 80%;
+    }
+
+    /* Card Content */
+    .card-content {
+        display: flex;
+        flex-direction: column;
+        padding: 1rem 1rem 1rem 1rem;
+    }
+}
+
+.buttons-below {
+    padding: 0.5rem 1rem;
+    background-color: #67b9e1;
+    color: white;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    margin-right: 10px;
+    gap: 0.5rem;
+}
+
+.buttons-below:hover {
+    background-color: #c1c1c1;
+}
+
+.button-container {
+    display: flex;
+    justify-content: center;
+    padding-top: 10px;
+    padding-bottom: 30px;
+}
+
+/* If the input is active */
+input:enabled {
+    background-color: #d0e4ef;
+    font-weight: 400;
+}
+
+textarea:enabled {
+    background-color: #d0e4ef;
+    font-weight: 400;
+}

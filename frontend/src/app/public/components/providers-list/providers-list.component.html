@@ -1,0 +1,41 @@
+<!-- Title Section -->
+<div class="dashboard-header">
+    <h1 class="dashboard-title">List of Verified Providers</h1>
+    <p class="dashboard-description">Access the verified service providers of your chosen service category to ensure you
+        are working with trusted and reputable professionals.</p>
+</div>
+
+<!-- Providers List Section -->
+<div class="providers-list">
+    <div class="columns">
+        <!-- Provider Card Loop -->
+        <div class="column" *ngFor="let provider of providers">
+            <div class="provider-card">
+                <img [src]="provider.logo" alt="Business Logo" class="business-logo">
+                <div class="provider-info">
+                    <h3 class="business-name">{{ provider.businessName }}</h3>
+                    <div class="rating">
+                        <span class="star">&#9733;</span>
+                        <span class="rating-number">{{ provider.rating }}</span>
+                    </div>
+                    <p class="business-location"><i class="pi pi-map-marker"></i> {{ provider.location }}</p>
+                    <p class="business-description">{{ provider.description }}</p>
+                    <button class="book-now-btn" (click)="loginFirstVisible = true">Book Now</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Dialog displaying Login First -->
+<p-dialog header="Have an account?" [modal]="true" [(visible)]="loginFirstVisible" [style]="{ width: '40rem'}">
+    <span class="review-text">
+        You need to log in first to book a service. If you have an account, please sign in using your credentials. If
+        you don't have an account yet, you can easily register to create a new one and start booking.
+    </span>
+    <div class="register-options">
+        <button pButton label="Log In" routerLink="/login" class="customer-button"></button>
+        <div class="divider"></div>
+        <button pButton label="Register" (click)="registerDialogVisible = true" class="provider-button"></button>
+    </div>
+</p-dialog>

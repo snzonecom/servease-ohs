@@ -1,0 +1,144 @@
+<!-- Columns Bar -->
+<div class="container">
+    <div class="row">
+        <!-- First Column - Left with Business Information, Services, and Feedback -->
+        <div class="column">
+            <div class="card">
+                <p-card class="full-width-card">
+                    <div class="card-content">
+                        <!-- Business Information -->
+                        <div class="business-info">
+                            <img src="https://placehold.co/600x600" alt="Business Logo" class="business-logo">
+                            <h3 class="business-name">Business Name</h3>
+                            <p class="business-email"><i class="pi pi-envelope"></i> example_business.com</p>
+                            <p class="business-address"><i class="pi pi-map-marker"></i> City, Province
+                            </p>
+                            <p class="business-description">This business offers high-quality services to meet your
+                                needs.</p>
+                            <button class="book-now-btn"
+                                onclick="document.getElementById('book-now-section').scrollIntoView({behavior: 'smooth'})">
+                                Book a Service with Them
+                            </button>
+                        </div>
+
+                        <!-- Line Separator -->
+                        <hr />
+
+                        <!-- Offered Services -->
+                        <div class="offered-services">
+                            <h2>Offered Services</h2>
+                            <div class="services">
+                                <p-card *ngFor="let service of availableServices" class="service-card">
+                                    <div class="service-header">
+                                        <h3>{{ service.name }}</h3>
+                                    </div>
+                                    <div class="service-content">
+                                        <div class="service-description">
+                                            <p>{{ service.description }}</p>
+                                        </div>
+                                        <div class="service-price">
+                                            <span class="price">Starting from {{ service.price }}</span>
+                                        </div>
+                                    </div>
+                                </p-card>
+                            </div>
+                        </div>
+
+
+
+                        <!-- Line Separator -->
+                        <hr />
+
+                        <!-- Rates and Feedbacks -->
+                        <div class="feedbacks">
+                            <h2>Ratings & Feedbacks</h2>
+                            <div class="feedback-cards">
+                                <!-- Feedbacks loop -->
+                                <div *ngFor="let feedback of displayedFeedbacks" class="feedback-card">
+                                    <div class="feedback-header">
+                                        <h3>{{ feedback.clientName }}</h3>
+                                    </div>
+                                    <div class="feedback-content">
+                                        <div class="rating">
+                                            <span *ngFor="let star of feedback.rating" class="star">&#9733;</span>
+                                            <span *ngFor="let emptyStar of feedback.emptyStars"
+                                                class="star">&#9734;</span>
+                                        </div>
+                                        <div class="feedback-text">
+                                            <p>{{ feedback.reviewText }}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Show All Reviews Button -->
+                            <button *ngIf="feedbacks.length > 3 && !showAllReviews" (click)="toggleReviews()"
+                                class="show-reviews-btn">
+                                Show All Reviews
+                            </button>
+
+                            <button *ngIf="feedbacks.length > 3 && showAllReviews" (click)="toggleReviews()"
+                                class="show-reviews-btn">
+                                Show Less Reviews
+                            </button>
+                        </div>
+
+
+
+
+                    </div>
+                </p-card>
+            </div>
+        </div>
+
+
+        <!-- Second Column - Right -->
+        <div class="column">
+            <div class="card">
+                <!-- Book Now Section -->
+                <div id="book-now-section" class="book-now">
+                    <h2>Book Now</h2>
+                    <div class="booking-form">
+                        <!-- Select Services Section -->
+                        <div class="book-now-form-group">
+                            <label>Select Services to Avail</label>
+                            <div class="book-now-services-grid">
+                                <div *ngFor="let service of availableServices" [class.selected]="service.isSelected"
+                                    class="book-now-service-card" (click)="toggleServiceSelection(service)">
+                                    <h3>{{ service.name }}</h3>
+                                    <p>{{ service.description }}</p>
+                                    <span class="price">{{ service.price }}</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Select Date Section -->
+                        <div class="book-now-form-group">
+                            <label for="booking-date">Select Date</label>
+                            <input type="date" id="booking-date" class="form-control" />
+                        </div>
+
+                        <!-- Select Time Section -->
+                        <div class="book-now-form-group">
+                            <label for="booking-time">Select Available Time</label>
+                            <select id="booking-time" class="form-control">
+                                <option value="" disabled selected>Choose a time slot</option>
+                                <option value="morning">Morning (9:00 AM - 12:00 PM)</option>
+                                <option value="afternoon">Afternoon (1:00 PM - 4:00 PM)</option>
+                                <option value="evening">Evening (5:00 PM - 8:00 PM)</option>
+                            </select>
+                        </div>
+
+                        <!-- Book Now Button -->
+                        <div class="book-now-form-group">
+                            <button class="book-now-btn" (click)="showConfirmation()">Submit Booking</button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+
+    </div>
+</div>

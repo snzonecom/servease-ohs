@@ -1,0 +1,77 @@
+<!-- Profile Details Title Section -->
+<div class="dashboard-header">
+    <h1 class="dashboard-title">
+        Profile Details</h1>
+    <p class="dashboard-description">Manage and update your information to keep your account
+        up to date.
+</div>
+
+<!-- Profile Details Card Section -->
+<div class="profile-card-container">
+    <p-card class="profile-card">
+        <ng-template pTemplate="header">
+            <div class="header-content">
+                <i class="pi pi-id-card header-icon"></i>
+                <span class="header-title">User Profile</span>
+            </div>
+        </ng-template>
+        <div class="card-content">
+            <!-- Single Column Layout for Information and Fields -->
+            <div class="info-row-container">
+                <!-- Profile Photo -->
+                <div class="info-row">
+                    <label for="profilePhoto">Profile Photo:</label>
+                    <p-image src="https://placehold.co/600x600" alt="Profile Photo" width="100" height="100"></p-image>
+                </div>
+                <!-- Full Name -->
+                <div class="info-row">
+                    <label for="fullName">Full Name:</label>
+                    <input id="fullName" type="text" [(ngModel)]="fullName" [disabled]="!isEditing" />
+                </div>
+                <!-- Email Address -->
+                <div class="info-row">
+                    <label for="email">Email Address:</label>
+                    <input id="email" type="email" [(ngModel)]="emailAddress" [disabled]="!isEditing" />
+                </div>
+                <!-- Contact Number -->
+                <div class="info-row">
+                    <label for="contactNumber">Contact Number:</label>
+                    <input id="contactNumber" type="tel" [(ngModel)]="contactNumber" [disabled]="!isEditing" />
+                </div>
+                <div class="info-row">
+                    <label for="houseAdd">House Address:</label>
+                    <input id="houseAdd" type="text" [(ngModel)]="houseAdd" [disabled]="!isEditing" />
+                </div>
+                <div class="info-row">
+                    <label for="street">Street:</label>
+                    <input id="street" type="text" [(ngModel)]="street" [disabled]="!isEditing" />
+                </div>
+                <div class="info-row">
+                    <label for="brgy">Barangay:</label>
+                    <input id="brgy" type="text" [(ngModel)]="brgy" [disabled]="!isEditing" />
+                </div>
+                <div class="info-row">
+                    <label for="city">City:</label>
+                    <input id="city" type="text" [(ngModel)]="city" [disabled]="!isEditing" />
+                </div>
+                <div class="info-row">
+                    <label for="province">Province:</label>
+                    <input id="province" type="text" [(ngModel)]="province" [disabled]="!isEditing" />
+                </div>
+                <div class="info-row">
+                    <label for="password">Password:</label>
+                    <input id="password" type="text" [(ngModel)]="password" [disabled]="!isEditing" />
+                </div>
+
+            </div>
+        </div>
+    </p-card>
+
+    <!-- Buttons Outside the Card -->
+    <div class="button-container" style="text-align: center; margin-top: 10px;">
+        <button pButton type="button" label="Edit Profile" icon="pi pi-pencil" class="buttons-below"
+            (click)="editProfile()"></button>
+        <button pButton type="button" label="Save Details" icon="pi pi-save" class="buttons-below"
+            (click)="saveProfile()"></button>
+    </div>
+</div>

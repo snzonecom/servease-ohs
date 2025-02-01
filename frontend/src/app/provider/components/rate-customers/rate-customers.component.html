@@ -1,0 +1,79 @@
+<!-- Rate Customer Title Section -->
+<div class="dashboard-header">
+    <h1 class="dashboard-title">Rate your Customers</h1>
+    <p class="dashboard-description">Rate your customers to help improve the future interactions. </p>
+</div>
+
+<!-- Rate Section -->
+<div class="pending-bookings-content">
+    <div class="columns-container">
+        <!-- Loop through bookings array and generate cards -->
+        <div *ngFor="let booking of bookings" class="card">
+            <div class="card-content">
+                <!-- Div containing the star icon before the name -->
+                <div class="icon-container">
+                    <i class="pi pi-star-fill"></i>
+                </div>
+                <h3>{{ booking.customerName }}</h3>
+                <div class="info">
+                    <i class="pi pi-calendar"></i>
+                    <p>{{ booking.bookingDate }}</p>
+                </div>
+                <button class="see-booking-btn" (click)="showBookingDetails(booking)">Rate Customer</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Dialog displaying the details of the rating -->
+<p-dialog header="Rate Customer" [modal]="true" [(visible)]="visible" [style]="{ width: '40rem'}">
+    <span class="review-text">
+        Rate your customers to help improve service quality and maintain strong relationships. Provide feedback on their overall experience to enhance future interactions.
+    </span>
+
+    <!-- Form Fields displaying customer booking details -->
+    <div class="flex flex-column gap-3 mb-3">
+        <label for="customerName" class="field-label">
+            <span class="label-text">
+                <i class="pi pi-user"></i> Customer Name
+            </span>
+            <input pInputText id="customerName" [(ngModel)]="selectedBooking.customerName" [disabled]="true"
+                class="field-input" />
+        </label>
+    </div>
+
+    <div class="flex flex-column gap-3 mb-3">
+        <label for="contactNumber" class="field-label">
+            <span class="label-text">
+            <i class="pi pi-wrench"></i> Service Availed</span>
+            <input pInputText id="contactNumber" [(ngModel)]="selectedBooking.availingService" [disabled]="true"
+                class="field-input" />
+        </label>
+    </div>
+
+    <!-- Rating Section (5 Stars) -->
+    <div class="rating-section">
+        <label for="rating" class="field-label">
+            <span class="label-text">
+            Rate Customer</span>
+        </label>
+        <div class="stars">
+            <i class="pi pi-star-fill" *ngFor="let star of [1, 2, 3, 4, 5]" 
+                [ngClass]="{ 'selected': rating >= star }" (click)="setRating(star)">
+            </i>
+        </div>
+    </div>
+
+    <!-- Feedback Section -->
+    <div class="feedback-section">
+        <label for="feedback" class="field-label">
+            <span class="label-text">
+            <i class="pi pi-comment"></i> Feedback</span>
+        </label>
+        <textarea pInputTextarea id="feedback" [(ngModel)]="selectedBooking.remarks" class="field-input" rows="4"></textarea>
+    </div>
+
+    <div class="flex-right">
+        <button pButton label="Submit Rating" class="approve-button" (click)="acceptBooking()"></button>
+    </div>
+</p-dialog>

@@ -1,0 +1,188 @@
+<body>
+  <!-- Header Section: A short message to welcome the user -->
+  <div class="header-message">
+    <p>You are expected to respond to</p> <!-- Update this message to match your content -->
+  </div>
+
+  <!-- Cards Container for Application Status -->
+  <div class="cards-container">
+    <!-- Card 1: Pending Applications -->
+    <div class="custom-card">
+      <div class="card-row">
+        <div class="number-container">
+          <h2>888</h2> <!-- Replace this number with dynamic data -->
+        </div>
+        <div class="icon-container">
+          <i class="pi pi-file-o"></i> <!-- Replace icon as needed -->
+        </div>
+      </div>
+      <div class="card-row">
+        <div class="description-container">
+          <p>Pending Applications</p> <!-- Replace with description text -->
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 2: Completed Applications -->
+    <div class="custom-card">
+      <div class="card-row">
+        <div class="number-container">
+          <h2>999</h2> <!-- Replace this number with dynamic data -->
+        </div>
+        <div class="icon-container">
+          <i class="pi pi-exclamation-circle"></i> <!-- Replace icon as needed -->
+        </div>
+      </div>
+      <div class="card-row">
+        <div class="description-container">
+          <p>User Reports</p> <!-- Replace with description text -->
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 3: In Progress -->
+    <div class="custom-card">
+      <div class="card-row">
+        <div class="number-container">
+          <h2>555</h2> <!-- Replace this number with dynamic data -->
+        </div>
+        <div class="icon-container">
+          <i class="pi pi-exclamation-circle"></i> <!-- Replace icon as needed -->
+        </div>
+      </div>
+      <div class="card-row">
+        <div class="description-container">
+          <p>Provider Reports</p> <!-- Replace with description text -->
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 4: Rejected Applications -->
+    <div class="custom-card">
+      <div class="card-row">
+        <div class="number-container">
+          <h2>777</h2> <!-- Replace this number with dynamic data -->
+        </div>
+        <div class="icon-container">
+          <i class="pi pi-bell"></i> <!-- Replace icon as needed -->
+        </div>
+      </div>
+      <div class="card-row">
+        <div class="description-container">
+          <p>Newly Registered Users</p> <!-- Replace with description text -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Services and Providers Section -->
+  <div class="services-container">
+    <!-- Left Division: Popular Services Chart -->
+    <div class="left-division">
+      <h3>Popular Services</h3>
+      <!-- Replace this chart with the actual data and options -->
+      <div style="align-self: center; min-width: 45rem;">
+        <p-chart type="bar" [data]="popularServicesData" [options]="chartOptions"></p-chart>
+      </div>
+
+    </div>
+
+    <!-- Right Division: Top Service Providers Table -->
+    <div class="right-division">
+      <h3>Top Service Providers</h3>
+      <!-- Providers Table with dynamic data -->
+      <p-table [value]="topProviders" [scrollable]="true" scrollHeight="400px">
+        <ng-template pTemplate="header">
+          <tr>
+            <th>Rank</th>
+            <th>Provider Name</th>
+            <th>Service Category</th>
+            <th>Acquired Bookings</th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-provider>
+          <tr>
+            <td><span class="rank-box">{{ provider.rank }}</span></td>
+            <td>{{ provider.name }}</td>
+            <td>{{ provider.serviceCategory }}</td>
+            <td>{{ provider.acquiredBookings }}</td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </div>
+  </div>
+
+  <!-- Third Section: System Current Status and Accumulated Bookings -->
+  <div class="third-section">
+    <!-- Left Division: System Current Status with Cards -->
+    <div class="current-status">
+      <p>System Current Status</p> <!-- Update the title based on content -->
+
+      <!-- Main Card Containing Status Information -->
+      <div class="status-card">
+        <!-- Container for 2 Columns -->
+        <div class="status-inner-cards-container">
+
+          <!-- Card 1: Total Number of Users -->
+          <div class="status-inner-card">
+            <div class="status-content">
+              <div class="status-icon">
+                <i class="pi pi-users"></i> <!-- Replace icon as needed -->
+              </div>
+              <h2>1200</h2> <!-- Replace with dynamic data -->
+              <div class="status-info">
+                <h4>Total Number of Registered Users</h4> <!-- Update description -->
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 2: Total Number of Bookings -->
+          <div class="status-inner-card">
+            <div class="status-content">
+              <div class="status-icon">
+                <i class="pi pi-calendar"></i> <!-- Replace icon as needed -->
+              </div>
+              <h2>3500</h2> <!-- Replace with dynamic data -->
+              <div class="status-info">
+                <h4>Total Number of Bookings</h4> <!-- Update description -->
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 3: Total Number of Registered Service Providers -->
+          <div class="status-inner-card">
+            <div class="status-content">
+              <div class="status-icon">
+                <i class="pi pi-briefcase"></i> <!-- Replace icon as needed -->
+              </div>
+              <h2>80</h2> <!-- Replace with dynamic data -->
+              <div class="status-info">
+                <h4>Registered Service Providers</h4> <!-- Update description -->
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 4: Total Number of Service Categories -->
+          <div class="status-inner-card">
+            <div class="status-content">
+              <div class="status-icon">
+                <i class="pi pi-tags"></i> <!-- Replace icon as needed -->
+              </div>
+              <h2>15</h2> <!-- Replace with dynamic data -->
+              <div class="status-info">
+                <h4>Recorded Service Categories</h4> <!-- Update description -->
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Division: Accumulated Bookings Line Chart -->
+    <div class="accumulated-bookings">
+      <!-- Replace this chart with actual accumulated bookings data -->
+      <p-chart type="line" [data]="accumulatedBookingsData" [options]="chartOptions"></p-chart>
+    </div>
+  </div>
+
+</body>

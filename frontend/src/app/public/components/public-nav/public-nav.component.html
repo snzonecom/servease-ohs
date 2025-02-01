@@ -1,0 +1,43 @@
+<!-- NAVIGATION BAR SECTION -->
+<nav>
+    <input type="checkbox" id="sidebar-active">
+    <label for="sidebar-active" class="open-sidebar-button">
+        <svg xmlns="http://www.w3.org/2000/svg" height="32" viewBox="0 -960 960 960" width="32">
+            <path d="M120-240v-80h720v80H120Zm0-200v-80h720v80H120Zm0-200v-80h720v80H120Z" />
+        </svg>
+    </label>
+    <label id="overlay" for="sidebar-active"></label>
+    <div class="links-container">
+        <label for="sidebar-active" class="close-sidebar-button">
+            <svg xmlns="http://www.w3.org/2000/svg" height="32" viewBox="0 -960 960 960" width="32">
+                <path
+                    d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z" />
+            </svg>
+        </label>
+
+        <a class="home-link" routerLink="/">LOGO GOES HERE</a>
+        <a routerLink="/">Home</a>
+        <a [routerLink]="['/']" fragment="service">Service Categories</a>
+        <a [routerLink]="['/']" fragment="about">About</a>
+        <a [routerLink]="['/']" fragment="faq" >FAQs</a>
+        <a routerLink="/login">Login</a>
+        <a (click)="showRegisterDialog()">Register</a>
+    </div>
+</nav>
+
+<!-- Dialog displaying Register Type -->
+<p-dialog header="Register an account to get started!" [modal]="true" [(visible)]="registerDialogVisible"
+    [style]="{ width: '40rem'}">
+    <span class="review-text">
+        Choose <b>Customer</b> if you’re seeking professional services for your household needs, or select <b>Service
+            Provider</b> to
+        offer your expertise and connect with potential clients.
+    </span>
+    <div class="register-options">
+        <button pButton label="Customer" routerLink="/user-register" class="customer-button"
+            (click)="closeRegisterDialog()"></button>
+        <div class="divider"></div>
+        <button pButton label="Service Provider" routerLink="/provider-register" class="provider-button"
+            (click)="closeRegisterDialog()"></button>
+    </div>
+</p-dialog>
