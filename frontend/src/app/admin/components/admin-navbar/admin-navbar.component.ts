@@ -2,8 +2,9 @@ import { Component, Output, EventEmitter, OnInit, HostListener } from '@angular/
 import { adminLinks } from './admin-links';
 import { animate, keyframes, style, transition, trigger } from '@angular/animations';
 import { Router, NavigationEnd } from '@angular/router';
+import { AuthService } from '../../../services/auth.service';
 
-interface SideNavToggle{
+interface SideNavToggle {
   screenWidth: number;
   collapsed: boolean;
 }
@@ -40,6 +41,8 @@ export class AdminNavbarComponent implements OnInit {
   screenWidth = 0;
   navData = adminLinks;
 
+  constructor(private authService: AuthService, private router: Router) { }
+
   @HostListener('window:resize', ['$event'])
   onResize(event: any) {
     this.screenWidth = window.innerWidth;
@@ -61,6 +64,17 @@ export class AdminNavbarComponent implements OnInit {
   closeSidenav(): void {
     this.collapsed = false;
     this.onToggleSideNav.emit({ collapsed: this.collapsed, screenWidth: this.screenWidth });
+  }
+
+  logout(): void {
+    this.authService.logout().subscribe({
+      next: () => {
+        this.router.navigate(['/login']);  // ✅ Redirect to login after logout
+      },
+      error: (err) => {
+        console.error('Logout failed:', err);
+      }
+    });
   }
 
 }

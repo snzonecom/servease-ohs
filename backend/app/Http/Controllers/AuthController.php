@@ -86,10 +86,10 @@ class AuthController extends Controller
             return response()->json(['errors' => $validator->errors()], 422);
         }
 
-        $businessLogoPath = $request->hasFile('businessLogo') ? 
+        $businessLogoPath = $request->hasFile('businessLogo') ?
             $request->file('businessLogo')->store('uploads/logos', 'public') : null;
 
-        $personIDPath = $request->hasFile('personID') ? 
+        $personIDPath = $request->hasFile('personID') ?
             $request->file('personID')->store('uploads/ids', 'public') : null;
 
         $userId = DB::table('users')->insertGetId([
@@ -122,29 +122,34 @@ class AuthController extends Controller
 
     public function login(Request $request)
     {
+        // Validate input
         $request->validate([
             'email' => 'required|string|email',
             'password' => 'required|string',
         ]);
 
+        // Attempt to authenticate the user
         if (!Auth::attempt($request->only('email', 'password'))) {
             throw ValidationException::withMessages([
                 'email' => ['The provided credentials are incorrect.'],
             ]);
         }
 
-        $user = $request->user();
+        // Retrieve the authenticated user
+        $user = Auth::user();  // Correct way to get the authenticated user
+
+        // Generate token
         $token = $user->createToken('auth_token')->plainTextToken;
 
+        // Return response with token and user info
         return response()->json([
             'token' => $token,
             'user' => [
                 'id' => $user->id,
                 'email' => $user->email,
-                'role' => $user->role // Include role in the response
+                'role' => $user->role  // Ensure the role column exists in your DB
             ]
         ]);
-        //return response()->json(['token' => $token, 'user' => $user]);
     }
 
     public function forgotPassword(Request $request)

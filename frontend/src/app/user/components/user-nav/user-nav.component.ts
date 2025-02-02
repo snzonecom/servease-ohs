@@ -1,6 +1,7 @@
 import { Component, AfterViewInit } from '@angular/core';
 import { ActivatedRoute, Router, NavigationEnd } from '@angular/router';
 import { filter } from 'rxjs/operators';
+import { AuthService } from '../../../services/auth.service';
 
 @Component({
   selector: 'app-user-nav',
@@ -11,7 +12,7 @@ export class UserNavComponent implements AfterViewInit {
 
   dropdownOpen = false;  // Start with the dropdown closed by default
 
-  constructor(private router: Router, private activatedRoute: ActivatedRoute) { }
+  constructor(private router: Router, private authService: AuthService, private activatedRoute: ActivatedRoute) { }
 
   // Close the dropdown when a link is clicked
   closeDropdown(): void {
@@ -36,6 +37,18 @@ export class UserNavComponent implements AfterViewInit {
         if (element) {
           element.scrollIntoView({ behavior: 'smooth' });
         }
+      }
+    });
+  }
+
+  // ✅ Logout Function
+  logout(): void {
+    this.authService.logout().subscribe({
+      next: () => {
+        this.router.navigate(['/login']);  // ✅ Redirect to login after logout
+      },
+      error: (err) => {
+        console.error('Logout failed:', err);
       }
     });
   }

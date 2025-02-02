@@ -32,7 +32,8 @@ export const adminLinks = [
     {
         routeLink: '',
         icon: 'pi pi-sign-in',
-        label: 'Logout'
+        label: 'Logout',
+        action: 'logout'
     }
 
 ];

@@ -14,7 +14,7 @@ export class LoginComponent {
   tncDialogVisible: boolean = false;
   errorMessage: string = '';
 
-  constructor(private authService: AuthService, private router: Router) {}
+  constructor(private authService: AuthService, private router: Router) { }
 
   showTncDialog() {
     this.tncDialogVisible = true;
@@ -32,17 +32,18 @@ export class LoginComponent {
 
     this.authService.login({ email: this.email, password: this.password }).subscribe({
       next: (response) => {
-        localStorage.setItem('token', response.token); // Save token
-    
+        localStorage.setItem('authToken', response.token);
+        localStorage.setItem('userRole', response.user.role);
+
         switch (response.user.role) {
           case 'admin':
-            this.router.navigate(['/admin']); // Admin route
+            this.router.navigate(['/admin/admin-dashboard']);
             break;
           case 'customer':
-            this.router.navigate(['/user/home']); // Customer route
+            this.router.navigate(['/user/home']);
             break;
           case 'provider':
-            this.router.navigate(['/user/pending-bookings']); // Service provider route
+            this.router.navigate(['/provider/provider-dashboard']);
             break;
           default:
             this.errorMessage = 'User role not recognized.';
@@ -54,4 +55,5 @@ export class LoginComponent {
       },
     });
   }
+
 }

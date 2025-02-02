@@ -13,10 +13,12 @@ import { HttpClientModule } from '@angular/common/http';  // For HTTP requests
 import { ProviderModule } from './provider/provider.module';
 import { UserModule } from './user/user.module';
 import { AdminModule } from './admin/admin.module';
+import { UnauthorizedComponent } from './services/unauthorized/unauthorized.component';
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    UnauthorizedComponent
   ],
   imports: [
     BrowserModule,

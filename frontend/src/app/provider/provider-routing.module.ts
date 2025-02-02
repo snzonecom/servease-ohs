@@ -12,7 +12,7 @@ import { RateCustomersComponent } from './components/rate-customers/rate-custome
 
 const routes: Routes = [
   {
-    path: 'provider',
+    path: '',
     component: ProviderLayoutComponent,
     children: [
       {path: 'provider-dashboard', component: DashboardComponent},

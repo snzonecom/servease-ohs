@@ -14,7 +14,7 @@ import { ProviderListComponent } from './components/provider-list/provider-list.
 
 const routes: Routes = [
   {
-    path: 'user',
+    path: '',
     component: UserLayoutComponent,
     children: [
       {path: 'home', component: UserHomeComponent},
