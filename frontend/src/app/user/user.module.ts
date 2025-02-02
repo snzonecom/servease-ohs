@@ -4,10 +4,6 @@ import { CommonModule } from '@angular/common';
 import { UserRoutingModule } from './user-routing.module';
 import { UserLayoutComponent } from './user-layout/user-layout.component';
 import { UserProfileComponent } from './components/user-profile/user-profile.component';
-import { PendingTransactionsComponent } from './components/pending-transactions/pending-transactions.component';
-import { SchedBookingComponent } from './components/sched-booking/sched-booking.component';
-import { CompletedBookingsComponent } from './components/completed-bookings/completed-bookings.component';
-import { RateProviderComponent } from './components/rate-provider/rate-provider.component';
 import { CardModule } from 'primeng/card';
 import { ImageModule } from 'primeng/image';
 import { FormsModule } from '@angular/forms';
@@ -20,19 +16,19 @@ import { BookServiceComponent } from './components/book-service/book-service.com
 import { ProviderListComponent } from './components/provider-list/provider-list.component';
 import { HttpClientModule } from '@angular/common/http';
 import { AccordionModule } from 'primeng/accordion';
+import { UserTransactionsComponent } from './components/user-transactions/user-transactions.component';
+import { TabViewModule } from 'primeng/tabview';
+
 
 @NgModule({
   declarations: [
     UserLayoutComponent,
     UserProfileComponent,
-    PendingTransactionsComponent,
-    SchedBookingComponent,
-    CompletedBookingsComponent,
-    RateProviderComponent,
     UserNavComponent,
     UserHomeComponent,
     BookServiceComponent,
     ProviderListComponent,
+    UserTransactionsComponent,
   ],
   imports: [
     CommonModule,
@@ -44,7 +40,8 @@ import { AccordionModule } from 'primeng/accordion';
     DialogModule,
     CarouselModule,
     HttpClientModule,
-    AccordionModule
+    AccordionModule,
+    TabViewModule
   ]
 })
 export class UserModule { }

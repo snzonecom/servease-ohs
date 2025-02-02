@@ -1,0 +1,422 @@
+<div class="tabview-container">
+    <p-tabView>
+        <!-- Pending Bookings Tab -->
+        <p-tabPanel header="Pending">
+            <div class="dashboard-header">
+                <h1 class="dashboard-title">Pending Bookings</h1>
+                <p class="dashboard-description">
+                    Stay on top of your upcoming appointments! Easily view and manage all the bookings that are yet to
+                    be confirmed or processed.
+                </p>
+            </div>
+
+            <div class="pending-bookings-content">
+                <div class="columns-container">
+                    <!-- Loop through bookings array and generate cards -->
+                    <div *ngFor="let booking of pendingBookings" class="card">
+                        <div class="card-content">
+                            <h3>{{ booking.servicesRequested }}</h3>
+                            <div class="info">
+                                <i class="pi pi-users"></i>
+                                <p>{{ booking.serviceProvider }}</p>
+                            </div>
+                            <div class="info">
+                                <i class="pi pi-calendar"></i>
+                                <p>{{ booking.selectedDate }}</p>
+                            </div>
+                            <div class="info">
+                                <i class="pi pi-clock"></i>
+                                <p>{{ booking.selectedTime }}</p>
+                            </div>
+                            <button class="see-booking-btn" (click)="showPendingBookingDetails(booking)">See
+                                Booking</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </p-tabPanel>
+
+        <!-- Ongoing Bookings Tab -->
+        <p-tabPanel header="Ongoing">
+            <div class="dashboard-header">
+                <h1 class="dashboard-title">Scheduled Bookings</h1>
+                <p class="dashboard-description">
+                    Keep track of your upcoming appointments effortlessly! View and manage all confirmed bookings in one
+                    place and stay organized.
+                </p>
+            </div>
+
+            <div class="pending-bookings-content">
+                <div class="columns-container">
+                    <!-- Loop through bookings array and generate cards -->
+                    <div *ngFor="let booking of bookings" class="card">
+                        <div class="card-content">
+                            <h3>{{ booking.servicesRequested }}</h3>
+                            <div class="info">
+                                <i class="pi pi-users"></i>
+                                <p>{{ booking.serviceProvider }}</p>
+                            </div>
+                            <div class="info">
+                                <i class="pi pi-calendar"></i>
+                                <p>{{ booking.selectedDate }}</p>
+                            </div>
+                            <div class="info">
+                                <i class="pi pi-clock"></i>
+                                <p>{{ booking.selectedTime }}</p>
+                            </div>
+                            <button class="see-booking-btn" (click)="showOngoingBookingDetails(booking)">View My
+                                Booking</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </p-tabPanel>
+
+        <!-- Completed Bookings Tab -->
+        <p-tabPanel header="Completed">
+            <div class="dashboard-header">
+                <h1 class="dashboard-title">Completed Transactions</h1>
+                <p class="dashboard-description">
+                    You've completed these bookings! Stay on top of everything and maintain a clear record of your past
+                    appointments.
+                </p>
+            </div>
+
+            <div class="pending-bookings-content">
+                <div class="columns-container">
+                    <!-- Loop through visibleBookings and generate cards -->
+                    <div *ngFor="let booking of visibleBookings" class="card">
+                        <div class="card-content">
+                            <h3>{{ booking.serviceProvider }}</h3>
+                            <div class="info">
+                                <i class="pi pi-cog"></i>
+                                <p>{{ booking.servicesRequested }}</p>
+                            </div>
+                            <div class="info">
+                                <i class="pi pi-calendar"></i>
+                                <p>{{ booking.selectedDate }}</p>
+                            </div>
+                            <button class="see-booking-btn" (click)="showCompletedBookingDetails(booking)">View
+                                Details</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </p-tabPanel>
+    </p-tabView>
+</div>
+
+<!-- Pending Booking Dialog -->
+<p-dialog header="Requested Booking Details" [modal]="true" [(visible)]="pendingDialogVisible"
+    [style]="{ width: '40rem'}"> <span class="review-text">
+        Here are the information about the booking request you have submitted. Please note that your booking is pending
+        confirmation and is not finalized until the service provider accepts it.
+    </span>
+
+    <!-- Form Fields displaying booking details -->
+    <div class="flex flex-column gap-3 mb-3">
+        <label for="serviceProvider" class="field-label">
+            <span class="label-text">
+                <i class="pi pi-id-card"></i> Service Provider
+            </span>
+            <input pInputText id="serviceProvider" [(ngModel)]="selectedBooking.serviceProvider" [disabled]="true"
+                class="field-input" />
+        </label>
+    </div>
+
+    <div class="flex flex-column gap-3 mb-3">
+        <label for="servicesRequested" class="field-label">
+            <span class="label-text">
+                <i class="pi pi-wrench"></i> Services Requested
+            </span>
+            <input pInputText id="servicesRequested" [(ngModel)]="selectedBooking.servicesRequested" [disabled]="true"
+                class="field-input" />
+        </label>
+    </div>
+
+    <div class="flex flex-column gap-3 mb-3">
+        <label for="selectedDate" class="field-label">
+            <span class="label-text">
+                <i class="pi pi-calendar"></i> Selected Date
+            </span>
+            <input pInputText id="selectedDate" [(ngModel)]="selectedBooking.selectedDate" [disabled]="true"
+                class="field-input" />
+        </label>
+    </div>
+
+    <div class="flex flex-column gap-3 mb-3">
+        <label for="selectedTime" class="field-label">
+            <span class="label-text">
+                <i class="pi pi-clock"></i> Selected Time
+            </span>
+            <input pInputText id="selectedTime" [(ngModel)]="selectedBooking.selectedTime" [disabled]="true"
+                class="field-input" />
+        </label>
+    </div>
+
+    <div class="flex flex-column gap-3 mb-3">
+        <label for="remarks" class="field-label">
+            <span class="label-text">
+                <i class="pi pi-comment"></i> Booking Remarks
+            </span>
+            <textarea pInputTextarea id="remarks" [(ngModel)]="selectedBooking.remarks" [disabled]="true"
+                class="field-input" rows="4"></textarea>
+        </label>
+    </div>
+
+    <div class="flex flex-column gap-3 mb-3">
+        <label for="dateOfSubmission" class="field-label">
+            <span class="label-text">
+                <i class="pi pi-calendar-plus"></i> Date of Submission
+            </span>
+            <input pInputText id="dateOfSubmission" [(ngModel)]="selectedBooking.dateOfSubmission" [disabled]="true"
+                class="field-input" />
+        </label>
+    </div>
+</p-dialog>
+
+<!-- Ongoing Booking Dialog -->
+<p-dialog header="Ongoing Service Transaction" [modal]="true" [(visible)]="ongoingDialogVisible"
+    [style]="{ width: '40rem'}"> <span class="review-text">
+        Here is the information about the booking request you have scheduled. Please be ready for your booked household
+        service.
+    </span>
+
+    <!-- Form Fields displaying booking details -->
+    <div class="flex flex-column gap-3 mb-3">
+        <label for="serviceProvider" class="field-label">
+            <span class="label-text">
+                <i class="pi pi-id-card"></i> Service Provider
+            </span>
+            <input pInputText id="serviceProvider" [(ngModel)]="selectedBooking.serviceProvider" [disabled]="true"
+                class="field-input" />
+        </label>
+    </div>
+
+    <div class="flex flex-column gap-3 mb-3">
+        <label for="servicesRequested" class="field-label">
+            <span class="label-text">
+                <i class="pi pi-wrench"></i> Services Requested
+            </span>
+            <input pInputText id="servicesRequested" [(ngModel)]="selectedBooking.servicesRequested" [disabled]="true"
+                class="field-input" />
+        </label>
+    </div>
+
+    <div class="flex flex-column gap-3 mb-3">
+        <label for="selectedDate" class="field-label">
+            <span class="label-text">
+                <i class="pi pi-calendar"></i> Selected Date
+            </span>
+            <input pInputText id="selectedDate" [(ngModel)]="selectedBooking.selectedDate" [disabled]="true"
+                class="field-input" />
+        </label>
+    </div>
+
+    <div class="flex flex-column gap-3 mb-3">
+        <label for="selectedTime" class="field-label">
+            <span class="label-text">
+                <i class="pi pi-clock"></i> Selected Time
+            </span>
+            <input pInputText id="selectedTime" [(ngModel)]="selectedBooking.selectedTime" [disabled]="true"
+                class="field-input" />
+        </label>
+    </div>
+
+    <div class="flex flex-column gap-3 mb-3">
+        <label for="remarks" class="field-label">
+            <span class="label-text">
+                <i class="pi pi-comment"></i> Booking Remarks
+            </span>
+            <textarea pInputTextarea id="remarks" [(ngModel)]="selectedBooking.remarks" [disabled]="true"
+                class="field-input" rows="4"></textarea>
+        </label>
+    </div>
+
+    <div class="flex flex-column gap-3 mb-3">
+        <label for="dateOfSubmission" class="field-label">
+            <span class="label-text">
+                <i class="pi pi-calendar-plus"></i> Date of Submission
+            </span>
+            <input pInputText id="dateOfSubmission" [(ngModel)]="selectedBooking.dateOfSubmission" [disabled]="true"
+                class="field-input" />
+        </label>
+    </div>
+</p-dialog>
+
+<!-- Completed Booking Dialog -->
+<p-dialog header="Transaction Details" [modal]="true" [(visible)]="completedDialogVisible" [style]="{ width: '40rem'}">
+    <span class="review-text">
+        Review the detailed information for this specific completed transaction. This includes all relevant details, to
+        ensure clarity and easy reference for your records.
+    </span>
+
+    <!-- Form Fields displaying booking details -->
+    <div class="flex flex-column gap-3 mb-3">
+        <label for="serviceProvider" class="field-label">
+            <span class="label-text">
+                <i class="pi pi-user"></i> Service Provider
+            </span>
+            <input pInputText id="serviceProvider" [(ngModel)]="selectedBooking.serviceProvider" [disabled]="true"
+                class="field-input" />
+        </label>
+    </div>
+
+    <div class="flex flex-column gap-3 mb-3">
+        <label for="servicesRequested" class="field-label">
+            <span class="label-text">
+                <i class="pi pi-wrench"></i> Services Requested
+            </span>
+            <input pInputText id="servicesRequested" [(ngModel)]="selectedBooking.servicesRequested" [disabled]="true"
+                class="field-input" />
+        </label>
+    </div>
+
+    <div class="flex flex-column gap-3 mb-3">
+        <label for="selectedDate" class="field-label">
+            <span class="label-text">
+                <i class="pi pi-calendar"></i> Selected Date
+            </span>
+            <input pInputText id="selectedDate" [(ngModel)]="selectedBooking.selectedDate" [disabled]="true"
+                class="field-input" />
+        </label>
+    </div>
+
+    <div class="flex flex-column gap-3 mb-3">
+        <label for="selectedTime" class="field-label">
+            <span class="label-text">
+                <i class="pi pi-clock"></i> Selected Time
+            </span>
+            <input pInputText id="selectedTime" [(ngModel)]="selectedBooking.selectedTime" [disabled]="true"
+                class="field-input" />
+        </label>
+    </div>
+
+    <div class="flex flex-column gap-3 mb-3">
+        <label for="remarks" class="field-label">
+            <span class="label-text">
+                <i class="pi pi-comment"></i> Remarks
+            </span>
+            <textarea pInputTextarea id="remarks" [(ngModel)]="selectedBooking.remarks" [disabled]="true"
+                class="field-input" rows="4"></textarea>
+        </label>
+    </div>
+
+    <div class="flex flex-column gap-3 mb-3">
+        <label for="dateOfSubmission" class="field-label">
+            <span class="label-text">
+                <i class="pi pi-calendar"></i> Date of Submission
+            </span>
+            <input pInputText id="dateOfSubmission" [(ngModel)]="selectedBooking.dateOfSubmission" [disabled]="true"
+                class="field-input" />
+        </label>
+    </div>
+
+    <!-- Action Buttons for Report and Rate Provider -->
+    <div class="flex-right">
+        <button pButton label="Report Provider" class="reject-button" (click)="openReportDialog()"></button>
+        <button pButton label="Rate Provider" class="approve-button" (click)="openRatingDialog()"></button>
+    </div>
+</p-dialog>
+
+<!-- Rating Service Provider Dialog -->
+<p-dialog header="Rate Service Provider" [modal]="true" [(visible)]="ratingDialogVisible" [style]="{ width: '40rem'}">
+    <span class="review-text">
+        Provide feedback and rate your service provider to improve service quality and enhance customer satisfaction.
+    </span>
+
+    <!-- Service Provider Information -->
+    <div class="flex flex-column gap-3 mb-3">
+        <label class="field-label">
+            <span class="label-text">
+                <i class="pi pi-user"></i> Service Provider
+            </span>
+            <input pInputText [(ngModel)]="selectedBooking.serviceProvider" [disabled]="true" class="field-input" />
+        </label>
+    </div>
+
+    <div class="flex flex-column gap-3 mb-3">
+        <label class="field-label">
+            <span class="label-text">
+                <i class="pi pi-wrench"></i> Service Availed
+            </span>
+            <input pInputText [(ngModel)]="selectedBooking.servicesRequested" [disabled]="true" class="field-input" />
+        </label>
+    </div>
+
+    <!-- Star Rating -->
+    <div class="rating-section">
+        <label class="field-label">
+            <span class="label-text">Rate Service</span>
+        </label>
+        <div class="stars">
+            <i class="pi pi-star" *ngFor="let star of [1, 2, 3, 4, 5]" [ngClass]="{ 'selected': rating >= star }"
+                (click)="setRating(star)">
+            </i>
+        </div>
+    </div>
+
+    <!-- Feedback Section -->
+    <div class="flex flex-column gap-3 mb-3">
+        <label class="field-label">
+            <span class="label-text">
+                <i class="pi pi-comment"></i> Additional Feedback
+            </span>
+            <textarea pInputTextarea [(ngModel)]="ratingFeedback" class="field-input" rows="4"
+                placeholder="Provide your feedback here..."></textarea>
+        </label>
+    </div>
+
+    <div class="flex-right">
+        <button pButton label="Submit Rating" class="approve-button" (click)="submitRating()"></button>
+    </div>
+</p-dialog>
+
+<!-- Report Service Provider Dialog -->
+<p-dialog header="Report Service Provider" [modal]="true" [(visible)]="reportDialogVisible" [style]="{ width: '40rem'}">
+    <span class="review-text">
+        If you encountered issues with this service provider, please provide details and attach proof if necessary.
+    </span>
+
+    <!-- Report Title -->
+    <div class="flex flex-column gap-3 mb-3">
+        <label class="field-label">
+            <span class="label-text">
+                <i class="pi pi-book"></i> Report Title
+            </span>
+            <input pInputText [(ngModel)]="reportTitle" placeholder="Enter report title" class="field-input" />
+        </label>
+    </div>
+
+    <!-- Report Description -->
+    <div class="flex flex-column gap-3 mb-3">
+        <label class="field-label">
+            <span class="label-text">
+                <i class="pi pi-comment"></i> Description of Report
+            </span>
+            <textarea pInputTextarea [(ngModel)]="reportDescription" class="field-input" rows="4"
+                placeholder="Describe the issue..."></textarea>
+        </label>
+    </div>
+
+    <!-- Proof Attachments -->
+    <div class="flex flex-column gap-3 mb-3">
+        <label class="field-label">
+            <span class="label-text">
+                <i class="pi pi-paperclip"></i> Attach Proof (Images)
+            </span>
+            <input type="file" multiple (change)="handleFileUpload($event)" class="file-input" />
+        </label>
+        <div class="preview-container">
+            <div *ngFor="let file of attachedProofs; let i = index" class="image-preview">
+                <img [src]="file.preview" alt="Proof Image" class="preview-image">
+                <button class="remove-image" (click)="removeAttachment(i)">×</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="flex-right">
+        <button pButton label="Submit Report" class="approve-button" (click)="submitReport()"></button>
+        <button pButton label="Cancel" class="reject-button" (click)="closeReportDialog()"></button>
+    </div>
+</p-dialog>
