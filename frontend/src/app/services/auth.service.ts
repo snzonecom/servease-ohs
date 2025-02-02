@@ -23,9 +23,15 @@ export class AuthService {
       tap((response: any) => {
         localStorage.setItem('authToken', response.token);
         localStorage.setItem('userRole', response.user.role);
+
+        // ✅ Store provider_id if available
+        if (response.provider_id) {
+          localStorage.setItem('provider_id', response.provider_id);
+        }
       })
     );
   }
+
 
   getUser(): Observable<any> {
     return this.http.get(`${this.apiUrl}/user`);

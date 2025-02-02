@@ -151,6 +151,7 @@ class AuthController extends Controller
     
         // ✅ Retrieve the authenticated user
         $user = Auth::user();
+        $providerId = null; // Default value for non-provider users
     
         // ✅ Check if the user is a service provider
         if ($user->role === 'provider') {
@@ -163,21 +164,25 @@ class AuthController extends Controller
                     'error' => 'Your account is not yet approved. Please wait for admin verification.'
                 ], 403);
             }
+    
+            $providerId = $provider->provider_id; // ✅ Get provider_id if approved
         }
     
         // ✅ Generate token
         $token = $user->createToken('auth_token')->plainTextToken;
     
-        // ✅ Return response with token and user info
+        // ✅ Return response with token, user info, and provider_id (if applicable)
         return response()->json([
             'token' => $token,
             'user' => [
                 'id' => $user->id,
                 'email' => $user->email,
                 'role' => $user->role,
-            ]
+            ],
+            'provider_id' => $providerId // ✅ Include provider_id if the user is a provider
         ]);
     }
+    
     
 
     public function forgotPassword(Request $request)

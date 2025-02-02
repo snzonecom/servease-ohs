@@ -122,5 +122,48 @@ class ProviderController extends Controller
         return response()->json($approvedProviders);
     }
     
+    // For showing providers under a certain category
+    public function getProvidersByCategory($categoryId)
+    {
+        $providers = Provider::with('user')
+            ->where('account_status', 'approved')
+            ->where('service_type', $categoryId)
+            ->get()
+            ->map(function ($provider) {
+                return [
+                    'provider_id' => $provider->provider_id,
+                    'businessName' => $provider->provider_name,
+                    'logo' => $provider->profile_pic ? asset($provider->profile_pic) : null,
+                    'rating' => 4.5, // You can replace this with actual ratings logic
+                    'location' => $provider->city . ', ' . $provider->province
+                ];
+            });
+    
+        return response()->json($providers);
+    }
+
+    //For showing details of selected service provider
+    public function getProviderDetails($id)
+    {
+        $provider = Provider::with(['user', 'services']) // Assuming there's a relation for services
+            ->where('provider_id', $id)
+            ->first();
+
+        if (!$provider) {
+            return response()->json(['message' => 'Provider not found'], 404);
+        }
+
+        return response()->json([
+            'provider_id' => $provider->provider_id,
+            'provider_name' => $provider->provider_name,
+            'profile_pic' => $provider->profile_pic ? asset($provider->profile_pic) : null,
+            'email' => $provider->user->email,
+            'location' => "{$provider->city}, {$provider->province}",
+            'description' => $provider->brn,
+            'services' => $provider->services, // Assuming related services are fetched
+            'feedbacks' => [] // Add feedback logic here if available
+        ]);
+    }
+
     
 }

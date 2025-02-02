@@ -22,9 +22,10 @@ return new class extends Migration
             // Foreign key constraint
             $table->foreign('provider_id')->references('provider_id')->on('tbl_provider_info');
 
-            // Set AUTO_INCREMENT start value
-            DB::statement('ALTER TABLE tbl_services AUTO_INCREMENT = 105000;');
         });
+
+        // Set AUTO_INCREMENT start value
+        DB::statement('ALTER TABLE tbl_services AUTO_INCREMENT = 105000;');
     }
 
     /**

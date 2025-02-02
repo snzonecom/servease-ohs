@@ -8,13 +8,10 @@
                     <div class="card-content">
                         <!-- Business Information -->
                         <div class="business-info">
-                            <img src="https://placehold.co/600x600" alt="Business Logo" class="business-logo">
-                            <h3 class="business-name">Business Name</h3>
-                            <p class="business-email"><i class="pi pi-envelope"></i> example_business.com</p>
-                            <p class="business-address"><i class="pi pi-map-marker"></i> City, Province
-                            </p>
-                            <p class="business-description">This business offers high-quality services to meet your
-                                needs.</p>
+                            <img [src]="provider.profile_pic" alt="Business Logo" class="business-logo">
+                            <h3 class="business-name">{{ provider.provider_name }}</h3>
+                            <p class="business-email"><i class="pi pi-envelope"></i> {{ provider.email }}</p>
+                            <p class="business-address"><i class="pi pi-map-marker"></i> {{ provider.location }}</p>
                             <button class="book-now-btn"
                                 onclick="document.getElementById('book-now-section').scrollIntoView({behavior: 'smooth'})">
                                 Book a Service with Them
@@ -30,14 +27,12 @@
                             <div class="services">
                                 <p-card *ngFor="let service of availableServices" class="service-card">
                                     <div class="service-header">
-                                        <h3>{{ service.name }}</h3>
+                                        <h3>{{ service.service_name }}</h3>
                                     </div>
                                     <div class="service-content">
-                                        <div class="service-description">
-                                            <p>{{ service.description }}</p>
-                                        </div>
+                                        <p>{{ service.service_description }}</p>
                                         <div class="service-price">
-                                            <span class="price">Starting from {{ service.price }}</span>
+                                            <span class="price">Starting from ₱{{ service.price_start }}</span>
                                         </div>
                                     </div>
                                 </p-card>
@@ -72,7 +67,7 @@
                             </div>
 
                             <!-- Show All Reviews Button -->
-                            <button *ngIf="feedbacks.length > 3 && !showAllReviews" (click)="toggleReviews()"
+                            <!-- <button *ngIf="feedbacks.length > 3 && !showAllReviews" (click)="toggleReviews()"
                                 class="show-reviews-btn">
                                 Show All Reviews
                             </button>
@@ -80,7 +75,7 @@
                             <button *ngIf="feedbacks.length > 3 && showAllReviews" (click)="toggleReviews()"
                                 class="show-reviews-btn">
                                 Show Less Reviews
-                            </button>
+                            </button> -->
                         </div>
 
 
@@ -105,9 +100,8 @@
                             <div class="book-now-services-grid">
                                 <div *ngFor="let service of availableServices" [class.selected]="service.isSelected"
                                     class="book-now-service-card" (click)="toggleServiceSelection(service)">
-                                    <h3>{{ service.name }}</h3>
-                                    <p>{{ service.description }}</p>
-                                    <span class="price">{{ service.price }}</span>
+                                    <h3>{{ service.service_name }}</h3>
+                                    <span class="price">Starting price <br> {{ service.price_start }}</span>
                                 </div>
                             </div>
                         </div>

@@ -16,8 +16,8 @@ const routes: Routes = [
     children: [
       {path: 'home', component: UserHomeComponent},
       {path: 'user-profile', component: UserProfileComponent},
-      {path: 'book-service', component: BookServiceComponent},
-      {path: 'providers-list/:id', component: ProviderListComponent},
+      {path: 'book-service/:providerId', component: BookServiceComponent},
+      {path: 'providers-list/:categoryId', component: ProviderListComponent},
       {path: 'user-transactions', component: UserTransactionsComponent},
     ]
   }

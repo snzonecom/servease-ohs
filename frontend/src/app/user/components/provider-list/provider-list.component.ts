@@ -1,66 +1,42 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-provider-list',
   templateUrl: './provider-list.component.html',
   styleUrl: './provider-list.component.css'
 })
-export class ProviderListComponent {
+export class ProviderListComponent implements OnInit {
   registerDialogVisible: boolean = false;
   loginFirstVisible: boolean = false;
+  providers: any[] = [];
+  categoryId: number | null = null;
 
-  // Function to show the dialog
+  constructor(private route: ActivatedRoute, private http: HttpClient) { }
+
+  ngOnInit(): void {
+    this.categoryId = +this.route.snapshot.paramMap.get('categoryId')!;
+    this.fetchProvidersByCategory(this.categoryId);
+  }
+
+  // ✅ Fetch providers based on the selected category
+  fetchProvidersByCategory(categoryId: number): void {
+    this.http.get<any[]>(`http://127.0.0.1:8000/api/providers-by-category/${categoryId}`).subscribe(
+      (data) => {
+        this.providers = data;
+      },
+      (error) => {
+        console.error('Error fetching providers:', error);
+      }
+    );
+  }
+
   showRegisterDialog() {
     this.registerDialogVisible = true;
   }
 
   loginFirstDialog() {
-    this.registerDialogVisible = true;
+    this.loginFirstVisible = true;
   }
-
-  providers = [
-    {
-      logo: 'https://placehold.co/600x600',
-      businessName: 'Business 1',
-      rating: 4.0,
-      location: 'City, Province',
-      description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla vel nulla sit amet odio posuere fermentum. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Integer egestas, ligula nec faucibus interdum.'
-    },
-    {
-      logo: 'https://placehold.co/600x600',
-      businessName: 'Business 2',
-      rating: 4.5,
-      location: 'City, Province',
-      description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla vel nulla sit amet odio posuere fermentum. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Integer egestas, ligula nec faucibus interdum.'
-    },
-    {
-      logo: 'https://placehold.co/600x600',
-      businessName: 'Business 3',
-      rating: 3.5,
-      location: 'City, Province',
-      description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla vel nulla sit amet odio posuere fermentum. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Integer egestas, ligula nec faucibus interdum.'
-    },
-    {
-      logo: 'https://placehold.co/600x600',
-      businessName: 'Business 4',
-      rating: 5.0,
-      location: 'City, Province',
-      description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla vel nulla sit amet odio posuere fermentum. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Integer egestas, ligula nec faucibus interdum.'
-    },
-    {
-      logo: 'https://placehold.co/600x600',
-      businessName: 'Business 5',
-      rating: 4.5,
-      location: 'City, Province',
-      description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla vel nulla sit amet odio posuere fermentum. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Integer egestas, ligula nec faucibus interdum.'
-    },
-    {
-      logo: 'https://placehold.co/600x600',
-      businessName: 'Business 6',
-      rating: 3.0,
-      location: 'City, Province',
-      description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla vel nulla sit amet odio posuere fermentum. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Integer egestas, ligula nec faucibus interdum.'
-    }
-  ];
-
 }

@@ -19,8 +19,7 @@
                         <span class="rating-number">{{ provider.rating }}</span>
                     </div>
                     <p class="business-location"><i class="pi pi-map-marker"></i> {{ provider.location }}</p>
-                    <p class="business-description">{{ provider.description }}</p>
-                    <button class="book-now-btn" [routerLink]="['/user/book-service']">Book Now</button>
+                    <button class="book-now-btn" [routerLink]="['/user/book-service', provider.provider_id]">Book Now</button>
                 </div>
             </div>
         </div>

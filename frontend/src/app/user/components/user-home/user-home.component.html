@@ -86,12 +86,12 @@
         <div class="service-columns">
             <div *ngFor="let service of services" class="service-column">
                 <div class="service-card">
-                    <h3 class="service-name">{{ service.name }}</h3>
-                    <p class="service-description">{{ service.description }}</p>
-                    <a [routerLink]="['/user/providers-list']" style="text-decoration: none; color: white;"><button
-                            class="view-providers-btn">
-                            View Available Providers
-                        </button></a>
+                    <h3 class="service-name">{{ service.category_name }}</h3>
+                    <p class="service-description">{{ service.category_description }}</p>
+                    <a [routerLink]="['/user/providers-list', service.category_id]"
+                        style="text-decoration: none; color: white;">
+                        <button class="view-providers-btn">View Available Providers</button>
+                    </a>
                 </div>
             </div>
         </div>

@@ -22,10 +22,11 @@ Route::middleware('auth:sanctum')->group(function () {
 
 /* ✅ Service Categories */
 Route::get('/service-category', [ServiceCategoryController::class, 'index']);
-Route::get('/service-categories', [ServiceCategoryController::class, 'getCategories']);
+Route::get('/service-categories', [ServiceCategoryController::class, 'getCategories']); // display all categories
 Route::post('/service-category', [ServiceCategoryController::class, 'store']);
 Route::put('/service-category/{id}', [ServiceCategoryController::class, 'update']);
 Route::delete('/service-category/{id}', [ServiceCategoryController::class, 'destroy']);
+Route::get('/providers-by-category/{categoryId}', [ProviderController::class, 'getProvidersByCategory']);
 
 /* ✅ Service Providers */
 Route::prefix('providers')->group(function () {
@@ -38,6 +39,8 @@ Route::prefix('providers')->group(function () {
     Route::get('/count/approved', [ProviderController::class, 'countApprovedProviders']);
 });
 
+Route::get('/provider/{id}', [ProviderController::class, 'getProviderDetails']); // get details of a specific service provider
+
 // FOR ADMIN - PENDING APPLICATIONS PAGE
 Route::get('/pending-providers', [ProviderController::class, 'pendingProviders']);
 
@@ -47,8 +50,8 @@ Route::get('/approved-providers', [ProviderController::class, 'approvedProviders
 
 // PROVIDER SERVICES
 Route::middleware('auth:sanctum')->group(function () {
-    Route::get('/provider/services', [ServiceController::class, 'index']);
-    Route::post('/provider/services', [ServiceController::class, 'store']);
-    Route::put('/provider/services/{id}', [ServiceController::class, 'update']);
-    Route::delete('/provider/services/{id}', [ServiceController::class, 'destroy']);
+    Route::get('/provider/{providerId}/services', [ServiceController::class, 'getServicesByProvider']);
+    Route::post('/provider/{providerId}/services', [ServiceController::class, 'store']);
+    Route::put('/provider/{providerId}/services/{id}', [ServiceController::class, 'update']);
+    Route::delete('/provider/{providerId}/services/{id}', [ServiceController::class, 'destroy']);
 });

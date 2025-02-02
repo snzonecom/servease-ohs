@@ -14,9 +14,9 @@ export class ProviderServicesComponent implements OnInit {
   isEditMode: boolean = false;
   selectedService: any = {};
 
-  private apiUrl = 'http://127.0.0.1:8000/api/provider/services';
+  private apiUrl = 'http://127.0.0.1:8000/api/provider';
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   ngOnInit(): void {
     this.fetchServices();
@@ -24,19 +24,39 @@ export class ProviderServicesComponent implements OnInit {
 
   // ✅ Get Token from localStorage
   private getAuthHeaders() {
-    const token = localStorage.getItem('authToken');  // Make sure you save the token on login
+    const token = localStorage.getItem('authToken');
     return new HttpHeaders({
       'Authorization': `Bearer ${token}`
     });
   }
 
-  // ✅ Fetch services
-  fetchServices() {
-    this.http.get<any[]>(this.apiUrl, { headers: this.getAuthHeaders() }).subscribe(
-      (data) => this.services = data,
-      (error) => console.error('Error fetching services', error)
+  // ✅ Fetch services for the logged-in provider
+  fetchServices(): void {
+    const providerId = localStorage.getItem('provider_id');
+
+    if (!providerId) {
+      Swal.fire('Error!', 'Provider ID not found. Please log in again.', 'error');
+      return;
+    }
+
+    this.http.get<any[]>(`${this.apiUrl}/${providerId}/services`, { headers: this.getAuthHeaders() }).subscribe(
+      (data) => {
+        this.services = data;
+
+        // ✅ Check if the services are empty
+        if (this.services.length === 0) {
+          console.log('No services found for this provider.');
+        }
+      },
+      (error) => {
+        console.error('Error fetching services:', error);
+
+        // ✅ Improved error handling
+        Swal.fire('Error!', 'Failed to fetch services. Please try again later.', 'error');
+      }
     );
   }
+
 
   filteredServices() {
     return this.services.filter(service =>
@@ -59,9 +79,18 @@ export class ProviderServicesComponent implements OnInit {
   // ✅ Save Service (Add or Update)
   saveService() {
     const headers = this.getAuthHeaders();
+    const providerId = localStorage.getItem('provider_id');
+
+    if (!providerId) {
+      Swal.fire('Error!', 'Provider ID not found.', 'error');
+      return;
+    }
+
+    this.selectedService.provider_id = providerId;
 
     if (this.isEditMode) {
-      this.http.put(`${this.apiUrl}/${this.selectedService.service_id}`, this.selectedService, { headers }).subscribe(
+      // ✅ Updated API endpoint for updating a service
+      this.http.put(`${this.apiUrl}/${providerId}/services/${this.selectedService.service_id}`, this.selectedService, { headers }).subscribe(
         () => {
           Swal.fire('Success!', 'Service updated successfully!', 'success');
           this.fetchServices();
@@ -73,7 +102,8 @@ export class ProviderServicesComponent implements OnInit {
         }
       );
     } else {
-      this.http.post(this.apiUrl, this.selectedService, { headers }).subscribe(
+      // ✅ API for adding remains the same
+      this.http.post(`${this.apiUrl}/${providerId}/services`, this.selectedService, { headers }).subscribe(
         () => {
           Swal.fire('Success!', 'Service added successfully!', 'success');
           this.fetchServices();
@@ -87,7 +117,10 @@ export class ProviderServicesComponent implements OnInit {
     }
   }
 
-  deleteService(id: number) {
+  // ✅ Delete Service (with providerId in the URL)
+  deleteService(serviceId: number) {
+    const providerId = localStorage.getItem('provider_id');
+  
     Swal.fire({
       title: 'Are you sure?',
       text: 'This service will be deleted permanently!',
@@ -97,9 +130,11 @@ export class ProviderServicesComponent implements OnInit {
       cancelButtonText: 'Cancel'
     }).then((result) => {
       if (result.isConfirmed) {
-        this.http.delete(`${this.apiUrl}/${id}`, { headers: this.getAuthHeaders() }).subscribe(
+        this.http.delete(`${this.apiUrl}/${providerId}/services/${serviceId}`, { headers: this.getAuthHeaders() }).subscribe(
           () => {
             Swal.fire('Deleted!', 'Service has been deleted.', 'success');
+  
+            // ✅ Refetch services after deletion (even if 0 remain)
             this.fetchServices();
           },
           (error) => {
@@ -110,4 +145,7 @@ export class ProviderServicesComponent implements OnInit {
       }
     });
   }
+  
+
+
 }

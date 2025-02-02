@@ -46,21 +46,52 @@ class ServiceController extends Controller
         return response()->json(['message' => 'Service added successfully!', 'service' => $service], 201);
     }
 
-    // ✅ Update an existing service
-    public function update(Request $request, $id)
-    {
-        $service = Service::findOrFail($id);
-        $service->update($request->all());
-
-        return response()->json(['message' => 'Service updated successfully!', 'service' => $service]);
-    }
+        // ✅ Update an existing service
+        public function update(Request $request, $providerId, $id)
+        {
+            $user = auth()->user();
+        
+            // ✅ Ensure the service belongs to the logged-in provider
+            $service = Service::where('provider_id', $providerId)->where('service_id', $id)->first();
+        
+            if (!$service) {
+                return response()->json(['error' => 'Service not found for this provider.'], 404);
+            }
+        
+            $request->validate([
+                'service_name' => 'required|string|max:255',
+                'service_description' => 'nullable|string',
+                'price_start' => 'required|numeric',
+            ]);
+        
+            $service->update($request->all());
+        
+            return response()->json(['message' => 'Service updated successfully!', 'service' => $service]);
+        }
 
     // ✅ Delete a service
-    public function destroy($id)
+    public function destroy($providerId, $id)
     {
-        $service = Service::findOrFail($id);
+        $user = auth()->user();
+    
+        // ✅ Ensure the service belongs to the logged-in provider
+        $service = Service::where('provider_id', $providerId)->where('service_id', $id)->first();
+    
+        if (!$service) {
+            return response()->json(['error' => 'Service not found for this provider.'], 404);
+        }
+    
         $service->delete();
-
+    
         return response()->json(['message' => 'Service deleted successfully.']);
+    }
+
+    // ✅ Fetch Services by Provider ID (Handle empty results gracefully)
+    public function getServicesByProvider($providerId)
+    {
+        $services = Service::where('provider_id', $providerId)->get();
+    
+        // ✅ Return an empty array instead of an error if no services are found
+        return response()->json($services);
     }
 }

@@ -28,6 +28,11 @@
                 </div>
             </div>
         </div>
+
+        <!-- ✅ Empty State Message (When No Services Exist) -->
+        <div *ngIf="services.length === 0" class="no-services-message">
+            <p>No services found. Click <i>"Add Service"</i> to get started!</p>
+        </div>
     </div>
 
     <!-- ✅ Add/Edit Service Dialog -->

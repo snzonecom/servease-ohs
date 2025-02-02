@@ -45,5 +45,10 @@ class Provider extends Model
     {
         return $this->belongsTo(ServiceCategory::class, 'service_type', 'category_id');
     }
+
+    public function services()
+    {
+        return $this->hasMany(Service::class, 'provider_id', 'provider_id');
+    }
     
 }
