@@ -17,6 +17,9 @@ return new class extends Migration
             $table->text('category_description')->nullable();
             $table->timestamps();
         });
+
+        // Set AUTO_INCREMENT start value
+        DB::statement('ALTER TABLE tbl_categories AUTO_INCREMENT = 156785;');
     }
 
     /**

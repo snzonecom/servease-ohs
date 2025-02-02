@@ -22,6 +22,9 @@ return new class extends Migration
             $table->timestamps();
         });
 
+        // Set custom auto-increment starting value
+        DB::statement('ALTER TABLE users AUTO_INCREMENT = 542367;');
+
         Schema::create('password_reset_tokens', function (Blueprint $table) {
             $table->string('email')->primary();
             $table->string('token');

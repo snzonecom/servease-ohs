@@ -19,7 +19,7 @@
                     <h2>{{ service.category_name }}</h2>
                 </div>
                 <div class="icon-container">
-                    <i [class]="service.serviceIcon"></i>
+                    <i class="pi pi-th-large"></i>
                 </div>
             </div>
             <div class="card-row">
@@ -40,21 +40,22 @@
             <label for="categoryName" class="font-semibold">
                 Service Name
             </label>
-            <input pInputText id="categoryName" placeholder="Enter service name" class="w-full" />
+            <input pInputText [(ngModel)]="newCategory.category_name" placeholder="Enter service name" class="w-full" />
         </div>
 
         <div class="flex flex-column align-items-start gap-3 mb-3">
             <label for="categoryDescription" class="font-semibold">
                 Service Description
             </label>
-            <textarea pInputText id="categoryDescription" class="w-full">Enter service description</textarea>
+            <textarea pInputText [(ngModel)]="newCategory.category_description" placeholder="Enter service name"
+                class="w-full">Enter service description</textarea>
         </div>
 
         <div class="flex justify-content-end gap-2">
             <button p-button (click)="addDialogVisible = false" class="cancel-button">
                 Cancel
             </button>
-            <button p-button (click)="addDialogVisible = false" class="submit-button">
+            <button p-button (click)="addServiceCategory()" class="submit-button">
                 Add New Category
             </button>
         </div>
@@ -67,26 +68,23 @@
             <label for="categoryName" class="font-semibold">
                 Service Name
             </label>
-            <input pInputText id="categoryName" value="Electrical Repair" placeholder="Enter service name"
-                class="w-full" />
+            <input pInputText [(ngModel)]="selectedCategory.category_name" />
         </div>
 
         <div class="flex flex-column align-items-start gap-3 mb-3">
             <label for="categoryDescription" class="font-semibold">
                 Service Description
             </label>
-            <textarea pInputText id="categoryDescription" placeholder="Enter service description"
-                class="w-full">We provide comprehensive electrical repair services, ensuring safety and reliability.</textarea>
+            <textarea pInputText [(ngModel)]="selectedCategory.category_description"></textarea>
         </div>
 
         <div class="flex justify-content-end gap-2">
-            <button p-button (click)="editDialogVisible = false" class="cancel-button">
-                Cancel
+            <button p-button (click)="deleteServiceCategory(selectedCategory.category_id)" class="cancel-button">
+                Delete This Category
             </button>
-            <button p-button (click)="editDialogVisible = false" class="submit-button">
+            <button p-button (click)="updateServiceCategory()" class="submit-button">
                 Save New Changes
             </button>
         </div>
     </p-dialog>
-
 </body>

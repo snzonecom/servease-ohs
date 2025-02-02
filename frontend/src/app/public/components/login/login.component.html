@@ -1,56 +1,61 @@
 <!-- Login Section -->
 <div class="full-screen-container">
-    <div class="login-box">
-      <div class="login-header">
-        <img src="https://placehold.co/600x600" height="120px">
-        <header>Login</header>
-      </div>
-  
-      <div *ngIf="errorMessage" class="error-message">{{ errorMessage }}</div>
-  
-      <div class="input-box">
-        <input type="text" [(ngModel)]="email" class="input-field" placeholder="Email" autocomplete="off" required>
-      </div>
-  
-      <div class="input-box">
-        <input type="password" [(ngModel)]="password" class="input-field" placeholder="Password" autocomplete="off" required>
-      </div>
-  
-      <div class="forgot">
-        <section>
-          <a (click)="showTncDialog()">Terms and Conditions</a>
-        </section>
-        <section>
-          <a routerLink="/forgot-password">Forgot password?</a>
-        </section>
-      </div>
-  
-      <div class="input-submit">
-        <button class="submit-btn" id="submit" (click)="login()">Sign In</button>
-      </div>
-  
-      <div class="sign-up-link">
-        <p>Don't have account? <a (click)="showRegisterDialog()">Register</a></p>
-      </div>
+  <div class="login-box">
+    <div class="login-header">
+      <img src="assets/img/servease-logo.png" height="200px">
+      <header>Login</header>
+    </div>
+
+    <div *ngIf="errorMessage" class="error-message">
+      {{ errorMessage }}
+    </div>
+
+    <div class="input-box">
+      <input type="text" [(ngModel)]="email" class="input-field" placeholder="Email" autocomplete="off" required>
+    </div>
+
+    <div class="input-box">
+      <input type="password" [(ngModel)]="password" class="input-field" placeholder="Password" autocomplete="off"
+        required>
+    </div>
+
+    <div class="forgot">
+      <section>
+        <a (click)="showTncDialog()">Terms and Conditions</a>
+      </section>
+      <section>
+        <a routerLink="/forgot-password">Forgot password?</a>
+      </section>
+    </div>
+
+    <div class="input-submit">
+      <button class="submit-btn" id="submit" (click)="login()">Sign In</button>
+    </div>
+
+    <div class="sign-up-link">
+      <p>Don't have account? <a (click)="showRegisterDialog()">Register</a></p>
     </div>
   </div>
-  
-  <!-- Dialogs -->
-  <p-dialog header="Register an account to get started!" [modal]="true" [(visible)]="registerDialogVisible"
-      [style]="{ width: '40rem'}">
-    <span class="review-text">
-      Choose <b>Customer</b> if you’re seeking professional services for your household needs, or select <b>Service Provider</b> to offer your expertise and connect with potential clients.
-    </span>
-    <div class="register-options">
-      <button pButton label="Customer" routerLink="/user-register" class="customer-button"></button>
-      <div class="divider"></div>
-      <button pButton label="Service Provider" routerLink="/provider-register" class="provider-button"></button>
-    </div>
-  </p-dialog>
-  
-  <p-dialog header="Terms and Conditions" [modal]="true" [(visible)]="tncDialogVisible" [style]="{ width: '40rem'}">
-    <span class="review-text">
-      Lorem ipsum dolor sit amet consectetur adipisicing elit. Hic, autem, quis tempore fugiat deleniti ea rerum modi repellendus nobis fuga asperiores sapiente. Suscipit corporis laudantium voluptatibus placeat deserunt consectetur quia.
-    </span>
-  </p-dialog>
-  
+</div>
+
+<!-- Dialogs -->
+<p-dialog header="Register an account to get started!" [modal]="true" [(visible)]="registerDialogVisible"
+  [style]="{ width: '40rem'}">
+  <span class="review-text">
+    Choose <b>Customer</b> if you’re seeking professional services for your household needs, or select <b>Service
+      Provider</b> to offer your expertise and connect with potential clients.
+  </span>
+  <div class="register-options">
+    <button pButton label="Customer" routerLink="/user-register" class="customer-button"></button>
+    <div class="divider"></div>
+    <button pButton label="Service Provider" routerLink="/provider-register" class="provider-button"></button>
+  </div>
+</p-dialog>
+
+<p-dialog header="Terms and Conditions" [modal]="true" [(visible)]="tncDialogVisible" [style]="{ width: '40rem'}">
+  <span class="review-text">
+    Lorem ipsum dolor sit amet consectetur adipisicing elit. Hic, autem, quis tempore fugiat deleniti ea rerum modi
+    repellendus nobis fuga asperiores sapiente. Suscipit corporis laudantium voluptatibus placeat deserunt consectetur
+    quia.
+  </span>
+</p-dialog>

@@ -22,7 +22,7 @@
 
 .login-header {
     text-align: center;
-    margin: 20px 0 40px 0;
+    margin: 40px 0 40px 0;
 }
 
 .login-header header {
@@ -94,6 +94,9 @@ section a {
     border-radius: 30px;
     cursor: pointer;
     transition: .3s;
+    font-weight: 700;
+    font-size: 1.1rem;
+    color: whitesmoke;
 }
 
 .input-submit label {
@@ -156,6 +159,20 @@ section a {
     padding: 0.5rem 0;
     background-color: #428eba;
 }
+
+.error-message {
+    color: #ff4d4f;
+    background-color: #ffe6e6;
+    border: 1px solid #ff4d4f;
+    padding: 5px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+    font-weight: bold;
+    text-align: center;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
 
 /* Mobile Responsive */
 @media (max-width: 768px) {

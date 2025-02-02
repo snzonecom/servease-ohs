@@ -14,20 +14,25 @@ return new class extends Migration
         Schema::create('tbl_provider_info', function (Blueprint $table) {
             $table->id('provider_id'); // Primary key
             $table->string('profile_pic')->nullable();
-            $table->string('provieder_name'); // Corrected spelling from "provieder" to "provider"
+            $table->string('provider_name');
             $table->string('contact_no');
             $table->string('office_add')->nullable();
             $table->string('street')->nullable();
             $table->string('brgy')->nullable();
             $table->string('city')->nullable();
+            $table->string('province')->nullable();
             $table->string('brn')->nullable();
             $table->string('contact_person')->nullable();
             $table->string('attachment')->nullable();
             $table->string('service_type')->nullable();
-            $table->string('amount_status')->nullable();
+            $table->string('account_status')->nullable();
             $table->boolean('email_verified')->default(false);
             $table->timestamps();
         });
+
+        // Set AUTO_INCREMENT start value
+        DB::statement('ALTER TABLE tbl_provider_info AUTO_INCREMENT = 672493;');
+
     }
 
     /**

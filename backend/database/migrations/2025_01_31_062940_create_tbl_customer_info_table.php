@@ -13,13 +13,15 @@ return new class extends Migration
     {
         Schema::create('tbl_customer_info', function (Blueprint $table) {
             $table->id('customer_id'); // Auto-incrementing primary key
+            $table->string('profile_photo')->nullable();
             $table->string('customer_name');
-            $table->string('contact_no')->unique();
-            $table->string('house_add');
+            $table->string('contact_no');
+            $table->string('house_add')->nullable();
             $table->string('street')->nullable();
             $table->string('brgy')->nullable();
-            $table->string('city');
-            $table->timestamps(); // Adds created_at and updated_at columns
+            $table->string('city')->nullable();
+            $table->string('province')->nullable();
+            $table->timestamps();
         });
     }
 

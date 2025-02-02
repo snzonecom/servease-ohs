@@ -1,454 +1,453 @@
 body {
-    width: 85rem;
-    margin: 1rem;
-  }
-  
-  .header-message {
-    text-align: left;
-    font-size: 1.5rem;
-    font-weight: 600;
-    margin-bottom: 1rem;
-  }
-  
-  .cards-container {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr); /* 4 columns */
-    gap: 1rem; /* Space between cards */
-    padding: 1rem; /* Padding around the grid */
-  }
-  
-  .custom-card {
-    background-color: #f9f9f9;
-    padding: 1rem;
-    border-radius: 10px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    border: 1px solid #ccc;
-  }
-  
-  .card-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 1rem;
-  }
-  
-  .number-container h2 {
-    font-size: 1.5rem;
-    margin: 0;
-  }
-  
-  .icon-container i {
-    font-size: 2rem;
-    padding: 0.5rem;
-  }
-  
-  .description-container p {
-    font-size: 1rem;
-    text-align: left;
-    padding-right: 2rem;
-    display: -webkit-box;
-    -webkit-line-clamp: 3; /* Limit to 3 lines */
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: normal; /* Allow wrapping within the lines */
-  }
-  
-  
-  .services-container {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 2rem;
-  }
-  
-  .left-division p-chart {
-    flex-grow: 1;  /* This will make the chart grow to take up the available space */
-    width: 100%;   /* Fill the entire width of the parent */
-    height: 100%;  /* Fill the entire height of the parent */
-    min-height: 400px;  /* Ensure it never gets smaller than 400px */
-  }
-  
-  
-  .left-division, .right-division {
-    width: calc(50% - 0.5rem);
-    padding: 1rem;
-    background-color: #f9f9f9;
-    border-radius: 10px;
-    border: 1px solid #ccc;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    display: flex;
-    flex-direction: column;
-    height: auto; /* Define a fixed height for the left division */
-  }
-  
-  .left-division h3, .right-division h3 {
-    font-size: 1.5rem;
-    font-weight: 600;
-    margin-bottom: 1rem;
-  }
-  
-  .left-division ul, .right-division ul {
-    list-style-type: none;
-    padding: 0;
-  }
-  
-  .left-division li, .right-division li {
-    font-size: 1.1rem;
-    margin-bottom: 0.5rem;
-  }
-  
-  .rank-box {
-    display: inline-block;
-    width: 2rem;
-    height: 2rem;
-    background-color: #66b9e1;
-    color: #fff;
-    text-align: center;
-    line-height: 2rem;
-    border-radius: 4px;
-    font-weight: bold;
-  }
-  
-  .right-division p-table {
-    width: 100%;
-    margin-top: 1rem;
-  }
-  
-  .right-division .p-datatable-wrapper {
-    overflow-y: auto;
-    max-height: 200px;
-  }
-  
-  .right-division th, .right-division td {
-    text-align: center;
-    padding: 0.8rem;
-  }
-  
-  .right-division .p-table thead {
-    background-color: #f1f1f1;
-  }
-  
-  .right-division p-table .p-datatable-tbody > tr {
-    border: none;
-  }
-  
-  .right-division p-table th, .right-division p-table td {
-    border: none;
-  }
-  
-  .right-division p-table .p-datatable-tbody > tr:hover {
-    background-color: #f4f4f4;
-  }
-  
-  .third-section {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 2rem;
-  }
-  
-  .current-status {
-    width: 33%;
-    padding: 1rem;
-    background-color: #f9f9f9;
-    border-radius: 10px;
-    border: 1px solid #ccc;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  }
-  
-  .current-status p {
-    font-size: 1.2rem;
-    font-weight: 600;
-    margin-bottom: 1rem;
-  }
-  
-  .status-card {
-    display: flex;
-    flex-direction: column;
-  }
-  
-  .status-inner-card {
-    border: 1px solid #ccc;
-    border-radius: 10px;
-    padding: 1rem;
-    margin-bottom: 1rem;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  }
-  
-  .status-inner-card h4 {
-    font-size: 1.1rem;
-    font-weight: 600;
-    margin-bottom: 0.5rem;
-  }
-  
-  .status-inner-card p {
-    font-size: 1rem;
-    margin: 0;
-  }
-  
-  .accumulated-bookings {
-    width: 66%;
-    padding: 1rem;
-    background-color: #f9f9f9;
-    border-radius: 10px;
-    border: 1px solid #ccc;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  }
-  
-  .accumulated-bookings p-chart {
-    width: 100%;
-    height: 100%;
-  }
-  
-  .status-inner-card .status-content {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-  }
-  
-  .pi {
-    font-size: 2rem;
-    color: #007ad9;
-    margin-bottom: 0.5rem;
-  }
-  
-  .status-inner-card h2 {
-    font-size: 3rem;
-    color: #333;
-    margin: 0;
-  }
-  
-  .status-inner-card .status-info {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-top: 0.5rem;
-  }
-  
-  .status-inner-card .status-info h4 {
-    font-size: 1.1rem;
-    font-weight: 600;
-    margin-right: 0.5rem;
-  }
-  
-  .status-inner-card .status-info i {
-    font-size: 1.5rem;
-    color: #005f7f;
-  }
-  
-  .status-inner-cards-container {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 20px;
-  }
-  
-  .status-inner-card {
-    background-color: #fff;
-    border: 1px solid #ccc;
-    border-radius: 10px;
-    padding: 1rem;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  }
-  
-  .status-content {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-  }
-  
-  .status-icon i {
-    font-size: 2rem;
-    margin-bottom: 10px;
-  }
-  
-  h2 {
-    font-size: 2rem;
-    margin: 0;
-  }
-  
-  .status-info {
-    font-size: 1.2rem;
-    margin-top: 10px;
-  }
-  
-  .status-inner-card:hover {
-    background-color: #b8dbf1;
-  }
-  
-  .custom-card:hover {
-    background-color: #b8dbf1;
-  }
+  width: 85rem;
+  margin: 1rem;
+}
 
-  .button-row {
-    text-align: center; /* Center the button horizontally */
-    margin-top: 1rem;
-  }
+.header-message {
+  text-align: left;
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
 
-  .edit-button {
-    background-color: #3b82f6; /* Primary blue color */
-    color: #fff;
-    border: none;
-    border-radius: 5px;
-    padding: 0.5rem 1rem;
-    font-size: 1rem;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-    width: 100%;
-  }
-  
-  .edit-button:hover {
-    background-color: #0056b3; /* Darker blue on hover */
-  }
-  
-  .search-add-container {
-    display: flex; /* Arrange items side by side */
-    gap: 1rem; /* Space between the search bar and button */
-    margin-bottom: 1rem; /* Add spacing below the container */
-    align-items: center; /* Align items vertically in the center */
-  }
-  
-  .search-bar {
-    flex-grow: 1; /* Make the search bar take up available space */
-    padding: 0.5rem;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    font-size: 1rem;
-  }
-  
-  .add-button {
-    background-color: #3b82f6; /* Primary blue color */
-    color: #fff;
-    border: none;
-    border-radius: 5px;
-    padding: 0.5rem 1rem;
-    font-size: 1rem;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-    white-space: nowrap; /* Prevent text from wrapping */
-  }
-  
-  .add-button:hover {
-    background-color: #0056b3; /* Darker blue on hover */
-  }
+.cards-container {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr); /* 4 columns */
+  gap: 1rem; /* Space between cards */
+  padding: 1rem; /* Padding around the grid */
+}
 
-  .card {
-    display: flex;
-    justify-content: center;
-    margin: 2rem;
+.custom-card {
+  background-color: #f9f9f9;
+  padding: 1rem;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  border: 1px solid #ccc;
+}
+
+.card-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.number-container h2 {
+  font-size: 1.5rem;
+  margin: 0;
+}
+
+.icon-container i {
+  font-size: 2rem;
+  padding: 0.5rem;
+}
+
+.description-container p {
+  font-size: 1rem;
+  text-align: left;
+  padding-right: 2rem;
+  display: -webkit-box;
+  -webkit-line-clamp: 3; /* Limit to 3 lines */
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: normal; /* Allow wrapping within the lines */
+}
+
+
+.services-container {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 2rem;
+}
+
+.left-division p-chart {
+  flex-grow: 1;  /* This will make the chart grow to take up the available space */
+  width: 100%;   /* Fill the entire width of the parent */
+  height: 100%;  /* Fill the entire height of the parent */
+  min-height: 400px;  /* Ensure it never gets smaller than 400px */
+}
+
+
+.left-division, .right-division {
+  width: calc(50% - 0.5rem);
+  padding: 1rem;
+  background-color: #f9f9f9;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  height: auto; /* Define a fixed height for the left division */
+}
+
+.left-division h3, .right-division h3 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+.left-division ul, .right-division ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.left-division li, .right-division li {
+  font-size: 1.1rem;
+  margin-bottom: 0.5rem;
+}
+
+.rank-box {
+  display: inline-block;
+  width: 2rem;
+  height: 2rem;
+  background-color: #66b9e1;
+  color: #fff;
+  text-align: center;
+  line-height: 2rem;
+  border-radius: 4px;
+  font-weight: bold;
+}
+
+.right-division p-table {
+  width: 100%;
+  margin-top: 1rem;
+}
+
+.right-division .p-datatable-wrapper {
+  overflow-y: auto;
+  max-height: 200px;
+}
+
+.right-division th, .right-division td {
+  text-align: center;
+  padding: 0.8rem;
+}
+
+.right-division .p-table thead {
+  background-color: #f1f1f1;
+}
+
+.right-division p-table .p-datatable-tbody > tr {
+  border: none;
+}
+
+.right-division p-table th, .right-division p-table td {
+  border: none;
+}
+
+.right-division p-table .p-datatable-tbody > tr:hover {
+  background-color: #f4f4f4;
+}
+
+.third-section {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 2rem;
+}
+
+.current-status {
+  width: 33%;
+  padding: 1rem;
+  background-color: #f9f9f9;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.current-status p {
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+.status-card {
+  display: flex;
+  flex-direction: column;
+}
+
+.status-inner-card {
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.status-inner-card h4 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.status-inner-card p {
+  font-size: 1rem;
+  margin: 0;
+}
+
+.accumulated-bookings {
+  width: 66%;
+  padding: 1rem;
+  background-color: #f9f9f9;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.accumulated-bookings p-chart {
+  width: 100%;
+  height: 100%;
+}
+
+.status-inner-card .status-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.pi {
+  font-size: 2rem;
+  color: #007ad9;
+  margin-bottom: 0.5rem;
+}
+
+.status-inner-card h2 {
+  font-size: 3rem;
+  color: #333;
+  margin: 0;
+}
+
+.status-inner-card .status-info {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 0.5rem;
+}
+
+.status-inner-card .status-info h4 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-right: 0.5rem;
+}
+
+.status-inner-card .status-info i {
+  font-size: 1.5rem;
+  color: #005f7f;
+}
+
+.status-inner-cards-container {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+}
+
+.status-inner-card {
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  padding: 1rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.status-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.status-icon i {
+  font-size: 2rem;
+  margin-bottom: 10px;
+}
+
+h2 {
+  font-size: 2rem;
+  margin: 0;
+}
+
+.status-info {
+  font-size: 1.2rem;
+  margin-top: 10px;
+}
+
+.status-inner-card:hover {
+  background-color: #b8dbf1;
+}
+
+.custom-card:hover {
+  background-color: #b8dbf1;
+}
+
+.button-row {
+  text-align: center; /* Center the button horizontally */
+  margin-top: 1rem;
+}
+
+.edit-button {
+  background-color: #3b82f6; /* Primary blue color */
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  width: 100%;
+}
+
+.edit-button:hover {
+  background-color: #0056b3; /* Darker blue on hover */
+}
+
+.search-add-container {
+  display: flex; /* Arrange items side by side */
+  gap: 1rem; /* Space between the search bar and button */
+  margin-bottom: 1rem; /* Add spacing below the container */
+  align-items: center; /* Align items vertically in the center */
+}
+
+.search-bar {
+  flex-grow: 1; /* Make the search bar take up available space */
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 1rem;
+}
+
+.add-button {
+  background-color: #3b82f6; /* Primary blue color */
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  white-space: nowrap; /* Prevent text from wrapping */
+}
+
+.add-button:hover {
+  background-color: #0056b3; /* Darker blue on hover */
+}
+
+.card {
+  display: flex;
+  justify-content: center;
+  margin: 2rem;
 }
 
 .flex-column {
-    display: flex;
-    flex-direction: column;
+  display: flex;
+  flex-direction: column;
 }
 
 .w-6rem {
-    width: 15rem;
+  width: 15rem;
 }
 
 .w-full {
-    width: 100%;
-    height: 2.5rem;
+  width: 100%;
+  height: 2.5rem;
 }
 
 .id-full {
-    width: 100%;
-    height: 100%;
+  width: 100%;
+  height: 100%;
 }
 
 .p-dialog {
-    width: 40rem;
+  width: 40rem;
 }
 
 .p-dialog-header {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
 }
 
 .p-dialog-header i {
-    margin-right: 10px;
+  margin-right: 10px;
 }
 
 .p-dialog-header span {
-    font-size: 2rem;
-    font-weight: 700;
+  font-size: 2rem;
+  font-weight: 700;
 }
 
 .flex {
-    display: flex;
+  display: flex;
 }
 
 .align-items-center {
-    align-items: center;
+  align-items: center;
 }
 
 .justify-content-end {
-    justify-content: flex-end;
+  justify-content: flex-end;
 }
 
 .gap-2 {
-    gap: 1rem;
+  gap: 1rem;
 }
 
 .mb-3 {
-    margin-bottom: 1rem;
+  margin-bottom: 1rem;
 }
 
 .mb-5 {
-    margin-bottom: 2rem;
+  margin-bottom: 2rem;
 }
 
 .flex-auto {
-    flex: 1;
+  flex: 1;
 }
 
 .p-text-secondary {
-    color: #6c757d;
+  color: #6c757d;
 }
 
 ::ng-deep .p-dialog .p-dialog-content {
-    padding: 0 2rem 2rem 2rem;
+  padding: 0 2rem 2rem 2rem;
 }
 
 ::ng-deep .p-dialog-header {
-    padding: 1.5rem 1.5rem 0.5rem 2rem;
+  padding: 1.5rem 1.5rem 0.5rem 2rem;
 }
 
 input.p-inputtext {
-    padding: 0.5rem;
+  padding: 0.5rem;
 }
 
 .submit-button {
-    padding: 0.5rem 1rem;
-    background-color: #71c969;
-    color: white;
-    border: none;
-    border-radius: 20px;
-    cursor: pointer;
-    font-weight: 600;
-    font-size: 1rem;
+  padding: 0.5rem 1rem;
+  background-color: #71c969;
+  color: white;
+  border: none;
+  border-radius: 20px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 1rem;
 }
 
 .submit-button:hover {
-    background-color: #c1c1c1;
+  background-color: #c1c1c1;
 }
 
 .cancel-button {
-    padding: 0.5rem 1rem;
-    background-color: #d3504c;
-    color: white;
-    border: none;
-    border-radius: 20px;
-    cursor: pointer;
-    font-weight: 600;
-    font-size: 1rem;
+  padding: 0.5rem 1rem;
+  background-color: #d3504c;
+  color: white;
+  border: none;
+  border-radius: 20px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 1rem;
 }
 
 .cancel-button:hover {
-    background-color: #c1c1c1;
+  background-color: #c1c1c1;
 }
-  

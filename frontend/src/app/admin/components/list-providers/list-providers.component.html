@@ -7,122 +7,122 @@
     </div>
 
     <div class="reports-table">
-        <p-table [value]="filteredSuspendedAccounts">
-          <ng-template pTemplate="header">
-            <tr>
-              <th pSortableColumn="provider_id">ID <p-sortIcon field="provider_id"></p-sortIcon></th>
-              <th class="provider_name">Provider Name</th>
-              <th class="contact_no">Contact Number</th>
-              <th class="created_at">Created At</th>
-              <th class="action-column">Action</th>
-            </tr>
-          </ng-template>
-    
-          <ng-template pTemplate="body" let-provider>
-            <tr>
-              <td>{{ provider.provider_id }}</td>
-              <td>{{ provider.provieder_name }}</td>
-              <td>{{ provider.contact_no }}</td>
-              <td>{{ provider.created_at | date:'shortDate' }}</td> <!-- Format date as needed -->
-              <td class="action-column">
-                <button p-button (click)="showDialog(provider)">See Details</button>
-              </td>
-            </tr>
-          </ng-template>
+        <p-table [value]="filteredProviders">
+            <ng-template pTemplate="header">
+                <tr>
+                    <th pSortableColumn="provider_id">ID <p-sortIcon field="provider_id"></p-sortIcon></th>
+                    <th class="provider_name">Provider Name</th>
+                    <th class="contact_no">Contact Number</th>
+                    <th class="created_at">Created At</th>
+                    <th class="action-column">Action</th>
+                </tr>
+            </ng-template>
+
+            <ng-template pTemplate="body" let-provider>
+                <tr>
+                    <td>{{ provider.provider_id }}</td>
+                    <td>{{ provider.provider_name }}</td>
+                    <td>{{ provider.contact_no }}</td>
+                    <td>{{ provider.created_at | date }}</td>
+                    <td class="action-column">
+                        <button p-button (click)="showDialog(provider)">See Details</button>
+                    </td>
+                </tr>
+            </ng-template>
         </p-table>
-      </div>
+    </div>
 
-
-    <!-- Dialog displaying the details of the application -->
+    <!-- Dialog displaying the details of the approved service provider -->
     <div class="card flex justify-content-center">
         <p-dialog header="Service Provider Information" [modal]="true" [(visible)]="visible"
             [style]="{ width: '40rem'}">
-            <!-- Introduction text and instructions for reviewing the application -->
-            <span class="p-text-secondary block mb-5">Please note that the information displayed is confidential and
-                should only be accessed by authorized personnel.</span>
+            <span class="p-text-secondary block mb-5">
+                The details below are of a verified service provider. Please ensure data accuracy when referencing.
+            </span>
 
-
-            <!-- Form Fields displaying service provider details -->
-            <div class="mb-3"></div>
+            <!-- Business Logo -->
             <div class="flex flex-column align-items-start gap-3 mb-3">
-                <label for="name" class="font-semibold">
+                <label class="font-semibold">
+                    <i class="pi pi-image" style="margin-right: 10px;"></i> Business Logo
+                </label>
+                <img *ngIf="selectedProvider?.profile_pic" [src]="selectedProvider?.profile_pic" class="business-logo"
+                    alt="Business Logo" />
+            </div>
+
+            <!-- Business Name -->
+            <div class="flex flex-column align-items-start gap-3 mb-3">
+                <label class="font-semibold">
                     <i class="pi pi-building" style="margin-right: 10px;"></i> Business Name
                 </label>
-                <input pInputText id="name" value="Global Enterprises Ltd." [disabled]="true" class="w-full" />
+                <input pInputText [value]="selectedProvider?.provider_name" [disabled]="true" class="w-full" />
             </div>
 
+            <!-- Email Address -->
             <div class="flex flex-column align-items-start gap-3 mb-3">
-                <label for="brn" class="font-semibold">
-                    <i class="pi pi-id-card" style="margin-right: 10px;"></i> Business Registration Number (BRN)
+                <label class="font-semibold">
+                    <i class="pi pi-envelope" style="margin-right: 10px;"></i> Email Address
                 </label>
-                <input pInputText id="brn" value="BRN9876543210" [disabled]="true" class="w-full" />
+                <input pInputText [value]="selectedProvider?.email" [disabled]="true" class="w-full" />
             </div>
 
+            <!-- Contact Number -->
             <div class="flex flex-column align-items-start gap-3 mb-3">
-                <label for="serviceType" class="font-semibold">
-                    <i class="pi pi-cog" style="margin-right: 10px;"></i> Service Type
-                </label>
-                <input pInputText id="serviceType" value="Cleaning" [disabled]="true" class="w-full" />
-            </div>
-
-            <div class="flex flex-column align-items-start gap-3 mb-3">
-                <label for="address" class="font-semibold">
-                    <i class="pi pi-map" style="margin-right: 10px;"></i> Address
-                </label>
-                <input pInputText id="address" rows="3" [disabled]="true" value="456 Market Street, Central City"
-                    class="w-full" />
-            </div>
-
-            <div class="flex flex-column align-items-start gap-3 mb-3">
-                <label for="contactName" class="font-semibold">
-                    <i class="pi pi-user" style="margin-right: 10px;"></i> Contact Person
-                </label>
-                <input pInputText id="contactName" value="John Smith" [disabled]="true" class="w-full" />
-            </div>
-
-            <div class="flex flex-column align-items-start gap-3 mb-3">
-                <label for="contactId" class="font-semibold">
-                    <i class="pi pi-id-card" style="margin-right: 10px;"></i> Contact Person ID
-                </label>
-                <img src="https://upload.wikimedia.org/wikipedia/commons/3/34/Philippine_Identification_System_%28PhilSys%29_card_sample.png"
-                    class="id-full">
-            </div>
-
-            <div class="flex flex-column align-items-start gap-3 mb-3">
-                <label for="contactEmail" class="font-semibold">
-                    <i class="pi pi-envelope" style="margin-right: 10px;"></i> Contact Email
-                </label>
-                <input pInputText id="contactEmail" value="john.smith@globalenterprises.com" [disabled]="true"
-                    class="w-full" />
-            </div>
-
-            <div class="flex flex-column align-items-start gap-3 mb-3">
-                <label for="contactNumber" class="font-semibold">
+                <label class="font-semibold">
                     <i class="pi pi-phone" style="margin-right: 10px;"></i> Contact Number
                 </label>
-                <input pInputText id="contactNumber" value="+321 654 9870" [disabled]="true" class="w-full" />
+                <input pInputText [value]="selectedProvider?.contact_no" [disabled]="true" class="w-full" />
             </div>
 
+            <!-- Office Address (Combined Fields) -->
             <div class="flex flex-column align-items-start gap-3 mb-3">
-                <label for="startDate" class="font-semibold">
-                    <i class="pi pi-calendar" style="margin-right: 10px;"></i> Business Started
+                <label class="font-semibold">
+                    <i class="pi pi-map" style="margin-right: 10px;"></i> Office Address
                 </label>
-                <input pInputText id="startDate" value="2015-04-01" [disabled]="true" class="w-full" />
+                <input pInputText
+                    [value]="selectedProvider?.office_add + ', ' + selectedProvider?.street + ', ' + selectedProvider?.brgy + ', ' + selectedProvider?.city + ', ' + selectedProvider?.province"
+                    [disabled]="true" class="w-full" />
             </div>
 
+            <!-- Business Registration Number (BRN) -->
             <div class="flex flex-column align-items-start gap-3 mb-3">
-                <label for="yearsOfOperation" class="font-semibold">
-                    <i class="pi pi-calendar-plus" style="margin-right: 10px;"></i> Years of Operation
+                <label class="font-semibold">
+                    <i class="pi pi-id-card" style="margin-right: 10px;"></i> Business Registration Number (BRN)
                 </label>
-                <input pInputText id="yearsOfOperation" value="10" [disabled]="true" class="w-full" />
+                <input pInputText [value]="selectedProvider?.brn" [disabled]="true" class="w-full" />
             </div>
 
+            <!-- Contact Person -->
             <div class="flex flex-column align-items-start gap-3 mb-3">
-                <label for="applicationDate" class="font-semibold">
-                    <i class="pi pi-calendar-times" style="margin-right: 10px;"></i> Application Date
+                <label class="font-semibold">
+                    <i class="pi pi-user" style="margin-right: 10px;"></i> Contact Person
                 </label>
-                <input pInputText id="applicationDate" value="2025-01-15" [disabled]="true" class="w-full" />
+                <input pInputText [value]="selectedProvider?.contact_person" [disabled]="true" class="w-full" />
             </div>
+
+            <!-- Contact Person ID (Attachment) -->
+            <div class="flex flex-column align-items-start gap-3 mb-3">
+                <label class="font-semibold">
+                    <i class="pi pi-id-card" style="margin-right: 10px;"></i> Contact Person ID
+                </label>
+                <img *ngIf="selectedProvider?.attachment" [src]="selectedProvider?.attachment" class="id-full"
+                    alt="Contact Person ID" />
+            </div>
+
+            <!-- Service Type -->
+            <!-- Service Type -->
+            <div class="flex flex-column align-items-start gap-3 mb-3">
+                <label class="font-semibold">
+                    <i class="pi pi-cog" style="margin-right: 10px;"></i> Service Type
+                </label>
+                <input pInputText [value]="selectedProvider?.service_type_name" [disabled]="true" class="w-full" />
+            </div>
+
+
+            <span class="p-text-secondary block end-statement">
+                This provider is verified and registered in the system. Contact details are confidential.
+            </span>
         </p-dialog>
     </div>
+
+
 </body>

@@ -2,8 +2,9 @@
 <div class="dashboard-header">
     <h1 class="dashboard-title">User Registration</h1>
     <p class="dashboard-description">
-        Complete your user registration by filling out the required details. Provide
-        accurate information to ensure a seamless and secure experience.
+        Complete your user registration by filling out the required details. Provide accurate information to ensure a
+        seamless
+        and secure experience.
     </p>
 </div>
 
@@ -17,68 +18,84 @@
             </div>
         </ng-template>
         <div class="card-content">
-            <!-- Single Column Layout for Information and Fields -->
             <div class="info-row-container">
                 <!-- Profile Photo -->
-               
+                <div class="info-row">
+                    <label for="profilePhoto">Profile Photo:</label>
+                    <div class="upload-container">
+                        <input type="file" id="profile" accept="image/*" class="file-input"
+                            (change)="onProfileSelected($event)" />
+                        <button class="upload-button" (click)="triggerProfileInput()">Upload Profile Photo</button>
+                        <img *ngIf="photoPreview" [src]="photoPreview" alt="Profile Preview" class="image-preview" />
+                    </div>
+                </div>
 
                 <!-- Full Name -->
                 <div class="info-row">
                     <label for="fullName">Full Name:</label>
-                    <input id="fullName" type="text" placeholder="Juan Dela Cruz" [(ngModel)]="formData.fullName" name="fullName" required />
+                    <input id="fullName" type="text" [(ngModel)]="formData.fullName" placeholder="Juan Dela Cruz"
+                        required />
                 </div>
 
                 <!-- Email Address -->
                 <div class="info-row">
                     <label for="email">Email Address:</label>
-                    <input id="email" type="email" placeholder="sample@mail.com" [(ngModel)]="formData.email" name="email" required />
+                    <input id="email" type="email" [(ngModel)]="formData.email" placeholder="sample@mail.com"
+                        required />
                 </div>
 
                 <!-- Contact Number -->
                 <div class="info-row">
                     <label for="contactNumber">Contact Number:</label>
-                    <input id="contactNumber" type="tel" placeholder="09213456789" [(ngModel)]="formData.contactNumber" name="contactNumber" required />
+                    <input id="contactNumber" type="tel" [(ngModel)]="formData.contactNumber" placeholder="09213456789"
+                        required />
                 </div>
 
-                <!-- Address Details -->
+                <!-- Address Fields -->
                 <div class="info-row">
                     <label for="houseAdd">House Address:</label>
-                    <input id="houseAdd" type="text" placeholder="124 House" [(ngModel)]="formData.houseAdd" name="houseAdd" required />
+                    <input id="houseAdd" type="text" [(ngModel)]="formData.houseAdd" placeholder="124 House" required />
                 </div>
+
                 <div class="info-row">
                     <label for="street">Street:</label>
-                    <input id="street" type="text" placeholder="Unknown Street" [(ngModel)]="formData.street" name="street" required />
+                    <input id="street" type="text" [(ngModel)]="formData.street" placeholder="Unknown Street"
+                        required />
                 </div>
+
                 <div class="info-row">
                     <label for="brgy">Barangay:</label>
-                    <input id="brgy" type="text" placeholder="Barangay Name" [(ngModel)]="formData.brgy" name="brgy" required />
-                </div>
-                <div class="info-row">
-                    <label for="city">City:</label>
-                    <input id="city" type="text" placeholder="City Name" [(ngModel)]="formData.city" name="city" required />
+                    <input id="brgy" type="text" [(ngModel)]="formData.brgy" placeholder="Barangay Name" required />
                 </div>
 
-                <!-- Password -->
+                <div class="info-row">
+                    <label for="city">City/Municipality:</label>
+                    <input id="city" type="text" [(ngModel)]="formData.city" placeholder="City Name" required />
+                </div>
+
+                <div class="info-row">
+                    <label for="province">Province:</label>
+                    <input id="province" type="text" [(ngModel)]="formData.province" placeholder="Province Name"
+                        required />
+                </div>
+
+                <!-- Password Fields -->
                 <div class="info-row">
                     <label for="password">Password:</label>
-                    <input id="password" type="password" [(ngModel)]="formData.password" name="password" required />
+                    <input id="password" type="password" [(ngModel)]="formData.password" required />
                 </div>
 
-                <!-- Confirm Password -->
                 <div class="info-row">
                     <label for="confirm-password">Confirm Password:</label>
-                    <input id="confirm-password" type="password" [(ngModel)]="formData.confirmPassword" name="confirmPassword" required />
+                    <input id="confirm-password" type="password" [(ngModel)]="formData.confirmPassword" required />
                 </div>
-
-                <!-- Role -->
-                <input id="role" value="customer" type="hidden" [(ngModel)]="formData.role" />
 
                 <!-- Terms and Conditions -->
                 <div class="info-row-terms terms-row">
                     <label for="terms" class="terms-label">
-                        <input type="checkbox" id="terms" />
-                        By proceeding, you confirm that you have read, understood, and agree to abide by the <a
-                            (click)="tncDialogVisible = true" class="terms-condi">Terms and Conditions</a> governing the use of this platform.
+                        <input type="checkbox" id="terms" [(ngModel)]="formData.acceptTerms" />
+                        By proceeding, you confirm that you have read, understood, and agree to abide by the
+                        <a (click)="tncDialogVisible = true" class="terms-condi">Terms and Conditions</a>.
                     </label>
                 </div>
             </div>
@@ -87,15 +104,13 @@
 
     <!-- Buttons Outside the Card -->
     <div class="button-container" style="text-align: center; margin-top: 10px;">
-        <button pButton type="button" label="Register" (click)="registerUser()" class="buttons-below"></button>
+        <button pButton type="button" label="Register" class="buttons-below" (click)="registerUser()"></button>
     </div>
 </div>
 
 <!-- Dialog displaying Terms and Conditions -->
-<p-dialog header="Terms and Conditions" [modal]="true">
+<p-dialog header="Terms and Conditions" [modal]="true" [(visible)]="tncDialogVisible" [style]="{ width: '40rem'}">
     <span class="review-text">
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Hic, autem, quis tempore fugiat deleniti ea rerum modi
-        repellendus nobis fuga asperiores sapiente. Suscipit corporis laudantium voluptatibus placeat deserunt
-        consectetur quia.
+        Please read and agree to the Terms and Conditions before proceeding with your registration.
     </span>
 </p-dialog>

@@ -1,53 +1,82 @@
 import { Component, OnInit } from '@angular/core';
-import { HttpClient } from '@angular/common/http';  // Import HttpClient
+import { HttpClient } from '@angular/common/http';
 import { ChangeDetectorRef } from '@angular/core';
 
 @Component({
   selector: 'app-list-providers',
   templateUrl: './list-providers.component.html',
-  styleUrls: ['./list-providers.component.css']  // Note: Use styleUrls, not styleUrl
+  styleUrls: ['./list-providers.component.css']
 })
 export class ListProvidersComponent implements OnInit {
   searchQuery = '';
   visible: boolean = false;
   selectedProvider: any = null;
+  approvedProviders: any[] = [];
+  serviceCategories: { category_id: number; category_name: string }[] = [];
 
-  allProviders: any[] = [];  // Declare an empty array to store fetched providers
+  private providersApiUrl = 'http://127.0.0.1:8000/api/approved-providers';
+  private categoriesApiUrl = 'http://127.0.0.1:8000/api/service-categories';
 
   constructor(
-    private http: HttpClient,  // Inject HttpClient service
+    private http: HttpClient,
     private cdr: ChangeDetectorRef
   ) { }
 
   ngOnInit(): void {
-    this.fetchProviders();  // Call the method to fetch provider data on component initialization
+    this.fetchServiceCategories();
   }
 
-  // Method to fetch provider data from API
-  fetchProviders(): void {
-    const apiUrl = 'http://127.0.0.1:8000/api/providers';  // Replace with your actual API URL
-
-    this.http.get<any[]>(apiUrl)  // Make the GET request
-      .subscribe(data => {
-        this.allProviders = data;  // Assign fetched data to allProviders array
-        this.cdr.detectChanges();  // Trigger change detection
-      }, error => {
-        console.error('Error fetching providers', error);  // Handle error gracefully
-      });
-  }
-
-  // Filter providers based on search query
-  get filteredSuspendedAccounts() {
-    return this.allProviders.filter(account =>
-      account.provieder_name.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
-      account.contact_no.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
-      account.created_at.toLocaleDateString().includes(this.searchQuery)
+  // ✅ Fetch categories and then fetch providers
+  fetchServiceCategories(): void {
+    this.http.get<{ category_id: number; category_name: string }[]>(this.categoriesApiUrl).subscribe(
+      (data) => {
+        this.serviceCategories = data;
+        this.fetchApprovedProviders(); // Fetch providers only after categories are loaded
+      },
+      (error) => {
+        console.error('Error fetching service categories', error);
+      }
     );
   }
 
-  // Show dialog with provider details
-  showDialog(applicant: any) {
-    this.selectedProvider = applicant;
+  // ✅ Fetch approved providers and map category ID to category name
+  fetchApprovedProviders(): void {
+    this.http.get<any[]>(this.providersApiUrl).subscribe(
+      (data) => {
+        this.approvedProviders = data; // ✅ Directly use the data with service_type_name included
+      },
+      (error) => {
+        console.error('Error fetching approved providers', error);
+      }
+    );
+  }
+
+  // ✅ Convert service_type ID to category name
+  getCategoryName(categoryId: number): string {
+    const category = this.serviceCategories.find(cat => cat.category_id === categoryId);
+    return category ? category.category_name : 'Unknown';
+  }
+
+  // ✅ Search function
+  get filteredProviders() {
+    if (!this.searchQuery) {
+      return this.approvedProviders;
+    }
+
+    const query = this.searchQuery.toLowerCase();
+    return this.approvedProviders.filter(provider => {
+      const providerName = provider.provider_name?.toLowerCase() || '';
+      const contactNo = provider.contact_no?.toLowerCase() || '';
+      const categoryName = provider.service_type_name?.toLowerCase() || '';
+      const formattedDate = provider.created_at ? new Date(provider.created_at).toLocaleDateString() : '';
+
+      return providerName.includes(query) || contactNo.includes(query) || categoryName.includes(query) || formattedDate.includes(query);
+    });
+  }
+
+  // ✅ Show details modal
+  showDialog(provider: any) {
+    this.selectedProvider = provider;
     this.visible = true;
     this.cdr.detectChanges();
   }

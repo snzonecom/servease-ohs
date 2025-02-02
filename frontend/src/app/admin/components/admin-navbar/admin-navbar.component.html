@@ -10,23 +10,22 @@
             <i class="fas fa-times close-icon"></i>
         </button>
     </div>
-
     <ul class="sidenav-nav">
         <li class="sidenav-nav-item" *ngFor="let data of navData">
-            <!-- ✅ Handle Logout Button Separately -->
-            <a class="sidenav-nav-link" *ngIf="data.action !== 'logout'; else logoutTemplate"
+            <a class="sidenav-nav-link" *ngIf="data.label !== 'Logout'; else logoutTemplate"
                 [routerLink]="[data.routeLink]" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
                 <i class="sidenav-link-icon" [class]="data.icon"></i>
                 <span class="sidenav-link-text" @fadeInOut *ngIf="collapsed">{{ data.label }}</span>
             </a>
 
-            <!-- ✅ Template for Logout Action -->
+            <!-- ✅ Logout Button Template -->
             <ng-template #logoutTemplate>
                 <a class="sidenav-nav-link" (click)="logout()">
-                    <i class="sidenav-link-icon" [class]="data.icon"></i>
-                    <span class="sidenav-link-text" @fadeInOut *ngIf="collapsed">{{ data.label }}</span>
+                    <i class="sidenav-link-icon pi pi-sign-out"></i>
+                    <span class="sidenav-link-text" @fadeInOut *ngIf="collapsed">Logout</span>
                 </a>
             </ng-template>
         </li>
     </ul>
+
 </div>
