@@ -15,9 +15,9 @@ return new class extends Migration
             $table->id('booking_id'); // Primary key
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('provider_id'); // Foreign key
-            $table->unsignedBigInteger('service_id');  // Foreign key
+            $table->json('services');
             $table->date('book_date');
-            $table->time('book_time');
+            $table->string('book_time');
             $table->string('book_status');
             $table->decimal('provider_rate', 8, 2)->nullable();
             $table->text('provider_feedback')->nullable();

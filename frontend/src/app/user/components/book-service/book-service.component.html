@@ -101,10 +101,11 @@
                                 <div *ngFor="let service of availableServices" [class.selected]="service.isSelected"
                                     class="book-now-service-card" (click)="toggleServiceSelection(service)">
                                     <h3>{{ service.service_name }}</h3>
-                                    <span class="price">Starting price <br> {{ service.price_start }}</span>
+                                    <span class="price">Starting price <br> ₱{{ service.price_start }}</span>
                                 </div>
                             </div>
                         </div>
+
 
                         <!-- Select Date Section -->
                         <div class="book-now-form-group">

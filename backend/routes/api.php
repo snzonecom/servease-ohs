@@ -5,6 +5,7 @@ use App\Http\Controllers\ProviderController;
 use App\Http\Controllers\ServiceCategoryController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ServiceController;
+use App\Http\Controllers\BookingController;
 
 
 /* ✅ Authentication Routes */
@@ -54,4 +55,11 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/provider/{providerId}/services', [ServiceController::class, 'store']);
     Route::put('/provider/{providerId}/services/{id}', [ServiceController::class, 'update']);
     Route::delete('/provider/{providerId}/services/{id}', [ServiceController::class, 'destroy']);
+});
+
+// BOOKINGS
+Route::middleware('auth:sanctum')->group(function () {
+    Route::post('/bookings', [BookingController::class, 'store']);                 // ✅ Create booking
+    Route::get('/user/bookings', [BookingController::class, 'userBookings']);      // ✅ Get user's bookings
+    Route::put('/bookings/{id}/status', [BookingController::class, 'updateStatus']); // ✅ Update booking status
 });

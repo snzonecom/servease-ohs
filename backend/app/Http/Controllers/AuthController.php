@@ -25,7 +25,7 @@ class AuthController extends Controller
             'brgy' => 'required|string',
             'city' => 'required|string',
             'province' => 'required|string',
-            'profile_photo' => 'nullable|image|mimes:jpg,jpeg,png|max:2048' // ✅ Profile Photo Validation
+            'profile_photo' => 'nullable|image|mimes:jpg,jpeg,png|max:2048'
         ]);
     
         try {
@@ -40,27 +40,25 @@ class AuthController extends Controller
                 'updated_at' => now(),
             ]);
     
-            // ✅ Handle File Upload (Same as serviceRegister)
+            // ✅ Handle File Upload
             $profilePhotoPath = $request->hasFile('profile_photo') 
                 ? $request->file('profile_photo')->store('uploads/profile_photos', 'public') 
                 : null;
     
-            // ✅ Insert Customer Info
-            if ($request->role == 'customer') {
-                DB::table('tbl_customer_info')->insert([
-                    'user_id' => $userId,
-                    'customer_name' => $request->customer_name,
-                    'contact_no' => $request->contact_no,
-                    'house_add' => $request->house_add,
-                    'street' => $request->street,
-                    'brgy' => $request->brgy,
-                    'city' => $request->city,
-                    'province' => $request->province,
-                    'profile_photo' => $profilePhotoPath, // ✅ Save Photo Path
-                    'created_at' => now(),
-                    'updated_at' => now(),
-                ]);
-            }
+            // ✅ Insert Customer Info (No need for condition)
+            DB::table('tbl_customer_info')->insert([
+                'user_id' => $userId,
+                'customer_name' => $request->customer_name,
+                'contact_no' => $request->contact_no,
+                'house_add' => $request->house_add,
+                'street' => $request->street,
+                'brgy' => $request->brgy,
+                'city' => $request->city,
+                'province' => $request->province,
+                'profile_photo' => $profilePhotoPath,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
     
             DB::commit();
             return response()->json(['message' => 'Registration successful'], 201);
@@ -68,7 +66,7 @@ class AuthController extends Controller
             DB::rollBack();
             return response()->json(['error' => 'Registration failed', 'message' => $e->getMessage()], 500);
         }
-    }
+    }    
 
 
     public function registerProvider(Request $request)
