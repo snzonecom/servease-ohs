@@ -1,0 +1,150 @@
+<body>
+    <!-- Header for Transaction Report -->
+    <div class="header-title">
+        <div class="section-header">Service Provider Transaction Report</div>
+    </div>
+
+    <!-- Filter Container with 4 Columns -->
+    <div class="filter-container">
+        <!-- Column 1: Search Bar -->
+        <div class="filter-column">
+            <label class="date-label">Search</label>
+            <input type="text" [(ngModel)]="searchQuery" (input)="filterTransactions()" placeholder="Search Here"
+                class="search-bar" />
+        </div>
+
+        <!-- Column 2: Start Date -->
+        <div class="filter-column">
+            <label class="date-label">Start Date</label>
+            <input type="date" [(ngModel)]="startDate" class="date-input" />
+        </div>
+
+        <!-- Column 3: End Date -->
+        <div class="filter-column">
+            <label class="date-label">End Date</label>
+            <input type="date" [(ngModel)]="endDate" class="date-input" />
+        </div>
+
+        <!-- Column 4: Generate Report Button -->
+        <div class="filter-column">
+            <button pButton (click)="generateReport()" class="generate-report-btn">Generate This Report</button>
+        </div>
+    </div>
+
+    <!-- Transaction Table -->
+    <div class="transaction-table">
+        <p-table [value]="filteredTransactions" [responsiveLayout]="'scroll'">
+            <ng-template pTemplate="header">
+                <tr>
+                    <th pSortableColumn="date_of_booking">Date of Booking <p-sortIcon
+                            field="date_of_booking"></p-sortIcon></th>
+                    <th>Availed Service Type</th>
+                    <th>Name of Customer</th>
+                    <th>Action</th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-transaction>
+                <tr>
+                    <td>{{ transaction.date_of_booking | date }}</td>
+                    <td>{{ transaction.service_type }}</td>
+                    <td>{{ transaction.customer_name }}</td>
+                    <td><button class="view-transaction-btn" (click)="viewTransaction(transaction)">View
+                            Transaction</button></td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </div>
+
+    <!-- Booking Details Dialog -->
+    <p-dialog header="Booking Details" [modal]="true" [(visible)]="ongoingDialogVisible" [style]="{ width: '40rem' }"
+        [baseZIndex]="10000" contentStyleClass="transaction-dialog">
+
+        <span class="review-text">
+            Kindly review the booking details below and ensure everything is in order.
+        </span>
+
+        <!-- Form Fields displaying customer booking details -->
+        <div class="customer-photo-container">
+            <span class="label-text">
+                <i class="pi pi-image"></i> Customer Photo
+            </span>
+            <img *ngIf="selectedBooking.customerPhoto" [src]="selectedBooking.customerPhoto" alt="Customer Photo"
+                class="customer-photo">
+            <p *ngIf="!selectedBooking.customerPhoto" class="no-photo">No photo available</p>
+        </div>
+
+        <div class="flex flex-column gap-3 mb-3">
+            <label for="customerName" class="field-label">
+                <span class="label-text">
+                    <i class="pi pi-user"></i> Customer Name
+                </span>
+                <input pInputText id="customerName" [(ngModel)]="selectedBooking.customerName" [disabled]="true"
+                    class="field-input" />
+            </label>
+
+        </div>
+
+        <div class="flex flex-column gap-3 mb-3">
+            <label for="contactNumber" class="field-label">
+                <span class="label-text">
+                    <i class="pi pi-phone"></i> Contact Number</span>
+                <input pInputText id="contactNumber" [(ngModel)]="selectedBooking.contactNumber" [disabled]="true"
+                    class="field-input" />
+            </label>
+        </div>
+
+        <div class="flex flex-column gap-3 mb-3">
+            <label for="email" class="field-label">
+                <span class="label-text">
+                    <i class="pi pi-envelope"></i> Email Address</span>
+                <input pInputText id="email" [(ngModel)]="selectedBooking.customerEmail" [disabled]="true"
+                    class="field-input" />
+            </label>
+        </div>
+
+        <div class="flex flex-column gap-3 mb-3">
+            <label for="service" class="field-label">
+                <span class="label-text">
+                    <i class="pi pi-wrench"></i> Availing Service/s</span>
+                <input pInputText id="service" [(ngModel)]="selectedBooking.availingService" [disabled]="true"
+                    class="field-input" />
+            </label>
+        </div>
+
+        <div class="flex flex-column gap-3 mb-3">
+            <label for="bookingDate" class="field-label">
+                <span class="label-text">
+                    <i class="pi pi-calendar"></i> Booking Date</span>
+                <input pInputText id="bookingDate" [(ngModel)]="selectedBooking.bookingDate" [disabled]="true"
+                    class="field-input" />
+            </label>
+        </div>
+
+        <div class="flex flex-column gap-3 mb-3">
+            <label for="bookingTime" class="field-label">
+                <span class="label-text">
+                    <i class="pi pi-clock"></i> Booking Time</span>
+                <input pInputText id="bookingTime" [(ngModel)]="selectedBooking.bookingTime" [disabled]="true"
+                    class="field-input" />
+            </label>
+        </div>
+
+        <div class="flex flex-column gap-3 mb-3">
+            <label for="remarks" class="field-label">
+                <span class="label-text">
+                    <i class="pi pi-comment"></i> Remarks</span>
+                <textarea pInputTextarea id="remarks" [(ngModel)]="selectedBooking.remarks" [disabled]="true"
+                    class="field-input" rows="4"></textarea>
+            </label>
+        </div>
+
+        <div class="flex flex-column gap-3 mb-3">
+            <label for="bookingPrice" class="field-label">
+                <span class="label-text">
+                    <i class="pi pi-wallet"></i> Price</span>
+                <input pInputText id="bookingPrice" class="field-input" [disabled]="true" />
+            </label>
+        </div>
+    </p-dialog>
+
+</body>

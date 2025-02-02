@@ -5,22 +5,20 @@ import { RouterModule, Routes } from '@angular/router';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { ProviderLayoutComponent } from './provider-layout/provider-layout.component';
 import { ProviderProfileComponent } from './components/provider-profile/provider-profile.component';
-import { PendingBookingsComponent } from './components/pending-bookings/pending-bookings.component';
-import { ConfirmedBookingsComponent } from './components/confirmed-bookings/confirmed-bookings.component';
-import { CompletedBookingsComponent } from './components/completed-bookings/completed-bookings.component';
-import { RateCustomersComponent } from './components/rate-customers/rate-customers.component';
+import { ProviderServicesComponent } from './components/provider-services/provider-services.component';
+import { MyTransactionsComponent } from './components/my-transactions/my-transactions.component';
+import { GenerateReportComponent } from './components/generate-report/generate-report.component';
 
 const routes: Routes = [
   {
     path: '',
     component: ProviderLayoutComponent,
     children: [
-      {path: 'provider-dashboard', component: DashboardComponent},
-      {path: 'pending-bookings', component: PendingBookingsComponent},
-      {path: 'confirmed-bookings', component: ConfirmedBookingsComponent},
-      {path: 'completed-bookings', component: CompletedBookingsComponent},
-      {path: 'rate-customers', component: RateCustomersComponent},
-      {path: 'provider-details', component: ProviderProfileComponent}
+      { path: 'provider-dashboard', component: DashboardComponent },
+      { path: 'provider-details', component: ProviderProfileComponent },
+      { path: 'provider-services', component: ProviderServicesComponent },
+      { path: 'provider-transactions', component: MyTransactionsComponent },
+      { path: 'generate-report', component: GenerateReportComponent }
     ]
   }
 ];

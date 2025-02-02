@@ -1,0 +1,83 @@
+<!-- Provider Services Page -->
+<div class="provider-services-container">
+    <div class="dashboard-header">
+        <h1 class="dashboard-title">Manage Your Services</h1>
+        <p class="dashboard-description">
+            Easily add, edit, or remove the services you offer to clients.
+        </p>
+    </div>
+
+    <!-- Search and Add Service Section -->
+    <div class="search-add-container">
+        <input type="text" class="search-bar" placeholder="Search services..." [(ngModel)]="searchTerm" />
+        <button pButton class="primary-btn" (click)="openAddDialog()">Add Service</button>
+    </div>
+
+    <!-- Services Grid -->
+    <div class="services-wrapper">
+        <div class="columns-container">
+            <div *ngFor="let service of filteredServices()" class="card">
+                <div class="card-content">
+                    <h3 class="card-title">{{ service.name }}</h3>
+                    <p class="card-description">{{ service.description }}</p>
+                    <p class="service-price">
+                        <i class="pi pi-tag"></i> Starting Price: <strong>{{ service.startingPrice | currency
+                            }}</strong>
+                    </p>
+                    <div class="card-actions">
+                        <button pButton class="edit-btn" (click)="openEditDialog(service)">Edit</button>
+                        <button pButton class="delete-btn" (click)="deleteService(service.id)">Delete</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Service Dialog -->
+    <p-dialog header="Add New Service" [(visible)]="dialogVisible" [modal]="true" [style]="{ width: '40rem' }">
+        <div class="dialog-content">
+            <label class="field-label">
+                <i class="pi pi-file"></i> <span>Service Name:</span>
+            </label>
+            <input type="text" class="field-input" [(ngModel)]="selectedService.name" />
+
+            <label class="field-label">
+                <i class="pi pi-align-left"></i> <span>Service Description:</span>
+            </label>
+            <textarea class="field-input" [(ngModel)]="selectedService.description"></textarea>
+
+            <label class="field-label">
+                <i class="pi pi-dollar"></i> <span>Starting Price:</span>
+            </label>
+            <input type="number" class="field-input" [(ngModel)]="selectedService.startingPrice" />
+
+            <div class="dialog-buttons">
+                <button pButton class="save-btn" (click)="saveService()">Save</button>
+            </div>
+        </div>
+    </p-dialog>
+
+    <!-- Edit Service Dialog -->
+    <p-dialog header="Edit Service" [(visible)]="editDialogVisible" [modal]="true" [style]="{ width: '40rem' }">
+        <div class="dialog-content">
+            <label class="field-label">
+                <i class="pi pi-file"></i> <span>Service Name:</span>
+            </label>
+            <input type="text" class="field-input" [(ngModel)]="selectedService.name" />
+
+            <label class="field-label">
+                <i class="pi pi-align-left"></i> <span>Service Description:</span>
+            </label>
+            <textarea class="field-input" [(ngModel)]="selectedService.description"></textarea>
+
+            <label class="field-label">
+                <i class="pi pi-dollar"></i> <span>Starting Price:</span>
+            </label>
+            <input type="number" class="field-input" [(ngModel)]="selectedService.startingPrice" />
+
+            <div class="dialog-buttons">
+                <button pButton class="save-btn" (click)="saveService()">Save</button>
+            </div>
+        </div>
+    </p-dialog>
+</div>

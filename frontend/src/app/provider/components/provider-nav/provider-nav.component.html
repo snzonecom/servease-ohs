@@ -15,28 +15,29 @@
             </svg>
         </label>
 
-        <a class="home-link" href="/provider/provider-dashboard">LOGO GOES HERE</a>
-        <a href="/provider/provider-dashboard">Dashboard</a>
+        <a class="home-link" routerLink="/provider/provider-dashboard">LOGO GOES HERE</a>
+        <a routerLink="/provider/provider-dashboard">Dashboard</a>
+        <a routerLink="/provider/provider-services">My Offered Services</a>
+        <a routerLink="/provider/provider-transactions">My Transactions</a>
 
         <!-- Dropdown for My Transactions -->
         <div class="dropdown">
             <input type="checkbox" id="dropdown-active" class="dropdown-checkbox">
             <label for="dropdown-active" class="dropdown-toggle">
-                My Transactions
+                Hello, Name Here!
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" viewBox="0 0 24 24" fill="none" stroke="white"
                     stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <polyline points="6 9 12 15 18 9"></polyline>
                 </svg>
             </label>
             <div class="dropdown-menu">
-                <a href="/provider/pending-bookings">Pending Bookings</a>
-                <a href="/provider/confirmed-bookings">Scheduled Bookings</a>
-                <a href="/provider/completed-bookings">Completed Transactions</a>
-                <a href="/provider/rate-customers">Customers to Rate</a>
+                <a routerLink="/provider/provider-details">Profile Details</a>
+                <a routerLink="/provider/generate-report">Generate Report</a>
+                <a (click)="logout()">Logout</a>
             </div>
         </div>
 
-        <a href="/provider/provider-details">Profile Details</a>
-        <a (click)="logout()">Logout</a>
+
+
     </div>
 </nav>
