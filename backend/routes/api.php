@@ -4,6 +4,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProviderController;
 use App\Http\Controllers\ServiceCategoryController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\ServiceController;
+
 
 /* ✅ Authentication Routes */
 Route::post('/register', [AuthController::class, 'register']);
@@ -41,3 +43,12 @@ Route::get('/pending-providers', [ProviderController::class, 'pendingProviders']
 
 // FOR ADMIN - LISTING APPROVED APPLICATIONS PAGE
 Route::get('/approved-providers', [ProviderController::class, 'approvedProviders']);
+
+
+// PROVIDER SERVICES
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/provider/services', [ServiceController::class, 'index']);
+    Route::post('/provider/services', [ServiceController::class, 'store']);
+    Route::put('/provider/services/{id}', [ServiceController::class, 'update']);
+    Route::delete('/provider/services/{id}', [ServiceController::class, 'destroy']);
+});

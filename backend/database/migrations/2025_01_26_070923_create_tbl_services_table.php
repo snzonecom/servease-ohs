@@ -15,12 +15,15 @@ return new class extends Migration
             $table->id('service_id'); // Primary key        
             $table->unsignedBigInteger('provider_id'); // Foreign key
             $table->string('service_name');
+            $table->string('service_description')->nullable();
             $table->decimal('price_start', 8, 2);
-            $table->string('role')->nullable();
             $table->timestamps();
     
             // Foreign key constraint
             $table->foreign('provider_id')->references('provider_id')->on('tbl_provider_info');
+
+            // Set AUTO_INCREMENT start value
+            DB::statement('ALTER TABLE tbl_services AUTO_INCREMENT = 105000;');
         });
     }
 
