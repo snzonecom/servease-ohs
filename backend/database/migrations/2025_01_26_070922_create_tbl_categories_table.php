@@ -14,12 +14,9 @@ return new class extends Migration
         Schema::create('tbl_categories', function (Blueprint $table) {
             $table->id('category_id'); // Primary key
             $table->string('category_name');
-            $table->text('category_description')->nullable();
+            $table->text('category_description');
             $table->timestamps();
         });
-
-        // Set AUTO_INCREMENT start value
-        DB::statement('ALTER TABLE tbl_categories AUTO_INCREMENT = 156785;');
     }
 
     /**

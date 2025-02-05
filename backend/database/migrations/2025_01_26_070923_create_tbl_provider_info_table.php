@@ -13,20 +13,18 @@ return new class extends Migration
     {
         Schema::create('tbl_provider_info', function (Blueprint $table) {
             $table->id('provider_id'); // Primary key
-            $table->string('profile_pic')->nullable();
+            $table->string('profile_pic');
             $table->string('provider_name');
             $table->string('contact_no');
-            $table->string('office_add')->nullable();
-            $table->string('street')->nullable();
-            $table->string('brgy')->nullable();
-            $table->string('city')->nullable();
-            $table->string('province')->nullable();
-            $table->string('brn')->nullable();
-            $table->string('contact_person')->nullable();
-            $table->string('attachment')->nullable();
-            $table->string('service_type')->nullable();
-            $table->string('account_status')->nullable();
-            $table->boolean('email_verified')->default(false);
+            $table->string('office_add');
+            $table->string('brgy');
+            $table->string('city');
+            $table->string('province');
+            $table->string('brn');
+            $table->string('contact_person');
+            $table->string('attachment');
+            $table->string('service_type');
+            $table->string('account_status');
             $table->timestamps();
         });
 

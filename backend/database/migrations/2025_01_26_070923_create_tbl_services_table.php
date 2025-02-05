@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id('service_id'); // Primary key        
             $table->unsignedBigInteger('provider_id'); // Foreign key
             $table->string('service_name');
-            $table->string('service_description')->nullable();
+            $table->string('service_description');
             $table->decimal('price_start', 8, 2);
             $table->timestamps();
     
@@ -25,7 +25,7 @@ return new class extends Migration
         });
 
         // Set AUTO_INCREMENT start value
-        DB::statement('ALTER TABLE tbl_services AUTO_INCREMENT = 105000;');
+        DB::statement('ALTER TABLE tbl_services AUTO_INCREMENT = 105010;');
     }
 
     /**

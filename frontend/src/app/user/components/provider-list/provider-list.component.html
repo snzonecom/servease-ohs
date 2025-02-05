@@ -16,7 +16,7 @@
                     <h3 class="business-name">{{ provider.businessName }}</h3>
                     <div class="rating">
                         <span class="star">&#9733;</span>
-                        <span class="rating-number">{{ provider.rating }}</span>
+                        <span class="rating-number">{{ provider.rating }}/5</span>
                     </div>
                     <p class="business-location"><i class="pi pi-map-marker"></i> {{ provider.location }}</p>
                     <button class="book-now-btn" [routerLink]="['/user/book-service', provider.provider_id]">Book Now</button>

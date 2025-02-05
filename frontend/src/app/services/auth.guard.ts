@@ -26,6 +26,7 @@ export class AuthGuard implements CanActivate {
     }
 
     // Redirect to unauthorized page if the role doesn't match
+    localStorage.clear();
     this.router.navigate(['/unauthorized']);
     return false;
   }

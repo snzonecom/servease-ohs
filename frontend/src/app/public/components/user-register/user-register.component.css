@@ -210,6 +210,20 @@
     text-decoration: underline;
 }
 
+.custom-dropdown {
+    padding: 8px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    font-size: 14px;
+    background: #d0e4ef;
+    width: 100%;
+}
+
+/* Hover effect */
+.custom-dropdown:hover {
+    border-color: #8cbad3;
+    background-color: #eee;
+}
 
 /* Mobile responsiveness */
 @media(max-width: 768px) {

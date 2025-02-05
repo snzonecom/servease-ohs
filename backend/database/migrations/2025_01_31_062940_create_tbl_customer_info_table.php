@@ -13,14 +13,13 @@ return new class extends Migration
     {
         Schema::create('tbl_customer_info', function (Blueprint $table) {
             $table->id('customer_id'); // Auto-incrementing primary key
-            $table->string('profile_photo')->nullable();
+            $table->string('profile_photo');
             $table->string('customer_name');
             $table->string('contact_no');
-            $table->string('house_add')->nullable();
-            $table->string('street')->nullable();
-            $table->string('brgy')->nullable();
-            $table->string('city')->nullable();
-            $table->string('province')->nullable();
+            $table->string('house_add');
+            $table->string('brgy');
+            $table->string('city');
+            $table->string('province');
             $table->timestamps();
         });
     }

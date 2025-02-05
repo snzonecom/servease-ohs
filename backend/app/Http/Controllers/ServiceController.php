@@ -8,6 +8,15 @@ use Illuminate\Support\Facades\Auth;
 
 class ServiceController extends Controller
 {
+    
+    public function getAllServices()
+    {
+        $services = Service::all();  // ✅ Get all services
+    
+        return response()->json($services);  // ✅ Return all services
+    }
+
+
     public function index()
     {
         $user = auth()->user();

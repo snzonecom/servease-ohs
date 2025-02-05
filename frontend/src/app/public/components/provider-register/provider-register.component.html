@@ -52,28 +52,32 @@
           <input id="officeAdd" type="text" [(ngModel)]="providerData.houseAdd" placeholder="123 House Building 45" />
         </div>
 
-        <!-- Street -->
-        <div class="info-row">
-          <label for="street">Street:</label>
-          <input id="street" type="text" [(ngModel)]="providerData.street" placeholder="Unknown Street" />
-        </div>
-
-        <!-- Barangay -->
+        <!-- Barangay Dropdown -->
         <div class="info-row">
           <label for="brgy">Barangay:</label>
-          <input id="brgy" type="text" [(ngModel)]="providerData.brgy" placeholder="Barangay Name" />
+          <select id="brgy" [(ngModel)]="providerData.brgy" [disabled]="!barangays.length" class="custom-dropdown" required>
+            <option value="" disabled selected>Select your City/Municipality First</option>
+            <option *ngFor="let brgy of barangays" [value]="brgy">{{ brgy }}</option>
+          </select>
         </div>
 
-        <!-- City -->
+        <!-- City/Municipality Dropdown -->
         <div class="info-row">
           <label for="city">City/Municipality:</label>
-          <input id="city" type="text" [(ngModel)]="providerData.city" placeholder="City Name" />
+          <select id="city" [(ngModel)]="providerData.city" (change)="onCityChange()" class="custom-dropdown" [disabled]="!cities.length"
+            required>
+            <option value="" disabled selected>Select Your Province First</option>
+            <option *ngFor="let city of cities" [value]="city.name">{{ city.name }}</option>
+          </select>
         </div>
 
-        <!-- Province -->
+        <!-- Province Dropdown -->
         <div class="info-row">
           <label for="province">Province:</label>
-          <input id="province" type="text" [(ngModel)]="providerData.province" placeholder="Province Name" />
+          <select id="province" [(ngModel)]="providerData.province" (change)="onProvinceChange()" class="custom-dropdown" required>
+            <option value="" disabled selected>Select Province</option>
+            <option *ngFor="let province of provinces" [value]="province.province">{{ province.province }}</option>
+          </select>
         </div>
 
         <!-- Business Registration Number (BRN) -->

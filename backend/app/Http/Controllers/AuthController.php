@@ -21,11 +21,10 @@ class AuthController extends Controller
             'customer_name' => 'required|string',
             'contact_no' => 'required|string',
             'house_add' => 'required|string',
-            'street' => 'required|string',
             'brgy' => 'required|string',
             'city' => 'required|string',
             'province' => 'required|string',
-            'profile_photo' => 'nullable|image|mimes:jpg,jpeg,png|max:2048'
+            'profile_photo' => 'required|image|mimes:jpg,jpeg,png|max:2048'
         ]);
     
         try {
@@ -51,7 +50,6 @@ class AuthController extends Controller
                 'customer_name' => $request->customer_name,
                 'contact_no' => $request->contact_no,
                 'house_add' => $request->house_add,
-                'street' => $request->street,
                 'brgy' => $request->brgy,
                 'city' => $request->city,
                 'province' => $request->province,
@@ -77,7 +75,6 @@ class AuthController extends Controller
             'password' => 'required|string|min:8',
             'contactNumber' => 'required',
             'houseAdd' => 'required',
-            'street' => 'required',
             'brgy' => 'required',
             'city' => 'required',
             'province' => 'required', // ✅ Ensure this is validated
@@ -115,7 +112,6 @@ class AuthController extends Controller
             'provider_name' => $request->fullName, // ✅ Corrected typo
             'contact_no' => $request->contactNumber,
             'office_add' => $request->houseAdd,
-            'street' => $request->street,
             'brgy' => $request->brgy,
             'city' => $request->city,
             'province' => $request->province,
@@ -124,7 +120,6 @@ class AuthController extends Controller
             'attachment' => $personIDPath ? 'storage/' . $personIDPath : null,
             'service_type' => $request->serviceType,
             'account_status' => 'pending', // ✅ Default status
-            'email_verified' => false,
             'created_at' => now(),
             'updated_at' => now(),
         ]);

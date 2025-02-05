@@ -5,15 +5,17 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Provider;
 use App\Models\User;
+use App\Models\Booking;
+
 
 class ProviderController extends Controller
 {
     // ✅ List all providers
-    public function index()
-    {
-        $providers = Provider::with('user')->get();
-        return response()->json($providers);
-    }
+        public function index()
+        {
+            $providers = Provider::with('user', )->get();
+            return response()->json($providers);
+        }
 
     // ✅ Show provider by ID
     public function show($id)
@@ -125,16 +127,19 @@ class ProviderController extends Controller
     // For showing providers under a certain category
     public function getProvidersByCategory($categoryId)
     {
-        $providers = Provider::with('user')
+        $providers = Provider::with('bookings')  // Include bookings for ratings
             ->where('account_status', 'approved')
             ->where('service_type', $categoryId)
             ->get()
             ->map(function ($provider) {
+                // ✅ Dynamically calculate the average rating
+                $averageRating = $provider->bookings()->avg('provider_rate');
+    
                 return [
                     'provider_id' => $provider->provider_id,
                     'businessName' => $provider->provider_name,
                     'logo' => $provider->profile_pic ? asset($provider->profile_pic) : null,
-                    'rating' => 4.5, // You can replace this with actual ratings logic
+                    'rating' => $averageRating ? round($averageRating, 1) : 0, // ✅ Round to 1 decimal place
                     'location' => $provider->city . ', ' . $provider->province
                 ];
             });

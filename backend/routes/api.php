@@ -63,3 +63,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/user/bookings', [BookingController::class, 'userBookings']);      // ✅ Get user's bookings
     Route::put('/bookings/{id}/status', [BookingController::class, 'updateStatus']); // ✅ Update booking status
 });
+
+Route::middleware('auth:sanctum')->get('/user/{userId}/bookings', [BookingController::class, 'getBookingsByUser']);
+Route::get('/services', [ServiceController::class, 'getAllServices']);  // ✅ Fetch all services
+
+Route::post('/bookings/{id}/rate', [BookingController::class, 'submitRating']);

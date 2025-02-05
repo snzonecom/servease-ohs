@@ -25,12 +25,18 @@ export class AuthService {
         localStorage.setItem('userRole', response.user.role);
 
         // ✅ Store provider_id if available
+        if (response.user.id) {
+          localStorage.setItem('userId', response.user.id);
+        }
+
+        // ✅ Store provider_id if available
         if (response.provider_id) {
           localStorage.setItem('provider_id', response.provider_id);
         }
       })
     );
   }
+
 
 
   getUser(): Observable<any> {
@@ -44,8 +50,7 @@ export class AuthService {
       }
     }).pipe(
       tap(() => {
-        localStorage.removeItem('authToken');  // ✅ Clear tokens after successful logout
-        localStorage.removeItem('userRole');
+        localStorage.clear();
       })
     );
   }

@@ -3,6 +3,62 @@ import { AuthService } from '../../../services/auth.service';
 import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
 
+// Locations Array
+export const locations = [
+  {
+    province: 'Pampanga',
+    cities: [
+      {
+        name: 'Angeles City',
+        barangays: [
+          'Agapito del Rosario', 'Amsic', 'Anunas', 'Balibago', 'Capaya',
+          'Claro M. Recto', 'Cuayan', 'Cutcut', 'Cutud', 'Lourdes North West',
+          'Lourdes Sur (Talimundoc)', 'Lourdes Sur East', 'Malabañas', 'Margot',
+          'Marisol (Ninoy Aquino)', 'Mining', 'Pampang (Santo Niño)', 'Pandan',
+          'Pulung Bulu', 'Pulung Cacutud', 'Pulung Maragul', 'Salapungan',
+          'San José', 'San Nicolas', 'Santa Teresita', 'Santa Trinidad',
+          'Santo Cristo', 'Santo Domingo', 'Santo Rosario (Población)',
+          'Sapalibutad', 'Sapangbato', 'Tabun', 'Virgen Delos Remedios'
+        ]
+      },
+      {
+        name: 'City of San Fernando',
+        barangays: [
+          'Alasas', 'Baliti', 'Bulaon', 'Calulut', 'Dela Paz Norte',
+          'Dela Paz Sur', 'Del Carmen', 'Del Pilar', 'Del Rosario',
+          'Dolores', 'Juliana', 'Lara', 'Lourdes', 'Magliman',
+          'Maimpis', 'Malino', 'Malpitic', 'Pandaras', 'Panipuan',
+          'Pulung Bulu', 'Quebiauan', 'Saguin', 'San Agustin',
+          'San Felipe', 'San Isidro', 'San Jose', 'San Juan',
+          'San Nicolas', 'San Pedro', 'Santa Lucia', 'Santa Teresita',
+          'Santo Niño', 'Santo Rosario', 'Sindalan', 'Telabastagan'
+        ]
+      },
+      { name: 'Mabalacat City', barangays: [] },
+      { name: 'Apalit', barangays: [] },
+      { name: 'Arayat', barangays: [] },
+      { name: 'Bacolor', barangays: [] },
+      { name: 'Candaba', barangays: [] },
+      { name: 'Floridablanca', barangays: [] },
+      { name: 'Guagua', barangays: [] },
+      { name: 'Lubao', barangays: [] },
+      { name: 'Macabebe', barangays: [] },
+      { name: 'Magalang', barangays: [] },
+      { name: 'Masantol', barangays: [] },
+      { name: 'Mexico', barangays: [] },
+      { name: 'Minalin', barangays: [] },
+      { name: 'Porac', barangays: [] },
+      { name: 'San Luis', barangays: [] },
+      { name: 'San Simon', barangays: [] },
+      { name: 'Santa Ana', barangays: [] },
+      { name: 'Santa Rita', barangays: [] },
+      { name: 'Santo Tomas', barangays: [] },
+      { name: 'Sasmuan', barangays: [] }
+    ]
+  }
+];
+
+
 @Component({
   selector: 'app-user-register',
   templateUrl: './user-register.component.html',
@@ -13,12 +69,15 @@ export class UserRegisterComponent {
   photoPreview: string | null = null;
   selectedFile: File | null = null;
 
+  provinces = locations;
+  cities: any[] = [];
+  barangays: string[] = [];
+
   formData: any = {
     fullName: '',
     email: '',
     contactNumber: '',
     houseAdd: '',
-    street: '',
     brgy: '',
     city: '',
     province: '',
@@ -28,6 +87,23 @@ export class UserRegisterComponent {
   };
 
   constructor(private authService: AuthService, private router: Router) { }
+
+  // Handle Province Selection
+  onProvinceChange(): void {
+    const selectedProvince = this.provinces.find(p => p.province === this.formData.province);
+    this.cities = selectedProvince ? selectedProvince.cities : [];
+    this.formData.city = '';
+    this.barangays = [];
+    this.formData.brgy = '';
+  }
+
+  // Handle City Selection
+  onCityChange(): void {
+    const selectedCity = this.cities.find(c => c.name === this.formData.city);
+    this.barangays = selectedCity ? selectedCity.barangays : [];
+    this.formData.brgy = '';
+  }
+
 
   triggerProfileInput(): void {
     const fileInput = document.getElementById('profile') as HTMLInputElement;
@@ -64,7 +140,6 @@ export class UserRegisterComponent {
     registrationData.append('customer_name', this.formData.fullName);
     registrationData.append('contact_no', this.formData.contactNumber);
     registrationData.append('house_add', this.formData.houseAdd);
-    registrationData.append('street', this.formData.street);
     registrationData.append('brgy', this.formData.brgy);
     registrationData.append('city', this.formData.city);
     registrationData.append('province', this.formData.province);
@@ -101,14 +176,13 @@ export class UserRegisterComponent {
       contactNumber: '',
       houseAdd: '',
       street: '',
-      brgy: '',
-      city: '',
-      province: '',
       password: '',
       confirmPassword: '',
       acceptTerms: false
     };
     this.photoPreview = null;
     this.selectedFile = null;
+    this.cities = [];
+    this.barangays = [];
   }
 }
