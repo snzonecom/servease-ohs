@@ -6,16 +6,17 @@ use Illuminate\Http\Request;
 use App\Models\Provider;
 use App\Models\User;
 use App\Models\Booking;
-
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
 class ProviderController extends Controller
 {
     // ✅ List all providers
-        public function index()
-        {
-            $providers = Provider::with('user', )->get();
-            return response()->json($providers);
-        }
+    public function index()
+    {
+        $providers = Provider::with('user',)->get();
+        return response()->json($providers);
+    }
 
     // ✅ Show provider by ID
     public function show($id)
@@ -25,32 +26,54 @@ class ProviderController extends Controller
     }
 
     // ✅ Update provider details
-    public function update(Request $request, $id)
+    public function update(Request $request)
     {
-        $provider = Provider::findOrFail($id);
-
+        $provider = Provider::where('user_id', Auth::id())->first();
+        $user = User::find(Auth::id()); // ✅ Get the corresponding user
+    
+        if (!$provider || !$user) {
+            return response()->json(['message' => 'Provider not found'], 404);
+        }
+    
+        // ✅ Validate Input
         $request->validate([
-            'provider_name' => 'sometimes|required|string|max:255',
-            'contact_no' => 'sometimes|required|string|max:20',
-            'profile_pic' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'attachment' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'email' => 'email|unique:users,email,' . Auth::id(),
+            'contact_no' => 'nullable|string',
+            'office_add' => 'nullable|string',
+            'brgy' => 'nullable|string',
+            'city' => 'nullable|string',
+            'province' => 'nullable|string',
+            'contact_person' => 'nullable|string',
+            'service_type' => 'nullable|integer',
+            'password' => 'nullable|string|min:6',  // ✅ Add password validation
         ]);
-
-        // Handle file updates
-        if ($request->hasFile('profile_pic')) {
-            $provider->profile_pic = $request->file('profile_pic')->store('public/profile_pics');
+    
+        // ✅ Update Provider Information
+        $provider->update($request->only([
+            'contact_no',
+            'office_add',
+            'brgy',
+            'city',
+            'province',
+            'contact_person',
+            'service_type'
+        ]));
+    
+        // ✅ Update Email in Users Table
+        if ($request->has('email')) {
+            $user->email = $request->input('email');
+            $user->save();
         }
-
-        if ($request->hasFile('attachment')) {
-            $provider->attachment = $request->file('attachment')->store('public/attachments');
+    
+        // ✅ Update Password if provided
+        if ($request->filled('password')) {
+            $user->password = Hash::make($request->input('password'));
+            $user->save();
         }
-
-        $provider->fill($request->except(['profile_pic', 'attachment']));
-        $provider->save();
-
+    
         return response()->json([
-            'message' => 'Provider updated successfully!',
-            'provider' => $provider,
+            'message' => 'Profile updated successfully!',
+            'provider' => $provider
         ]);
     }
 
@@ -97,16 +120,16 @@ class ProviderController extends Controller
             ->where('account_status', 'pending')
             ->get()
             ->map(function ($provider) {
-                $provider->profile_pic = $provider->profile_pic ? asset( $provider->profile_pic) : null;
-                $provider->attachment = $provider->attachment ? asset( $provider->attachment) : null;
+                $provider->profile_pic = $provider->profile_pic ? asset($provider->profile_pic) : null;
+                $provider->attachment = $provider->attachment ? asset($provider->attachment) : null;
                 $provider->service_type_name = $provider->serviceCategory ? $provider->serviceCategory->category_name : 'Unknown';
                 $provider->email = $provider->user ? $provider->user->email : 'N/A';
                 return $provider;
             });
-    
+
         return response()->json($pendingProviders);
     }
-    
+
     // For showing approved providers
     public function approvedProviders()
     {
@@ -114,16 +137,16 @@ class ProviderController extends Controller
             ->where('account_status', 'approved')
             ->get()
             ->map(function ($provider) {
-                $provider->profile_pic = $provider->profile_pic ? asset( $provider->profile_pic) : null;
-                $provider->attachment = $provider->attachment ? asset( $provider->attachment) : null;
+                $provider->profile_pic = $provider->profile_pic ? asset($provider->profile_pic) : null;
+                $provider->attachment = $provider->attachment ? asset($provider->attachment) : null;
                 $provider->service_type_name = $provider->serviceCategory ? $provider->serviceCategory->category_name : 'Unknown';
                 $provider->email = $provider->user ? $provider->user->email : 'N/A';
                 return $provider;
             });
-    
+
         return response()->json($approvedProviders);
     }
-    
+
     // For showing providers under a certain category
     public function getProvidersByCategory($categoryId)
     {
@@ -134,7 +157,7 @@ class ProviderController extends Controller
             ->map(function ($provider) {
                 // ✅ Dynamically calculate the average rating
                 $averageRating = $provider->bookings()->avg('provider_rate');
-    
+
                 return [
                     'provider_id' => $provider->provider_id,
                     'businessName' => $provider->provider_name,
@@ -143,7 +166,7 @@ class ProviderController extends Controller
                     'location' => $provider->city . ', ' . $provider->province
                 ];
             });
-    
+
         return response()->json($providers);
     }
 
@@ -170,5 +193,27 @@ class ProviderController extends Controller
         ]);
     }
 
+    public function getProfile($id)
+    {
+        $provider = Provider::with(['user', 'serviceCategory']) // ✅ Include serviceCategory relationship
+            ->where('provider_id', $id)
+            ->first();
     
+        if (!$provider) {
+            return response()->json(['message' => 'Provider not found'], 404);
+        }
+    
+        return response()->json([
+            'provider' => $provider,
+            'email' => $provider->user->email ?? 'N/A',
+            'profile_pic' => $provider->profile_pic ? asset($provider->profile_pic) : null,
+            'service_type_name' => $provider->serviceCategory->category_name ?? 'N/A' // ✅ Fetch service category name
+        ], 200);
+    }
+    
+    
+    
+
+
+
 }

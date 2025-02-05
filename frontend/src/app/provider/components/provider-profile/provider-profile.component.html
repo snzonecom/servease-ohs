@@ -1,9 +1,8 @@
 <!-- Profile Details Title Section -->
 <div class="dashboard-header">
-    <h1 class="dashboard-title">
-        Profile Details</h1>
-    <p class="dashboard-description">Manage and update your information to keep your account
-        up to date. Some fields, however, may not be editable as they are finalized upon account verification.</p>
+    <h1 class="dashboard-title">Profile Details</h1>
+    <p class="dashboard-description">Manage and update your information to keep your account up to date. Some fields may
+        not be editable after verification.</p>
 </div>
 
 <!-- Profile Details Card Section -->
@@ -15,57 +14,87 @@
                 <span class="header-title">Business Information</span>
             </div>
         </ng-template>
+
         <div class="card-content">
-            <!-- Single Column Layout for Information and Fields -->
             <div class="info-row-container">
                 <div class="info-row">
                     <label for="businessLogo">Business Logo:</label>
-                    <p-image src="https://placehold.co/600x600"
-                        alt="Business Logo" width="100" height="100"></p-image>
+                    <p-image [src]="provider.profile_pic" alt="Business Logo" width="100" height="100"></p-image>
                 </div>
+
                 <div class="info-row">
                     <label for="businessName">Business Name:</label>
-                    <input id="businessName" type="text" [(ngModel)]="businessName" disabled />
+                    <input id="businessName" type="text" [(ngModel)]="provider.provider_name" disabled />
                 </div>
+
                 <div class="info-row">
                     <label for="email">Email Address:</label>
-                    <input id="email" type="email" value="contact@business.com" [(ngModel)]="businessEmail" [disabled]="!isEditing" />
+                    <input id="email" type="email" [(ngModel)]="provider.email" [disabled]="!isEditing" />
                 </div>
+
                 <div class="info-row">
                     <label for="contactNumber">Contact Number:</label>
-                    <input id="contactNumber" type="tel" value="(123) 456-7890" [(ngModel)]="businessContact" [disabled]="!isEditing" />
+                    <input id="contactNumber" type="tel" [(ngModel)]="provider.contact_no" [disabled]="!isEditing" />
                 </div>
+
                 <div class="info-row">
                     <label for="officeAdd">Office Address:</label>
-                    <input id="officeAdd" type="text" value="123 House Building 4" [(ngModel)]="businessContact" [disabled]="!isEditing" />
+                    <input id="officeAdd" type="text" [(ngModel)]="provider.office_add" [disabled]="!isEditing" />
                 </div>
-                <div class="info-row">
-                    <label for="street">Street:</label>
-                    <input id="street" type="text" value="Street Name" [(ngModel)]="businessContact" [disabled]="!isEditing" />
-                </div>
+
                 <div class="info-row">
                     <label for="brgy">Barangay:</label>
-                    <input id="brgy" type="text" value="Barangay Name" [(ngModel)]="businessContact" [disabled]="!isEditing" />
+                    <select id="brgy" [(ngModel)]="provider.brgy" [disabled]="!isEditing" class="custom-dropdown">
+                        <option *ngFor="let barangay of barangays" [value]="barangay">{{ barangay }}</option>
+                    </select>
                 </div>
+
                 <div class="info-row">
                     <label for="city">City:</label>
-                    <input id="city" type="text" value="City Name" [(ngModel)]="businessContact" [disabled]="!isEditing" />
+                    <select id="city" [(ngModel)]="provider.city" (change)="onCityChange(provider.city)"
+                        [disabled]="!isEditing" class="custom-dropdown">
+                        <option *ngFor="let city of cities" [value]="city.name">{{ city.name }}</option>
+                    </select>
                 </div>
+
+                <div class="info-row">
+                    <label for="province">Province:</label>
+                    <select id="province" [(ngModel)]="provider.province" (change)="onProvinceChange(provider.province)"
+                        [disabled]="!isEditing" class="custom-dropdown">
+                        <option *ngFor="let province of provinces" [value]="province.province">{{ province.province }}
+                        </option>
+                    </select>
+                </div>
+
                 <div class="info-row">
                     <label for="brn">Business Registration Number (BRN):</label>
-                    <input id="brn" type="text" value="BRN-12345" disabled />
+                    <input id="brn" type="text" [(ngModel)]="provider.brn" disabled />
                 </div>
+
                 <div class="info-row">
                     <label for="contactPerson">Contact Person:</label>
-                    <input id="contactPerson" type="text" value="John Doe" [(ngModel)]="contactPerson" [disabled]="!isEditing" />
-                </div>                
+                    <input id="contactPerson" type="text" [(ngModel)]="provider.contact_person"
+                        [disabled]="!isEditing" />
+                </div>
+
                 <div class="info-row">
                     <label for="serviceType">Service Type:</label>
-                    <input id="serviceType" type="text" value="Online Services" [(ngModel)]="serviceType" [disabled]="!isEditing" />
-                </div>
-                <div class="info-row">
-                    <label for="password">Password:</label>
-                    <input id="password" type="text" [(ngModel)]="serviceType" [disabled]="!isEditing" />
+                    <select id="serviceType" [(ngModel)]="provider.service_type" [disabled]="!isEditing" class="custom-dropdown">
+                      <option *ngFor="let category of serviceCategories" [value]="category.category_id">
+                        {{ category.category_name }}
+                      </option>
+                    </select>
+                  </div>
+                  
+                  
+
+
+                <!-- ✅ New Password Field (Visible in Edit Mode Only) -->
+                <div class="info-row" *ngIf="isEditing">
+                    <label for="newPassword">New Password:</label>
+                    <input id="newPassword" type="password" [(ngModel)]="provider.new_password"
+                        placeholder="Enter new password" />
+                    <small class="info-text">Leave blank if you don't want to change the password.</small>
                 </div>
             </div>
         </div>
@@ -73,10 +102,9 @@
 
     <!-- Buttons Outside the Card -->
     <div class="button-container" style="text-align: center; margin-top: 10px;">
-        <button pButton type="button" label="Edit Profile" icon="pi pi-pencil" class="buttons-below" (click)="editProfile()"></button>
-        <button pButton type="button" label="Save Details" icon="pi pi-save" class="buttons-below" (click)="saveProfile()"></button>
-        
+        <button pButton type="button" label="Edit Profile" icon="pi pi-pencil" class="buttons-below"
+            (click)="editProfile()" *ngIf="!isEditing"></button>
+        <button pButton type="button" label="Save Details" icon="pi pi-save" class="buttons-below"
+            (click)="saveProfile()" *ngIf="isEditing"></button>
     </div>
-
-
 </div>

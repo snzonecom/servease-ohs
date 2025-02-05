@@ -76,7 +76,14 @@ Route::middleware('auth:sanctum')->put('/bookings/{id}/set-price', [BookingContr
 Route::get('/provider/{providerId}/transactions', [BookingController::class, 'getProviderTransactions']);
 
 
-
+// User Edit Profile
 Route::middleware('auth:sanctum')->get('/user', [AuthController::class, 'getUserProfile']);
 Route::middleware('auth:sanctum')->put('/user/update-profile', [AuthController::class, 'updateUserProfile']);
+
+// Provider Edit Profile
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/provider/{id}/profile', [ProviderController::class, 'getProfile']);  // ✅ Using {id}
+    Route::put('/provider/update-profile', [ProviderController::class, 'update']);
+});
+
 
