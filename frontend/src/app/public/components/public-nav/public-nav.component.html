@@ -15,13 +15,13 @@
             </svg>
         </label>
 
-        <a class="home-link" routerLink="/">LOGO GOES HERE</a>
+        <a class="home-link" routerLink="/"><img src="assets/img/servease-logo.png" alt="servease logo" width="50px"></a>
         <a routerLink="/">Home</a>
         <a [routerLink]="['/']" fragment="service">Service Categories</a>
         <a [routerLink]="['/']" fragment="about">About</a>
         <a [routerLink]="['/']" fragment="faq" >FAQs</a>
-        <a routerLink="/login">Login</a>
-        <a (click)="showRegisterDialog()">Register</a>
+        <a routerLink="/login" class="login-btn">Login</a>
+        <a (click)="showRegisterDialog()" class="register-btn">Register</a>
     </div>
 </nav>
 

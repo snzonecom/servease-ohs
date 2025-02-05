@@ -38,8 +38,9 @@
 
                     <!-- Call-to-Action Button -->
                     <div class="carousel-card-footer">
-                            <button icon="pi pi-calendar-plus" (click)="loginFirstVisible = true" class="carousel-card-button">
-                                Book Now</button>
+                        <button icon="pi pi-calendar-plus" (click)="loginFirstVisible = true"
+                            class="carousel-card-button">
+                            Book Now</button>
                     </div>
                 </div>
             </div>
@@ -54,29 +55,28 @@
         <div class="about-description">
             <h2>About SERVEASE</h2>
             <p class="description">
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Natus pariatur id doloribus nam distinctio
-                deserunt odio facere ullam alias, neque enim consectetur quisquam in maiores nulla quaerat ipsum porro
-                sint. Lorem ipsum dolor sit amet consectetur, adipisicing elit. Pariatur dolor distinctio a sequi
-                voluptates atque illum voluptatum nam, facilis nulla labore saepe cupiditate, maxime ipsam recusandae
-                nisi! Iusto, debitis atque! Lorem ipsum, dolor sit amet consectetur adipisicing elit. Corporis, repellat
-                sed, blanditiis tempora incidunt alias laudantium natus animi culpa ipsam nobis debitis dolores nulla
-                quibusdam enim quae suscipit nesciunt obcaecati? Lorem, ipsum dolor sit amet consectetur adipisicing
-                elit. Consequuntur ratione nesciunt dolore sequi odit illo nulla aut, alias rerum maiores iusto cum
-                soluta quidem aperiam laborum accusantium? Cumque, aspernatur a.
+                Welcome to Servease, your go-to platform for on-demand household services in Pampanga. Our
+                mission is to simplify the way you access reliable, professional, and affordable services with ease.
+                <br><br>
+                At Servease, we understand the demands of everyday life and the challenges of finding trustworthy
+                service providers. That’s why we’ve created an easy-to-use web application that connects you with
+                experienced professionals in real time, helping you manage household tasks without the hassle.
             </p>
-            <button class="know-more-btn"><a [routerLink]="['/']" fragment="faq" style="text-decoration: none; color: white;">
+            <button class="know-more-btn"><a [routerLink]="['/']" fragment="faq"
+                    style="text-decoration: none; color: white;">
                     Know More
                 </a></button>
         </div>
 
         <!-- Right Column: Image -->
         <div class="about-image">
-            <img src="https://placehold.co/500x650" alt="SERVEASE Overview Image" />
+            <img src="assets/img/about-photo.jpg" alt="SERVEASE Overview Image" />
         </div>
     </div>
 </div>
 
 <!-- Offered Services Section -->
+
 <div class="offered-services" id="service">
     <div class="offered-services-content">
         <h2>We Offer You the Following Service Categories</h2>
@@ -93,11 +93,10 @@
                 </div>
             </div>
         </div>
-
-
     </div>
-
 </div>
+
+
 
 <!-- FAQs Section -->
 <div class="faq-section" id="faq">
@@ -106,65 +105,67 @@
         <!-- Accordion Item 1 -->
         <div class="accordion-item" [class.active]="activeAccordion === 0" (click)="toggleAccordion(0)">
             <div class="accordion-header">
-                <span class="accordion-title">Question One</span>
+                <span class="accordion-title">How do I book a service?</span>
                 <span class="accordion-icon">+</span>
             </div>
             <div class="accordion-content">
-                <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Enim ullam repellendus quisquam asperiores
-                    eaque non dignissimos quam iure illum quasi mollitia quo quae cumque unde incidunt, dolores
-                    consequuntur quibusdam tempore.</p>
+                <p>
+                    1. Sign up or log in to your Servease account.
+                    <br> 2. Choose the service you need.
+                    <br> 3. Select a provider and schedule a booking.
+                    <br> 4. Submit your booking request and wait for provider confirmation.
+                </p>
             </div>
         </div>
 
         <!-- Accordion Item 2 -->
         <div class="accordion-item" [class.active]="activeAccordion === 1" (click)="toggleAccordion(1)">
             <div class="accordion-header">
-                <span class="accordion-title">Question Two</span>
+                <span class="accordion-title">How are service providers verified?</span>
                 <span class="accordion-icon">+</span>
             </div>
             <div class="accordion-content">
-                <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Et totam similique magnam quisquam quo,
-                    doloremque reiciendis, tenetur, recusandae maxime quibusdam quasi sapiente quia fugit! Itaque illum
-                    quisquam quaerat nemo natus!</p>
+                <p>The service providers listed on our platform went to screening and verification through a background
+                    check, identity
+                    verification to ensure quality and safety of everyone. Customer reviews were also displayed for you
+                    to refer. </p>
             </div>
         </div>
 
         <!-- Accordion Item 3 -->
         <div class="accordion-item" [class.active]="activeAccordion === 2" (click)="toggleAccordion(2)">
             <div class="accordion-header">
-                <span class="accordion-title">Question Three</span>
+                <span class="accordion-title">Can I cancel or reschedule a booking?</span>
                 <span class="accordion-icon">+</span>
             </div>
             <div class="accordion-content">
-                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Illo vero dignissimos veniam laboriosam unde
-                    id vel quibusdam impedit quisquam ad delectus, tempore suscipit quos veritatis dolores explicabo et
-                    perspiciatis eum.</p>
+                <p>Yes, you can cancel or reschedule a booking when your booking is still in pending status. Visit your
+                    booking history
+                    to manage your appointments. Cancellation policies may vary depending on the service provider.</p>
             </div>
         </div>
 
         <!-- Accordion Item 4 -->
         <div class="accordion-item" [class.active]="activeAccordion === 3" (click)="toggleAccordion(3)">
             <div class="accordion-header">
-                <span class="accordion-title">Question Four</span>
+                <span class="accordion-title">What payment methods does Servease accept?</span>
                 <span class="accordion-icon">+</span>
             </div>
             <div class="accordion-content">
-                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Illo vero dignissimos veniam laboriosam unde
-                    id vel quibusdam impedit quisquam ad delectus, tempore suscipit quos veritatis dolores explicabo et
-                    perspiciatis eum.</p>
+                <p>Cash is the only mode of payment as of the moment. However, more payment options will be added soon.
+                </p>
             </div>
         </div>
 
         <!-- Accordion Item 5 -->
         <div class="accordion-item" [class.active]="activeAccordion === 4" (click)="toggleAccordion(4)">
             <div class="accordion-header">
-                <span class="accordion-title">Question Five</span>
+                <span class="accordion-title">Is Servease available in my area?</span>
                 <span class="accordion-icon">+</span>
             </div>
             <div class="accordion-content">
-                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Illo vero dignissimos veniam laboriosam unde
-                    id vel quibusdam impedit quisquam ad delectus, tempore suscipit quos veritatis dolores explicabo et
-                    perspiciatis eum.</p>
+                <p>Currently, Servease operates in areas of Pampanga. We are working on expanding to more areas
+                    soon!</p>
             </div>
         </div>
 
@@ -175,7 +176,7 @@
 <div class="footer">
     <!-- First Column: App Logo and Description -->
     <div class="footer-column">
-        <img src="https://placehold.co/250x250" alt="App Logo" class="footer-logo">
+        <img src="assets/img/servease-logo.png" alt="App Logo" class="footer-logo">
         <p class="footer-description">
             SERVEASE is a platform connecting you to reliable service providers for household needs. Our mission is to
             simplify and streamline the process of finding trusted professionals.
@@ -196,9 +197,9 @@
     <!-- Third Column: Contact Us -->
     <div class="footer-column">
         <h3>Contact Us</h3>
-        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quibusdam repudiandae magnam doloribus dolorum
-            dignissimos velit sunt, totam eos voluptatibus cumque veniam. Impedit temporibus laborum dicta doloremque
-            explicabo, dolorem aspernatur earum!</p>
+        <p>We appreciate your interest in reaching out to us! Currently, the best way to contact us is through email. We
+            are actively working on expanding our communication channels and will provide more contact options soon.
+            Stay tuned for updates! </p>
         <br>
         <p>Email: contact_servease.com</p>
     </div>
@@ -214,5 +215,20 @@
         <button pButton label="Log In" routerLink="/login" class="customer-button"></button>
         <div class="divider"></div>
         <button pButton label="Register" (click)="registerDialogVisible = true" class="provider-button"></button>
+    </div>
+</p-dialog>
+
+<!-- Dialog displaying Register Type -->
+<p-dialog header="Register an account to get started!" [modal]="true" [(visible)]="registerDialogVisible"
+    [style]="{ width: '40rem'}">
+    <span class="review-text">
+        Choose <b>Customer</b> if you’re seeking professional services for your household needs, or select <b>Service
+            Provider</b> to
+        offer your expertise and connect with potential clients.
+    </span>
+    <div class="register-options">
+        <button pButton label="Customer" routerLink="/user-register" class="customer-button"></button>
+        <div class="divider"></div>
+        <button pButton label="Service Provider" routerLink="/provider-register" class="provider-button"></button>
     </div>
 </p-dialog>
