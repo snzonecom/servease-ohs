@@ -1,24 +1,15 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-my-transactions',
   templateUrl: './my-transactions.component.html',
   styleUrl: './my-transactions.component.css'
 })
-export class MyTransactionsComponent {
-  pendingBookings = [
-    { id: 1, availingService: 'Plumbing Repair', customerName: 'John Doe', bookingDate: '2025-02-01', bookingTime: '10:00 AM', customerAddress: '123 Main St' },
-    { id: 2, availingService: 'Electrical Maintenance', customerName: 'Jane Smith', bookingDate: '2025-02-02', bookingTime: '2:00 PM', customerAddress: '456 Elm St' }
-  ];
-
-  confirmedBookings = [
-    { id: 3, availingService: 'Air Conditioning Service', customerName: 'Alice Johnson', bookingDate: '2025-02-03', bookingTime: '11:00 AM', customerAddress: '789 Oak St' }
-  ];
-
-  completedBookings = [
-    { id: 4, customerName: 'Bob Brown', bookingDate: '2025-01-28', bookingTime: '9:30 AM' },
-    { id: 5, customerName: 'Emma Wilson', bookingDate: '2025-01-29', bookingTime: '3:00 PM' }
-  ];
+export class MyTransactionsComponent implements OnInit {
+  pendingBookings: any[] = [];
+  ongoingBookings: any[] = [];
+  completedBookings: any[] = [];
 
   pendingDialogVisible: boolean = false;
   ongoingDialogVisible: boolean = false;
@@ -29,66 +20,175 @@ export class MyTransactionsComponent {
   reportTitle: string = '';
   reportDescription: string = '';
 
-  // Show Pending Booking Details
-  showPendingBookingDetails(booking: any) {
-    this.selectedBooking = { ...booking };
+  servicesMap: { [key: number]: string } = {};
+
+  attachedProofs: any[] = [];
+
+  constructor(private http: HttpClient) { }
+
+  ngOnInit(): void {
+    this.fetchProviderBookings();
+    this.fetchServices();
+  }
+
+  // ✅ Fetch Bookings for Service Provider
+  fetchProviderBookings() {
+    const token = localStorage.getItem('authToken');
+    const providerId = localStorage.getItem('provider_id');
+
+    if (!providerId) {
+      console.error('Provider ID is missing. Please log in again.');
+      return;
+    }
+
+    this.http.get<any>(`http://127.0.0.1:8000/api/provider/${providerId}/bookings`, {
+      headers: { Authorization: `Bearer ${token}` }
+    }).subscribe(
+      (response) => {
+        console.log('Fetched Provider Bookings:', response);
+
+        // ✅ Parse services immediately after fetching
+        this.pendingBookings = response.pending.map((booking: any) => ({
+          ...booking,
+          services: this.parseServices(booking.services)
+        }));
+
+        this.ongoingBookings = response.ongoing.map((booking: any) => ({
+          ...booking,
+          services: this.parseServices(booking.services)
+        }));
+
+        this.completedBookings = response.completed.map((booking: any) => ({
+          ...booking,
+          services: this.parseServices(booking.services)
+        }));
+      },
+      (error) => {
+        console.error('Error fetching provider bookings:', error);
+      }
+    );
+  }
+
+
+  // ✅ Show Booking Details
+  showPendingBookingDetails(booking: any) {  // ✅ Explicitly typed as 'any'
+    this.selectedBooking = {
+      ...booking,
+      provider: booking.provider || { provider_name: 'N/A' },
+      services: this.parseServices(booking.services) // ✅ Parse services if needed
+    };
     this.pendingDialogVisible = true;
   }
 
-  // Show Ongoing Booking Details
-  showOngoingBookingDetails(booking: any) {
-    this.selectedBooking = { ...booking };
+  showOngoingBookingDetails(booking: any) {  // ✅ Explicitly typed as 'any'
+    this.selectedBooking = {
+      ...booking,
+      provider: booking.provider || { provider_name: 'N/A' },
+      services: this.parseServices(booking.services)
+    };
     this.ongoingDialogVisible = true;
   }
 
-  // Show Completed Booking Details
-  showCompletedBookingDetails(booking: any) {
-    this.selectedBooking = { ...booking };
+  showCompletedBookingDetails(booking: any) {  // ✅ Explicitly typed as 'any'
+    this.selectedBooking = {
+      ...booking,
+      provider: booking.provider || { provider_name: 'N/A' },
+      services: this.parseServices(booking.services)
+    };
     this.completedDialogVisible = true;
   }
 
-  // Accept Booking
+  // ✅ Booking Actions
   acceptBooking() {
-    console.log('Booking Accepted:', this.selectedBooking);
-    this.pendingDialogVisible = false;
+    this.updateBookingStatus('Ongoing');
   }
 
-  // Reject Booking
   rejectBooking() {
-    console.log('Booking Rejected:', this.selectedBooking);
-    this.pendingDialogVisible = false;
+    this.updateBookingStatus('Rejected');
   }
 
-  // Cancel Booking
   cancelBooking() {
-    console.log('Booking Cancelled:', this.selectedBooking);
-    this.ongoingDialogVisible = false;
+    this.updateBookingStatus('Cancelled');
   }
 
-  // Mark Booking as Completed
   completeBooking() {
-    console.log('Booking Completed:', this.selectedBooking);
-    this.ongoingDialogVisible = false;
+    if (!this.selectedBooking.price) {
+      alert('❌ Please set a price before completing the booking.');
+      return;
+    }
+
+    this.savePriceAndComplete();  // ✅ Save the price first, then mark as completed
   }
 
-  // Open Report Dialog
+  savePriceAndComplete() {
+    const token = localStorage.getItem('authToken');
+
+    this.http.put(`http://127.0.0.1:8000/api/bookings/${this.selectedBooking.booking_id}/set-price`,
+      { price: this.selectedBooking.price },
+      { headers: { Authorization: `Bearer ${token}` } }
+    ).subscribe(
+      () => {
+        console.log('Price saved successfully.');
+        this.updateBookingStatus('Completed');  // ✅ Mark as completed after price is saved
+      },
+      (error) => {
+        console.error('Error saving price:', error);
+        alert('❌ Failed to set price. Please try again.');
+      }
+    );
+  }
+
+  updateBookingStatus(book_status: string) {
+    const token = localStorage.getItem('authToken');
+
+    this.http.put(`http://127.0.0.1:8000/api/bookings/${this.selectedBooking.booking_id}/status`,
+      { book_status },
+      { headers: { Authorization: `Bearer ${token}` } }
+    ).subscribe(
+      () => {
+        console.log(`Booking marked as ${book_status} successfully.`);
+        alert(`✅ Booking marked as ${book_status}`);
+        this.closeAllDialogs();
+        this.fetchProviderBookings();
+      },
+      (error) => {
+        console.error(`Error updating booking status to ${book_status}:`, error);
+      }
+    );
+  }
+
+  // ✅ Report Handling
   openReportDialog() {
     this.reportDialogVisible = true;
   }
 
-  // Close Report Dialog
   closeReportDialog() {
     this.reportDialogVisible = false;
   }
 
-  // Submit Report
   submitReport() {
-    console.log('Report Submitted:', this.reportTitle, this.reportDescription);
-    this.closeReportDialog();
+    const token = localStorage.getItem('authToken');
+
+    const reportData = {
+      title: this.reportTitle,
+      description: this.reportDescription,
+      booking_id: this.selectedBooking.booking_id,
+    };
+
+    this.http.post('http://127.0.0.1:8000/api/reports', reportData, {
+      headers: { Authorization: `Bearer ${token}` }
+    }).subscribe(
+      () => {
+        console.log('Report submitted successfully.');
+        this.closeReportDialog();
+      },
+      (error) => {
+        console.error('Error submitting report:', error);
+      }
+    );
   }
 
-  attachedProofs: any[] = [];
-
+  // ✅ File Upload Handling
   handleFileUpload(event: any) {
     const files = event.target.files;
     if (files) {
@@ -106,4 +206,49 @@ export class MyTransactionsComponent {
     this.attachedProofs.splice(index, 1);
   }
 
+  // ✅ Close All Dialogs
+  closeAllDialogs() {
+    this.pendingDialogVisible = false;
+    this.ongoingDialogVisible = false;
+    this.completedDialogVisible = false;
+    this.reportDialogVisible = false;
+  }
+
+  /**
+ * ✅ Fetch All Services (for mapping service IDs to names)
+ */
+  fetchServices() {
+    this.http.get<any[]>(`http://127.0.0.1:8000/api/services`).subscribe(
+      (services) => {
+        services.forEach(service => {
+          this.servicesMap[service.service_id] = service.service_name; // ✅ Corrected key
+        });
+      },
+      (error) => {
+        console.error('Error fetching services:', error);
+      }
+    );
+  }
+
+  /**
+   * ✅ Parse services if it's a JSON string
+   */
+  parseServices(services: any): any[] {
+    if (typeof services === 'string') {
+      try {
+        return JSON.parse(services); // ✅ Convert JSON string to an array
+      } catch (error) {
+        console.error('Error parsing services:', error);
+        return [];
+      }
+    }
+    return Array.isArray(services) ? services : [];
+  }
+
+  /**
+   * ✅ Get Service Name by ID
+   */
+  getServiceName(serviceId: number): string {
+    return this.servicesMap[serviceId] || `Service ID: ${serviceId}`; // ✅ Fallback if service name not found
+  }
 }

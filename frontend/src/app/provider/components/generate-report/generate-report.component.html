@@ -16,18 +16,18 @@
         <!-- Column 2: Start Date -->
         <div class="filter-column">
             <label class="date-label">Start Date</label>
-            <input type="date" [(ngModel)]="startDate" class="date-input" />
+            <input type="date" [(ngModel)]="startDate" (change)="filterTransactions()" class="date-input" />
         </div>
 
         <!-- Column 3: End Date -->
         <div class="filter-column">
             <label class="date-label">End Date</label>
-            <input type="date" [(ngModel)]="endDate" class="date-input" />
+            <input type="date" [(ngModel)]="endDate" (change)="filterTransactions()" class="date-input" />
         </div>
 
         <!-- Column 4: Generate Report Button -->
         <div class="filter-column">
-            <button pButton (click)="generateReport()" class="generate-report-btn">Generate This Report</button>
+            <button pButton class="generate-report-btn">Generate This Report</button>
         </div>
     </div>
 
@@ -45,9 +45,11 @@
             </ng-template>
             <ng-template pTemplate="body" let-transaction>
                 <tr>
-                    <td>{{ transaction.date_of_booking | date }}</td>
-                    <td>{{ transaction.service_type }}</td>
-                    <td>{{ transaction.customer_name }}</td>
+                    <td>{{ transaction.book_date | date }}</td>
+                    <td>
+                        {{ getServiceNames(transaction.service_details) }}
+                    </td>
+                    <td>{{ transaction.customer.customer_name }}</td>
                     <td><button class="view-transaction-btn" (click)="viewTransaction(transaction)">View
                             Transaction</button></td>
                 </tr>
@@ -57,94 +59,80 @@
 
     <!-- Booking Details Dialog -->
     <p-dialog header="Booking Details" [modal]="true" [(visible)]="ongoingDialogVisible" [style]="{ width: '40rem' }"
-        [baseZIndex]="10000" contentStyleClass="transaction-dialog">
+    [baseZIndex]="10000" contentStyleClass="transaction-dialog">
 
-        <span class="review-text">
-            Kindly review the booking details below and ensure everything is in order.
+    <span class="review-text">
+        Kindly review the booking details below and ensure everything is in order.
+    </span>
+
+    <!-- ✅ Customer Photo -->
+    <div class="customer-photo-container">
+        <span class="label-text">
+            <i class="pi pi-image"></i> Customer Photo
         </span>
+        <img *ngIf="selectedBooking.customer?.profile_photo" 
+             [src]="'http://127.0.0.1:8000/storage/' + selectedBooking.customer.profile_photo" 
+             alt="Customer Photo" 
+             class="customer-photo">
+        <p *ngIf="!selectedBooking.customer?.profile_photo" class="no-photo">No photo available</p>
+    </div>
 
-        <!-- Form Fields displaying customer booking details -->
-        <div class="customer-photo-container">
-            <span class="label-text">
-                <i class="pi pi-image"></i> Customer Photo
-            </span>
-            <img *ngIf="selectedBooking.customerPhoto" [src]="selectedBooking.customerPhoto" alt="Customer Photo"
-                class="customer-photo">
-            <p *ngIf="!selectedBooking.customerPhoto" class="no-photo">No photo available</p>
-        </div>
+    <!-- ✅ Customer Name -->
+    <div class="flex flex-column gap-3 mb-3">
+        <label class="field-label">
+            <span class="label-text"><i class="pi pi-user"></i> Customer Name</span>
+            <input pInputText [value]="selectedBooking.customer?.customer_name || 'N/A'" [disabled]="true" class="field-input" />
+        </label>
+    </div>
 
-        <div class="flex flex-column gap-3 mb-3">
-            <label for="customerName" class="field-label">
-                <span class="label-text">
-                    <i class="pi pi-user"></i> Customer Name
-                </span>
-                <input pInputText id="customerName" [(ngModel)]="selectedBooking.customerName" [disabled]="true"
-                    class="field-input" />
-            </label>
+    <!-- ✅ Contact Number -->
+    <div class="flex flex-column gap-3 mb-3">
+        <label class="field-label">
+            <span class="label-text"><i class="pi pi-phone"></i> Contact Number</span>
+            <input pInputText [value]="selectedBooking.customer?.contact_no || 'N/A'" [disabled]="true" class="field-input" />
+        </label>
+    </div>
 
-        </div>
+    <!-- ✅ Email Address -->
+    <div class="flex flex-column gap-3 mb-3">
+        <label class="field-label">
+            <span class="label-text"><i class="pi pi-envelope"></i> Email Address</span>
+            <input pInputText [value]="selectedBooking.user?.email || 'N/A'" [disabled]="true" class="field-input" />
+        </label>
+    </div>
 
-        <div class="flex flex-column gap-3 mb-3">
-            <label for="contactNumber" class="field-label">
-                <span class="label-text">
-                    <i class="pi pi-phone"></i> Contact Number</span>
-                <input pInputText id="contactNumber" [(ngModel)]="selectedBooking.contactNumber" [disabled]="true"
-                    class="field-input" />
-            </label>
-        </div>
+    <!-- ✅ Availing Services -->
+    <div class="flex flex-column gap-3 mb-3">
+        <label class="field-label">
+            <span class="label-text"><i class="pi pi-wrench"></i> Availing Service/s</span>
+            <input pInputText [value]="getServiceNames(selectedBooking.service_details)" [disabled]="true" class="field-input" />
+        </label>
+    </div>
 
-        <div class="flex flex-column gap-3 mb-3">
-            <label for="email" class="field-label">
-                <span class="label-text">
-                    <i class="pi pi-envelope"></i> Email Address</span>
-                <input pInputText id="email" [(ngModel)]="selectedBooking.customerEmail" [disabled]="true"
-                    class="field-input" />
-            </label>
-        </div>
+    <!-- ✅ Booking Date -->
+    <div class="flex flex-column gap-3 mb-3">
+        <label class="field-label">
+            <span class="label-text"><i class="pi pi-calendar"></i> Booking Date</span>
+            <input pInputText [value]="selectedBooking.book_date | date:'mediumDate'" [disabled]="true" class="field-input" />
+        </label>
+    </div>
 
-        <div class="flex flex-column gap-3 mb-3">
-            <label for="service" class="field-label">
-                <span class="label-text">
-                    <i class="pi pi-wrench"></i> Availing Service/s</span>
-                <input pInputText id="service" [(ngModel)]="selectedBooking.availingService" [disabled]="true"
-                    class="field-input" />
-            </label>
-        </div>
+    <!-- ✅ Booking Time -->
+    <div class="flex flex-column gap-3 mb-3">
+        <label class="field-label">
+            <span class="label-text"><i class="pi pi-clock"></i> Booking Time</span>
+            <input pInputText [value]="selectedBooking.book_time" [disabled]="true" class="field-input" />
+        </label>
+    </div>
 
-        <div class="flex flex-column gap-3 mb-3">
-            <label for="bookingDate" class="field-label">
-                <span class="label-text">
-                    <i class="pi pi-calendar"></i> Booking Date</span>
-                <input pInputText id="bookingDate" [(ngModel)]="selectedBooking.bookingDate" [disabled]="true"
-                    class="field-input" />
-            </label>
-        </div>
+    <!-- ✅ Price -->
+    <div class="flex flex-column gap-3 mb-3">
+        <label class="field-label">
+            <span class="label-text"><i class="pi pi-wallet"></i> Price</span>
+            <input pInputText [value]="selectedBooking.price || 'N/A'" [disabled]="true" class="field-input" />
+        </label>
+    </div>
+</p-dialog>
 
-        <div class="flex flex-column gap-3 mb-3">
-            <label for="bookingTime" class="field-label">
-                <span class="label-text">
-                    <i class="pi pi-clock"></i> Booking Time</span>
-                <input pInputText id="bookingTime" [(ngModel)]="selectedBooking.bookingTime" [disabled]="true"
-                    class="field-input" />
-            </label>
-        </div>
-
-        <div class="flex flex-column gap-3 mb-3">
-            <label for="remarks" class="field-label">
-                <span class="label-text">
-                    <i class="pi pi-comment"></i> Remarks</span>
-                <textarea pInputTextarea id="remarks" [(ngModel)]="selectedBooking.remarks" [disabled]="true"
-                    class="field-input" rows="4"></textarea>
-            </label>
-        </div>
-
-        <div class="flex flex-column gap-3 mb-3">
-            <label for="bookingPrice" class="field-label">
-                <span class="label-text">
-                    <i class="pi pi-wallet"></i> Price</span>
-                <input pInputText id="bookingPrice" class="field-input" [disabled]="true" />
-            </label>
-        </div>
-    </p-dialog>
 
 </body>

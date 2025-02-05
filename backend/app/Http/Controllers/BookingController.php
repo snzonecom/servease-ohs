@@ -102,5 +102,56 @@ public function submitRating(Request $request, $id)
     return response()->json(['message' => 'Rating submitted successfully.']);
 }
 
+// ✅ Get bookings for the logged-in provider
+public function getBookingsByProvider($providerId)
+{
+    $pending = Booking::with(['user', 'provider', 'customer'])
+                ->where('provider_id', $providerId)
+                ->where('book_status', 'Pending')
+                ->get();
+
+    $ongoing = Booking::with(['user', 'provider', 'customer'])
+                ->where('provider_id', $providerId)
+                ->where('book_status', 'Ongoing')
+                ->get();
+
+    $completed = Booking::with(['user', 'provider', 'customer'])
+                ->where('provider_id', $providerId)
+                ->where('book_status', 'Completed')
+                ->get();
+
+    return response()->json([
+        'pending' => $pending,
+        'ongoing' => $ongoing,
+        'completed' => $completed,
+    ]);
+}
+
+public function setPrice(Request $request, $id)
+{
+    $request->validate([
+        'price' => 'required|numeric|min:0',
+    ]);
+
+    $booking = Booking::findOrFail($id);
+    $booking->price = $request->price;
+    $booking->save();
+
+    return response()->json(['message' => 'Price updated successfully.']);
+}
+
+public function getProviderTransactions($providerId)
+{
+    $bookings = Booking::with(['user', 'customer'])
+    ->where('provider_id', $providerId)
+    ->get()
+    ->map(function ($booking) {
+        $booking->service_details = $booking->service_details;  // ✅ Attach service details
+        return $booking;
+    });
+
+return response()->json($bookings);
+
+}
     
 }

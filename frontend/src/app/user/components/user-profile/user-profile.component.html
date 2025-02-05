@@ -1,9 +1,7 @@
 <!-- Profile Details Title Section -->
 <div class="dashboard-header">
-    <h1 class="dashboard-title">
-        Profile Details</h1>
-    <p class="dashboard-description">Manage and update your information to keep your account
-        up to date.
+    <h1 class="dashboard-title">Profile Details</h1>
+    <p class="dashboard-description">Manage and update your information to keep your account up to date.</p>
 </div>
 
 <!-- Profile Details Card Section -->
@@ -15,54 +13,74 @@
                 <span class="header-title">User Profile</span>
             </div>
         </ng-template>
+
         <div class="card-content">
-            <!-- Single Column Layout for Information and Fields -->
             <div class="info-row-container">
                 <!-- Profile Photo -->
                 <div class="info-row">
                     <label for="profilePhoto">Profile Photo:</label>
-                    <p-image src="https://placehold.co/600x600" alt="Profile Photo" width="100" height="100"></p-image>
+                    <p-image [src]="user.profile_photo || 'https://placehold.co/600x600'" alt="Profile Photo" width="100"
+                        height="100"></p-image>
+                    <input type="file" (change)="onFileSelected($event)" *ngIf="isEditing" />
                 </div>
+
                 <!-- Full Name -->
                 <div class="info-row">
                     <label for="fullName">Full Name:</label>
-                    <input id="fullName" type="text" [(ngModel)]="fullName" [disabled]="!isEditing" />
+                    <input id="fullName" type="text" [(ngModel)]="user.customer_name" [disabled]="!isEditing" />
                 </div>
+
                 <!-- Email Address -->
                 <div class="info-row">
                     <label for="email">Email Address:</label>
-                    <input id="email" type="email" [(ngModel)]="emailAddress" [disabled]="!isEditing" />
+                    <input id="email" type="email" [(ngModel)]="user.email" [disabled]="!isEditing" />
                 </div>
+
                 <!-- Contact Number -->
                 <div class="info-row">
                     <label for="contactNumber">Contact Number:</label>
-                    <input id="contactNumber" type="tel" [(ngModel)]="contactNumber" [disabled]="!isEditing" />
-                </div>
-                <div class="info-row">
-                    <label for="houseAdd">House Address:</label>
-                    <input id="houseAdd" type="text" [(ngModel)]="houseAdd" [disabled]="!isEditing" />
-                </div>
-                <div class="info-row">
-                    <label for="street">Street:</label>
-                    <input id="street" type="text" [(ngModel)]="street" [disabled]="!isEditing" />
-                </div>
-                <div class="info-row">
-                    <label for="brgy">Barangay:</label>
-                    <input id="brgy" type="text" [(ngModel)]="brgy" [disabled]="!isEditing" />
-                </div>
-                <div class="info-row">
-                    <label for="city">City:</label>
-                    <input id="city" type="text" [(ngModel)]="city" [disabled]="!isEditing" />
-                </div>
-                <div class="info-row">
-                    <label for="province">Province:</label>
-                    <input id="province" type="text" [(ngModel)]="province" [disabled]="!isEditing" />
-                </div>
-                <div class="info-row">
-                    <label for="password">Password:</label>
-                    <input id="password" type="text" [(ngModel)]="password" [disabled]="!isEditing" />
+                    <input id="contactNumber" type="tel" [(ngModel)]="user.contact_no" [disabled]="!isEditing" />
                 </div>
 
+                <!-- House Address -->
+                <div class="info-row">
+                    <label for="houseAdd">House and Street Address:</label>
+                    <input id="houseAdd" type="text" [(ngModel)]="user.house_add" [disabled]="!isEditing" />
+                </div>
+
+                <!-- Province Dropdown -->
+                <div class="info-row">
+                    <label for="province">Province:</label>
+                    <select id="province" [(ngModel)]="user.province" (change)="onProvinceChange(user.province)"
+                        [disabled]="!isEditing" class="custom-dropdown">
+                        <option *ngFor="let province of provinces" [value]="province.province">{{ province.province }}
+                        </option>
+                    </select>
+                </div>
+
+                <!-- City Dropdown -->
+                <div class="info-row">
+                    <label for="city">City:</label>
+                    <select id="city" [(ngModel)]="user.city" (change)="onCityChange(user.city)" [disabled]="!isEditing"
+                        class="custom-dropdown">
+                        <option *ngFor="let city of cities" [value]="city.name">{{ city.name }}</option>
+                    </select>
+                </div>
+
+                <!-- Barangay Dropdown -->
+                <div class="info-row">
+                    <label for="brgy">Barangay:</label>
+                    <select id="brgy" [(ngModel)]="user.brgy" [disabled]="!isEditing" class="custom-dropdown">
+                        <option *ngFor="let barangay of barangays" [value]="barangay">{{ barangay }}</option>
+                    </select>
+                </div>
+
+                <!-- Password -->
+                <div class="info-row" *ngIf="isEditing">
+                    <label for="password">New Password:</label>
+                    <input id="password" type="password" [(ngModel)]="user.password" placeholder="Enter new password" />
+                    <small class="info-text">Leave blank if you don't want to change the password.</small>
+                </div>
             </div>
         </div>
     </p-card>

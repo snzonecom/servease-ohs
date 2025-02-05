@@ -26,10 +26,10 @@ class AuthController extends Controller
             'province' => 'required|string',
             'profile_photo' => 'required|image|mimes:jpg,jpeg,png|max:2048'
         ]);
-    
+
         try {
             DB::beginTransaction();
-    
+
             // ✅ Create User
             $userId = DB::table('users')->insertGetId([
                 'email' => $request->email,
@@ -38,12 +38,12 @@ class AuthController extends Controller
                 'created_at' => now(),
                 'updated_at' => now(),
             ]);
-    
+
             // ✅ Handle File Upload
-            $profilePhotoPath = $request->hasFile('profile_photo') 
-                ? $request->file('profile_photo')->store('uploads/profile_photos', 'public') 
+            $profilePhotoPath = $request->hasFile('profile_photo')
+                ? $request->file('profile_photo')->store('uploads/profile_photos', 'public')
                 : null;
-    
+
             // ✅ Insert Customer Info (No need for condition)
             DB::table('tbl_customer_info')->insert([
                 'user_id' => $userId,
@@ -57,14 +57,14 @@ class AuthController extends Controller
                 'created_at' => now(),
                 'updated_at' => now(),
             ]);
-    
+
             DB::commit();
             return response()->json(['message' => 'Registration successful'], 201);
         } catch (\Exception $e) {
             DB::rollBack();
             return response()->json(['error' => 'Registration failed', 'message' => $e->getMessage()], 500);
         }
-    }    
+    }
 
 
     public function registerProvider(Request $request)
@@ -84,18 +84,18 @@ class AuthController extends Controller
             'businessLogo' => 'nullable|image|mimes:jpg,png,jpeg|max:2048',
             'personID' => 'nullable|image|mimes:jpg,png,jpeg|max:2048'
         ]);
-    
+
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()], 422);
         }
-    
+
         // ✅ Handle file uploads
         $businessLogoPath = $request->hasFile('businessLogo') ?
             $request->file('businessLogo')->store('uploads/logos', 'public') : null;
-    
+
         $personIDPath = $request->hasFile('personID') ?
             $request->file('personID')->store('uploads/ids', 'public') : null;
-    
+
         // ✅ Create User
         $userId = DB::table('users')->insertGetId([
             'email' => $request->email,
@@ -104,7 +104,7 @@ class AuthController extends Controller
             'created_at' => now(),
             'updated_at' => now(),
         ]);
-    
+
         // ✅ Insert Provider Info
         DB::table('tbl_provider_info')->insert([
             'user_id' => $userId,
@@ -123,9 +123,9 @@ class AuthController extends Controller
             'created_at' => now(),
             'updated_at' => now(),
         ]);
-    
+
         return response()->json(['message' => 'Registration successful!', 'user_id' => $userId], 201);
-    }    
+    }
 
     public function login(Request $request)
     {
@@ -134,22 +134,22 @@ class AuthController extends Controller
             'email' => 'required|string|email',
             'password' => 'required|string',
         ]);
-    
+
         // ✅ Attempt to authenticate the user
         if (!Auth::attempt($request->only('email', 'password'))) {
             throw ValidationException::withMessages([
                 'email' => ['The provided credentials are incorrect.'],
             ]);
         }
-    
+
         // ✅ Retrieve the authenticated user
         $user = Auth::user();
         $providerId = null; // Default value for non-provider users
-    
+
         // ✅ Check if the user is a service provider
         if ($user->role === 'provider') {
             $provider = \App\Models\Provider::where('user_id', $user->id)->first();
-    
+
             // ❌ Block login if the provider is not approved
             if (!$provider || $provider->account_status !== 'approved') {
                 Auth::logout(); // Logout the user immediately
@@ -157,13 +157,13 @@ class AuthController extends Controller
                     'error' => 'Your account is not yet approved. Please wait for admin verification.'
                 ], 403);
             }
-    
+
             $providerId = $provider->provider_id; // ✅ Get provider_id if approved
         }
-    
+
         // ✅ Generate token
         $token = $user->createToken('auth_token')->plainTextToken;
-    
+
         // ✅ Return response with token, user info, and provider_id (if applicable)
         return response()->json([
             'token' => $token,
@@ -175,8 +175,7 @@ class AuthController extends Controller
             'provider_id' => $providerId // ✅ Include provider_id if the user is a provider
         ]);
     }
-    
-    
+
 
     public function forgotPassword(Request $request)
     {
@@ -230,4 +229,92 @@ class AuthController extends Controller
         $request->user()->currentAccessToken()->delete();
         return response()->json(['message' => 'Logged out successfully']);
     }
+
+    public function getUserProfile(Request $request)
+    {
+        $user = Auth::user();
+
+        $customer = DB::table('tbl_customer_info')
+            ->where('user_id', $user->id)
+            ->first();
+
+        return response()->json([
+            'user_id' => $user->id,
+            'email' => $user->email,
+            'customer_name' => $customer->customer_name,
+            'contact_no' => $customer->contact_no,
+            'house_add' => $customer->house_add,
+            'brgy' => $customer->brgy,
+            'city' => $customer->city,
+            'province' => $customer->province,
+            'profile_photo' => $customer->profile_photo ? asset('storage/' . $customer->profile_photo) : null,
+        ]);
+    }
+
+    public function updateUserProfile(Request $request)
+    {    
+        $user = Auth::user();
+        $customer = DB::table('tbl_customer_info')->where('user_id', $user->id)->first();
+    
+        $changesDetected = false;
+        $updateData = [];
+    
+        // ✅ Update Email if Changed
+        if ($request->has('email') && $request->email !== $user->email) {
+            $user->email = $request->email;
+            $user->save();
+            $changesDetected = true;
+        }
+    
+        // ✅ Update Password if Provided
+        if ($request->filled('password')) {
+            $user->password = Hash::make($request->password);
+            $user->save();
+            $changesDetected = true;
+        }
+    
+        // ✅ Update Profile Photo if Uploaded
+        if ($request->hasFile('profile_photo')) {
+            $profilePhotoPath = $request->file('profile_photo')->store('uploads/profile_photos', 'public');
+    
+            if ($profilePhotoPath !== $customer->profile_photo) {
+                $updateData['profile_photo'] = $profilePhotoPath;
+                $changesDetected = true;
+            }
+        }
+    
+        // ✅ Update Other Fields (Name, Contact, Address, etc.)
+        $fields = [
+            'customer_name' => 'customer_name',
+            'contact_no' => 'contact_no',
+            'house_add' => 'house_add',
+            'brgy' => 'brgy',
+            'city' => 'city',
+            'province' => 'province',
+        ];
+    
+        foreach ($fields as $dbField => $requestField) {
+            $newValue = $request->input($requestField);
+            $oldValue = $customer->$dbField;
+    
+            \Log::info("Comparing '{$dbField}': OLD='{$oldValue}' | NEW='{$newValue}'");
+    
+            if ($newValue !== null && trim(strtolower($newValue)) !== trim(strtolower($oldValue))) {
+                $updateData[$dbField] = $newValue;
+                $changesDetected = true;
+            }
+        }
+    
+        // ✅ Apply Changes if Detected
+        if ($changesDetected && !empty($updateData)) {
+            DB::table('tbl_customer_info')
+                ->where('user_id', $user->id)
+                ->update($updateData);
+    
+            return response()->json(['message' => 'Profile updated successfully!']);
+        } elseif (!$changesDetected) {
+            return response()->json(['message' => 'No changes detected.']);
+        }
+    }
+    
 }

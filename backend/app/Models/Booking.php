@@ -24,6 +24,19 @@ class Booking extends Model
         'services' => 'array',  // ✅ Automatically casts JSON to array
     ];
 
+    public function getServiceDetailsAttribute()
+    {
+        $services = is_array($this->services) ? $this->services : json_decode($this->services, true);
+    
+        if (is_array($services)) {
+            return Service::whereIn('service_id', $services)->get();
+        }
+    
+        return collect();  // Return an empty collection if decoding fails
+    }
+    
+
+
     // Relationships
     public function user()
     {
@@ -34,4 +47,16 @@ class Booking extends Model
     {
         return $this->belongsTo(Provider::class, 'provider_id');
     }
+
+    public function customer()
+    {
+        return $this->hasOne(Customer::class, 'user_id', 'user_id');
+    }
+
+    public function services()
+{
+    return $this->belongsToMany(Service::class, 'tbl_services', 'service_id');
+}
+
+    
 }

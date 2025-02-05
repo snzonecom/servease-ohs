@@ -15,6 +15,13 @@
     margin-top: 10px;
 }
 
+.custom-dropdown {
+    padding: 8px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    font-size: 14px;
+}
+
 @media(max-width: 450px) {
     .dashboard-description {
         font-size: 13px;
@@ -137,6 +144,15 @@
 input:enabled {
     background-color: #d0e4ef;
     font-weight: 400;
+}
+
+.custom-dropdown:enabled {
+    padding: 8px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    font-size: 14px;
+    background: #d0e4ef;
+    width: 100%;
 }
 
 textarea:enabled {

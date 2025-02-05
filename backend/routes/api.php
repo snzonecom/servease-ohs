@@ -68,3 +68,15 @@ Route::middleware('auth:sanctum')->get('/user/{userId}/bookings', [BookingContro
 Route::get('/services', [ServiceController::class, 'getAllServices']);  // ✅ Fetch all services
 
 Route::post('/bookings/{id}/rate', [BookingController::class, 'submitRating']);
+
+
+Route::put('/bookings/{bookingId}/status', [BookingController::class, 'updateBookingStatus']);
+Route::get('/provider/{providerId}/bookings', [BookingController::class, 'getBookingsByProvider']);
+Route::middleware('auth:sanctum')->put('/bookings/{id}/set-price', [BookingController::class, 'setPrice']);
+Route::get('/provider/{providerId}/transactions', [BookingController::class, 'getProviderTransactions']);
+
+
+
+Route::middleware('auth:sanctum')->get('/user', [AuthController::class, 'getUserProfile']);
+Route::middleware('auth:sanctum')->put('/user/update-profile', [AuthController::class, 'updateUserProfile']);
+
