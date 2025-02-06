@@ -27,7 +27,7 @@
                 </div>
             </div>
             <ng-template #noPending>
-                <p>No pending bookings found.</p>
+                <p class="no-bookings-found">No pending bookings found.</p>
             </ng-template>
         </p-tabPanel>
 
@@ -58,7 +58,7 @@
                 </div>
             </div>
             <ng-template #noOngoing>
-                <p>No ongoing bookings found.</p>
+                <p class="no-bookings-found">No ongoing bookings found.</p>
             </ng-template>
         </p-tabPanel>
 
@@ -89,7 +89,7 @@
                 </div>
             </div>
             <ng-template #noCompleted>
-                <p>No completed bookings found.</p>
+                <p class="no-bookings-found">No completed bookings found.</p>
             </ng-template>
         </p-tabPanel>
     </p-tabView>
@@ -113,6 +113,15 @@
         </label>
     </div>
 
+    <!-- ✅ Service Provider Contact -->
+    <div class="flex flex-column gap-3 mb-3">
+        <label for="serviceProviderContact" class="field-label">
+            <span class="label-text"><i class="pi pi-id-card"></i> Service Provider Contact</span>
+            <input pInputText id="serviceProvider" [value]="selectedBooking.provider?.contact_no || 'N/A'"
+                [disabled]="true" class="field-input" />
+        </label>
+    </div>
+
     <!-- ✅ Services Availed -->
     <div class="flex flex-column gap-3 mb-3" *ngIf="selectedBooking.services?.length">
         <label class="field-label">
@@ -125,20 +134,20 @@
         </ul>
     </div>
 
-    <!-- ✅ Booked Date -->
-    <div class="flex flex-column gap-3 mb-3">
-        <label for="bookDate" class="field-label">
-            <span class="label-text"><i class="pi pi-calendar"></i> Booked Date</span>
-            <input pInputText id="bookDate" [(ngModel)]="selectedBooking.book_date" [disabled]="true"
-                class="field-input" />
-        </label>
-    </div>
-
     <!-- ✅ Booked Time -->
     <div class="flex flex-column gap-3 mb-3">
         <label for="bookTime" class="field-label">
             <span class="label-text"><i class="pi pi-clock"></i> Booked Time</span>
             <input pInputText id="bookTime" [(ngModel)]="selectedBooking.book_time" [disabled]="true"
+                class="field-input" />
+        </label>
+    </div>
+
+    <!-- ✅ Booked Date -->
+    <div class="flex flex-column gap-3 mb-3">
+        <label for="bookDate" class="field-label">
+            <span class="label-text"><i class="pi pi-calendar"></i> Booked Date</span>
+            <input pInputText id="bookDate" [(ngModel)]="selectedBooking.book_date" [disabled]="true"
                 class="field-input" />
         </label>
     </div>
@@ -175,6 +184,15 @@
         </label>
     </div>
 
+    <!-- ✅ Service Provider Contact -->
+    <div class="flex flex-column gap-3 mb-3">
+        <label for="serviceProviderContact" class="field-label">
+            <span class="label-text"><i class="pi pi-id-card"></i> Service Provider Contact</span>
+            <input pInputText id="serviceProvider" [value]="selectedBooking.provider?.contact_no || 'N/A'"
+                [disabled]="true" class="field-input" />
+        </label>
+    </div>
+
     <!-- ✅ Services Availed -->
     <div class="flex flex-column gap-3 mb-3" *ngIf="selectedBooking.services?.length">
         <label class="field-label">
@@ -187,20 +205,20 @@
         </ul>
     </div>
 
-    <!-- ✅ Booked Date -->
-    <div class="flex flex-column gap-3 mb-3">
-        <label for="bookDate" class="field-label">
-            <span class="label-text"><i class="pi pi-calendar"></i> Booked Date</span>
-            <input pInputText id="bookDate" [(ngModel)]="selectedBooking.book_date" [disabled]="true"
-                class="field-input" />
-        </label>
-    </div>
-
     <!-- ✅ Booked Time -->
     <div class="flex flex-column gap-3 mb-3">
         <label for="bookTime" class="field-label">
             <span class="label-text"><i class="pi pi-clock"></i> Booked Time</span>
             <input pInputText id="bookTime" [(ngModel)]="selectedBooking.book_time" [disabled]="true"
+                class="field-input" />
+        </label>
+    </div>
+
+    <!-- ✅ Booked Date -->
+    <div class="flex flex-column gap-3 mb-3">
+        <label for="bookDate" class="field-label">
+            <span class="label-text"><i class="pi pi-calendar"></i> Booked Date</span>
+            <input pInputText id="bookDate" [(ngModel)]="selectedBooking.book_date" [disabled]="true"
                 class="field-input" />
         </label>
     </div>
@@ -225,36 +243,64 @@
         ensure clarity and easy reference for your records.
     </span>
 
-    <!-- Form Fields displaying booking details -->
+    <!-- ✅ Service Provider Name -->
     <div class="flex flex-column gap-3 mb-3">
         <label for="serviceProvider" class="field-label">
             <span class="label-text"><i class="pi pi-id-card"></i> Service Provider</span>
-            <input pInputText id="serviceProvider" [value]="selectedBooking.provider?.provider_name" [disabled]="true"
+            <input pInputText id="serviceProvider" [value]="selectedBooking.provider?.provider_name || 'N/A'"
+                [disabled]="true" class="field-input" />
+        </label>
+    </div>
+
+    <!-- ✅ Service Provider Contact -->
+    <div class="flex flex-column gap-3 mb-3">
+        <label for="serviceProviderContact" class="field-label">
+            <span class="label-text"><i class="pi pi-id-card"></i> Service Provider Contact</span>
+            <input pInputText id="serviceProvider" [value]="selectedBooking.provider?.contact_no || 'N/A'"
+                [disabled]="true" class="field-input" />
+        </label>
+    </div>
+
+    <!-- ✅ Services Availed -->
+    <div class="flex flex-column gap-3 mb-3" *ngIf="selectedBooking.services?.length">
+        <label class="field-label">
+            <span class="label-text"><i class="pi pi-wrench"></i> Services Availed</span>
+        </label>
+        <ul class="services-availed">
+            <li *ngFor="let serviceId of selectedBooking.services">
+                {{ getServiceName(serviceId) }}
+            </li>
+        </ul>
+    </div>
+
+    <!-- ✅ Booked Time -->
+    <div class="flex flex-column gap-3 mb-3">
+        <label for="bookTime" class="field-label">
+            <span class="label-text"><i class="pi pi-clock"></i> Booked Time</span>
+            <input pInputText id="bookTime" [(ngModel)]="selectedBooking.book_time" [disabled]="true"
                 class="field-input" />
         </label>
     </div>
 
+    <!-- ✅ Booked Date -->
     <div class="flex flex-column gap-3 mb-3">
         <label for="bookDate" class="field-label">
             <span class="label-text"><i class="pi pi-calendar"></i> Booked Date</span>
-            <input pInputText id="bookDate" [value]="selectedBooking.book_date" [disabled]="true" class="field-input" />
+            <input pInputText id="bookDate" [(ngModel)]="selectedBooking.book_date" [disabled]="true"
+                class="field-input" />
         </label>
     </div>
 
+    <!-- ✅ Booked Date -->
     <div class="flex flex-column gap-3 mb-3">
-        <label for="bookTime" class="field-label">
-            <span class="label-text"><i class="pi pi-clock"></i> Booked Time</span>
-            <input pInputText id="bookTime" [value]="selectedBooking.book_time" [disabled]="true" class="field-input" />
+        <label for="price" class="field-label">
+            <span class="label-text"><i class="pi pi-calendar"></i> Price Paid</span>
+            <input pInputText id="price" [(ngModel)]="selectedBooking.price" [disabled]="true"
+                class="field-input" />
         </label>
     </div>
 
-    <div class="flex flex-column gap-3 mb-3">
-        <label for="bookTime" class="field-label">
-            <span class="label-text"><i class="pi pi-clock"></i> Price Paid</span>
-            <input pInputText id="bookTime" [value]="selectedBooking.price" [disabled]="true" class="field-input" />
-        </label>
-    </div>
-
+    <!-- ✅ Status -->
     <div class="flex flex-column gap-3 mb-3">
         <label for="status" class="field-label">
             <span class="label-text"><i class="pi pi-info-circle"></i> Status</span>

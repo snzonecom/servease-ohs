@@ -20,6 +20,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/user', [AuthController::class, 'user']);
     Route::post('/logout', [AuthController::class, 'logout']);
 });
+Route::middleware('auth:sanctum')->post('/user/upload-profile-photo', [AuthController::class, 'uploadProfilePhoto']);
 
 /* ✅ Service Categories */
 Route::get('/service-category', [ServiceCategoryController::class, 'index']);
@@ -85,6 +86,9 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/provider/{id}/profile', [ProviderController::class, 'getProfile']);  // ✅ Using {id}
     Route::put('/provider/update-profile', [ProviderController::class, 'update']);
 });
+
+Route::middleware('auth:sanctum')->post('/provider/upload-profile-picture', [ProviderController::class, 'uploadProfilePicture']);
+
 
 // For Public Home - To Get the Top Providers (based on number of bookings, and average rating)
 Route::get('/top-providers', [ProviderController::class, 'getTopProviders']);

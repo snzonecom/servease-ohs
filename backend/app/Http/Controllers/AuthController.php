@@ -10,12 +10,15 @@ use Illuminate\Validation\ValidationException;
 use App\Models\User;
 use DB;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Storage;
+
 
 class AuthController extends Controller
 {
     public function register(Request $request)
     {
-        $request->validate([
+        // ✅ Validate All Required Fields First
+        $validatedData = $request->validate([
             'email' => 'required|string|email|max:255|unique:users,email',
             'password' => 'required|string|min:8',
             'customer_name' => 'required|string',
@@ -26,42 +29,51 @@ class AuthController extends Controller
             'province' => 'required|string',
             'profile_photo' => 'required|image|mimes:jpg,jpeg,png|max:2048'
         ]);
-
+    
         try {
             DB::beginTransaction();
-
-            // ✅ Create User
+    
+            // ✅ Ensure the profile photo exists before proceeding
+            if (!$request->hasFile('profile_photo')) {
+                return response()->json(['error' => 'Profile photo is required'], 422);
+            }
+    
+            // ✅ Handle File Upload Securely
+            $profilePhotoPath = $request->file('profile_photo')->store('uploads/profile_photos', 'public');
+    
+            // ✅ Create User ONLY IF ALL VALIDATIONS PASSED
             $userId = DB::table('users')->insertGetId([
-                'email' => $request->email,
-                'password' => Hash::make($request->password),
+                'email' => $validatedData['email'],
+                'password' => Hash::make($validatedData['password']),
                 'role' => 'customer',
                 'created_at' => now(),
                 'updated_at' => now(),
             ]);
-
-            // ✅ Handle File Upload
-            $profilePhotoPath = $request->hasFile('profile_photo')
-                ? $request->file('profile_photo')->store('uploads/profile_photos', 'public')
-                : null;
-
-            // ✅ Insert Customer Info (No need for condition)
+    
+            // ✅ Insert Customer Info Only If User Was Successfully Created
             DB::table('tbl_customer_info')->insert([
                 'user_id' => $userId,
-                'customer_name' => $request->customer_name,
-                'contact_no' => $request->contact_no,
-                'house_add' => $request->house_add,
-                'brgy' => $request->brgy,
-                'city' => $request->city,
-                'province' => $request->province,
+                'customer_name' => $validatedData['customer_name'],
+                'contact_no' => $validatedData['contact_no'],
+                'house_add' => $validatedData['house_add'],
+                'brgy' => $validatedData['brgy'],
+                'city' => $validatedData['city'],
+                'province' => $validatedData['province'],
                 'profile_photo' => $profilePhotoPath,
                 'created_at' => now(),
                 'updated_at' => now(),
             ]);
-
+    
             DB::commit();
             return response()->json(['message' => 'Registration successful'], 201);
         } catch (\Exception $e) {
             DB::rollBack();
+    
+            // ✅ If file was uploaded but transaction failed, delete it to avoid orphaned files
+            if (isset($profilePhotoPath)) {
+                Storage::disk('public')->delete($profilePhotoPath);
+            }
+    
             return response()->json(['error' => 'Registration failed', 'message' => $e->getMessage()], 500);
         }
     }
@@ -69,6 +81,7 @@ class AuthController extends Controller
 
     public function registerProvider(Request $request)
     {
+        // ✅ Validate All Required Fields First
         $validator = Validator::make($request->all(), [
             'fullName' => 'required|string|max:255',
             'email' => 'required|email|unique:users',
@@ -77,54 +90,76 @@ class AuthController extends Controller
             'houseAdd' => 'required',
             'brgy' => 'required',
             'city' => 'required',
-            'province' => 'required', // ✅ Ensure this is validated
+            'province' => 'required',
             'brn' => 'required',
             'contactPerson' => 'required',
             'serviceType' => 'required',
             'businessLogo' => 'nullable|image|mimes:jpg,png,jpeg|max:2048',
             'personID' => 'nullable|image|mimes:jpg,png,jpeg|max:2048'
         ]);
-
+    
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()], 422);
         }
-
-        // ✅ Handle file uploads
-        $businessLogoPath = $request->hasFile('businessLogo') ?
-            $request->file('businessLogo')->store('uploads/logos', 'public') : null;
-
-        $personIDPath = $request->hasFile('personID') ?
-            $request->file('personID')->store('uploads/ids', 'public') : null;
-
-        // ✅ Create User
-        $userId = DB::table('users')->insertGetId([
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-            'role' => 'provider',
-            'created_at' => now(),
-            'updated_at' => now(),
-        ]);
-
-        // ✅ Insert Provider Info
-        DB::table('tbl_provider_info')->insert([
-            'user_id' => $userId,
-            'profile_pic' => $businessLogoPath ? 'storage/' . $businessLogoPath : null,
-            'provider_name' => $request->fullName, // ✅ Corrected typo
-            'contact_no' => $request->contactNumber,
-            'office_add' => $request->houseAdd,
-            'brgy' => $request->brgy,
-            'city' => $request->city,
-            'province' => $request->province,
-            'brn' => $request->brn,
-            'contact_person' => $request->contactPerson,
-            'attachment' => $personIDPath ? 'storage/' . $personIDPath : null,
-            'service_type' => $request->serviceType,
-            'account_status' => 'pending', // ✅ Default status
-            'created_at' => now(),
-            'updated_at' => now(),
-        ]);
-
-        return response()->json(['message' => 'Registration successful!', 'user_id' => $userId], 201);
+    
+        try {
+            DB::beginTransaction();
+    
+            // ✅ Handle File Uploads Securely
+            $businessLogoPath = null;
+            $personIDPath = null;
+    
+            if ($request->hasFile('businessLogo')) {
+                $businessLogoPath = $request->file('businessLogo')->store('uploads/logos', 'public');
+            }
+    
+            if ($request->hasFile('personID')) {
+                $personIDPath = $request->file('personID')->store('uploads/ids', 'public');
+            }
+    
+            // ✅ Create User ONLY IF ALL VALIDATIONS PASSED
+            $userId = DB::table('users')->insertGetId([
+                'email' => $request->email,
+                'password' => Hash::make($request->password),
+                'role' => 'provider',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
+    
+            // ✅ Insert Provider Info Only If User Was Successfully Created
+            DB::table('tbl_provider_info')->insert([
+                'user_id' => $userId,
+                'profile_pic' => $businessLogoPath ? 'storage/' . $businessLogoPath : null,
+                'provider_name' => $request->fullName,
+                'contact_no' => $request->contactNumber,
+                'office_add' => $request->houseAdd,
+                'brgy' => $request->brgy,
+                'city' => $request->city,
+                'province' => $request->province,
+                'brn' => $request->brn,
+                'contact_person' => $request->contactPerson,
+                'attachment' => $personIDPath ? 'storage/' . $personIDPath : null,
+                'service_type' => $request->serviceType,
+                'account_status' => 'pending', // ✅ Default status
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
+    
+            DB::commit();
+            return response()->json(['message' => 'Registration successful!', 'user_id' => $userId], 201);
+        } catch (\Exception $e) {
+            DB::rollBack();
+    
+            // ✅ Delete uploaded files if transaction fails to prevent storage clutter
+            if ($businessLogoPath) {
+                Storage::disk('public')->delete($businessLogoPath);
+            }
+            if ($personIDPath) {
+                Storage::disk('public')->delete($personIDPath);
+            }
+    
+            return response()->json(['error' => 'Registration failed', 'message' => $e->getMessage()], 500);
+        }
     }
 
     public function login(Request $request)
@@ -252,9 +287,13 @@ class AuthController extends Controller
     }
 
     public function updateUserProfile(Request $request)
-    {    
+    {
         $user = Auth::user();
         $customer = DB::table('tbl_customer_info')->where('user_id', $user->id)->first();
+    
+        if (!$customer) {
+            return response()->json(['message' => 'User not found'], 404);
+        }
     
         $changesDetected = false;
         $updateData = [];
@@ -273,16 +312,6 @@ class AuthController extends Controller
             $changesDetected = true;
         }
     
-        // ✅ Update Profile Photo if Uploaded
-        if ($request->hasFile('profile_photo')) {
-            $profilePhotoPath = $request->file('profile_photo')->store('uploads/profile_photos', 'public');
-    
-            if ($profilePhotoPath !== $customer->profile_photo) {
-                $updateData['profile_photo'] = $profilePhotoPath;
-                $changesDetected = true;
-            }
-        }
-    
         // ✅ Update Other Fields (Name, Contact, Address, etc.)
         $fields = [
             'customer_name' => 'customer_name',
@@ -297,8 +326,6 @@ class AuthController extends Controller
             $newValue = $request->input($requestField);
             $oldValue = $customer->$dbField;
     
-            \Log::info("Comparing '{$dbField}': OLD='{$oldValue}' | NEW='{$newValue}'");
-    
             if ($newValue !== null && trim(strtolower($newValue)) !== trim(strtolower($oldValue))) {
                 $updateData[$dbField] = $newValue;
                 $changesDetected = true;
@@ -312,23 +339,52 @@ class AuthController extends Controller
                 ->update($updateData);
     
             return response()->json(['message' => 'Profile updated successfully!']);
-        } elseif (!$changesDetected) {
+        } else {
             return response()->json(['message' => 'No changes detected.']);
         }
     }
-
-    public function getProfile($userId)
-{
-    $customer = Customer::where('user_id', $userId)->first(); // Get the customer info
-
-    if (!$customer) {
-        return response()->json(['message' => 'Customer not found'], 404);
+    
+    public function uploadProfilePhoto(Request $request)
+    {
+        $user = Auth::user();
+        $customer = DB::table('tbl_customer_info')->where('user_id', $user->id)->first();
+    
+        if (!$customer) {
+            return response()->json(['message' => 'User not found'], 404);
+        }
+    
+        // ✅ Validate Image
+        $request->validate([
+            'profile_photo' => 'required|image|mimes:jpeg,png,jpg|max:2048'
+        ]);
+    
+        // ✅ Handle Profile Photo Upload
+        if ($request->hasFile('profile_photo')) {
+            // ✅ Delete Old Profile Photo if Exists
+            if (!empty($customer->profile_photo)) {
+                $oldPath = str_replace('storage/', 'public/', $customer->profile_photo);
+                if (Storage::exists($oldPath)) {
+                    Storage::delete($oldPath);
+                }
+            }
+    
+            // ✅ Store new file in `storage/app/public/profile_photos`
+            $path = $request->file('profile_photo')->store('profile_photos', 'public');
+    
+            // ✅ Update database with correct path
+            DB::table('tbl_customer_info')
+                ->where('user_id', $user->id)
+                ->update(['profile_photo' => $path]);
+    
+            // ✅ Return the new photo URL
+            return response()->json([
+                'message' => 'Profile picture updated successfully!',
+                'profile_photo' => asset('storage/' . $path)
+            ]);
+        }
+    
+        return response()->json(['message' => 'No file uploaded.'], 400);
     }
-
-    return response()->json([
-        'customer_name' => $customer->customer_name ?? 'User', // Return customer name
-    ], 200);
-}
 
     
 }

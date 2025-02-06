@@ -358,6 +358,18 @@
     margin-inline: 30px;
 }
 
+.no-bookings-found {
+    text-align: center;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border: 2px dashed #ccc;
+    border-radius: 8px;
+    color: #555;
+    margin-top: 20px;
+    font-size: 1.1rem;
+    font-weight: bold;
+}
+
 .customer-photo-container {
     display: flex;
     flex-direction: column;

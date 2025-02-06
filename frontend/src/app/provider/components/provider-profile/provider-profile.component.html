@@ -19,7 +19,8 @@
             <div class="info-row-container">
                 <div class="info-row">
                     <label for="businessLogo">Business Logo:</label>
-                    <p-image [src]="provider.profile_pic" alt="Business Logo" width="100" height="100"></p-image>
+                    <p-image [src]="provider.profile_pic" alt="Business Logo" height="150"></p-image>
+                    <input type="file" id="businessLogo" (change)="onFileSelected($event)" *ngIf="isEditing">
                 </div>
 
                 <div class="info-row">
@@ -79,14 +80,15 @@
 
                 <div class="info-row">
                     <label for="serviceType">Service Type:</label>
-                    <select id="serviceType" [(ngModel)]="provider.service_type" [disabled]="!isEditing" class="custom-dropdown">
-                      <option *ngFor="let category of serviceCategories" [value]="category.category_id">
-                        {{ category.category_name }}
-                      </option>
+                    <select id="serviceType" [(ngModel)]="provider.service_type" disabled
+                        class="custom-dropdown">
+                        <option *ngFor="let category of serviceCategories" [value]="category.category_id">
+                            {{ category.category_name }}
+                        </option>
                     </select>
-                  </div>
-                  
-                  
+                </div>
+
+
 
 
                 <!-- ✅ New Password Field (Visible in Edit Mode Only) -->

@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import Swal from 'sweetalert2';
 
 // Locations Array
 export const locations = [
@@ -211,7 +212,8 @@ export class UserProfileComponent implements OnInit {
   // ✅ Save Profile Changes
   saveProfile() {
     const token = localStorage.getItem('authToken');
-
+  
+    // ✅ Send user profile details as JSON (excluding profile photo)
     const userData = {
       customer_name: this.user.customer_name,
       email: this.user.email,
@@ -222,32 +224,76 @@ export class UserProfileComponent implements OnInit {
       province: this.user.province,
       password: this.user.password ? this.user.password.trim() : null
     };
-
-    console.log('Submitting User Data:', userData); // ✅ Debugging
-
-    // ✅ Use PUT instead of POST
+  
+    console.log('Submitting User Data:', userData); // ✅ Debug JSON data
+  
     this.http.put('http://127.0.0.1:8000/api/user/update-profile', userData, {
       headers: {
-        'Authorization': `Bearer ${token}`,
-        'Content-Type': 'application/json'  // ✅ Send as JSON
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json'
       }
     }).subscribe(
       (response) => {
         console.log('Profile updated successfully:', response);
-        this.isEditing = false;
-        this.fetchUserProfile();
+  
+        // ✅ If a profile photo is selected, upload it separately
+        if (this.selectedProfilePhoto) {
+          this.uploadProfilePhoto();
+        } else {
+          Swal.fire('Success', 'Profile updated successfully!', 'success');
+          this.isEditing = false;
+          this.fetchUserProfile();
+        }
       },
       (error) => {
         console.error('Validation Error:', error);
+        Swal.fire('Error', 'Failed to update profile.', 'error');
       }
     );
   }
 
-
-  // ✅ Handle Profile Photo Selection
-  onFileSelected(event: any) {
-    this.selectedProfilePhoto = event.target.files[0];
+  uploadProfilePhoto() {
+    const token = localStorage.getItem('authToken');
+    const formData = new FormData();
+  
+    formData.append('profile_photo', this.selectedProfilePhoto!);
+  
+    console.log('Uploading Profile Photo:', this.selectedProfilePhoto); // ✅ Debug Image Upload
+  
+    this.http.post('http://127.0.0.1:8000/api/user/upload-profile-photo', formData, {
+      headers: { Authorization: `Bearer ${token}` }
+    }).subscribe(
+      (response) => {
+        console.log('Profile photo uploaded:', response);
+        Swal.fire('Success', 'Profile photo updated successfully!', 'success');
+        this.isEditing = false;
+        this.fetchUserProfile();
+      },
+      (error) => {
+        console.error('Error uploading profile photo:', error);
+        Swal.fire('Error', 'Failed to upload profile photo.', 'error');
+      }
+    );
   }
+  
+  
+
+
+  onFileSelected(event: any) {
+    const file: File = event.target.files[0];
+  
+    if (file) {
+      this.selectedProfilePhoto = file;
+  
+      // Preview the image
+      const reader = new FileReader();
+      reader.onload = (e: any) => {
+        this.user.profile_photo = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+  }
+  
 
   // ✅ Province Change
   onProvinceChange(provinceName: string) {

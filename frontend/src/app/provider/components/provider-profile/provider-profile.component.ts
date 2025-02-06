@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import Swal from 'sweetalert2';
+import { ChangeDetectorRef } from '@angular/core';
+
 
 // Locations Array
 export const locations = [
@@ -38,10 +40,10 @@ export const locations = [
         barangays: [
           'Atlu-Bola', 'Bical', 'Bundagul', 'Cacutud', 'Calumpang',
           'Camachiles', 'Dapdap', 'Dau', 'Dolores', 'Duquit',
-          'Lakandula', 'Mabiga', 'Macapagal Village', 'Mamatitang', 
-          'Mangalit', 'Marcos Village', 'Mawaque', 'Paralayunan', 
-          'Poblacion', 'San Francisco', 'San Joaquin', 'Santa Ines', 
-          'Santa Maria', 'Santo Rosario', 'Sapang Balen', 
+          'Lakandula', 'Mabiga', 'Macapagal Village', 'Mamatitang',
+          'Mangalit', 'Marcos Village', 'Mawaque', 'Paralayunan',
+          'Poblacion', 'San Francisco', 'San Joaquin', 'Santa Ines',
+          'Santa Maria', 'Santo Rosario', 'Sapang Balen',
           'Sapang Biabas', 'Tabun'
         ]
       },
@@ -58,12 +60,12 @@ export const locations = [
         barangays: [
           'Arenas', 'Baliti', 'Batasan', 'Buensuceso', 'Candating',
           'Gatiawin', 'Guemasan', 'La Paz (Turu)', 'Lacmit', 'Lacquios',
-          'Mangga-Cacutud', 'Mapalad', 'Palinlang', 'Paralaya', 
-          'Plazang Luma', 'Poblacion', 'San Agustin Norte', 
-          'San Agustin Sur', 'San Antonio', 'San Jose Mesulo', 
-          'San Juan Bano', 'San Mateo', 'San Nicolas', 
-          'San Roque Bitas', 'Cupang (Santa Lucia)', 
-          'Matamo (Santa Lucia)', 'Santo Niño Tabuan', 
+          'Mangga-Cacutud', 'Mapalad', 'Palinlang', 'Paralaya',
+          'Plazang Luma', 'Poblacion', 'San Agustin Norte',
+          'San Agustin Sur', 'San Antonio', 'San Jose Mesulo',
+          'San Juan Bano', 'San Mateo', 'San Nicolas',
+          'San Roque Bitas', 'Cupang (Santa Lucia)',
+          'Matamo (Santa Lucia)', 'Santo Niño Tabuan',
           'Suclayin', 'Telapayong', 'Kaledian (Camba)'
         ]
       },
@@ -85,8 +87,8 @@ export const locations = [
           'Lourdes', 'Magumbali', 'Mandasig', 'Mandili', 'Mangga',
           'Mapaniqui', 'Paligui', 'Pangclara', 'Pansinao', 'Paralaya (Poblacion)',
           'Pasig', 'Pescadores (Poblacion)', 'Pulong Gubat', 'Pulong Palazan',
-          'Salapungan', 'San Agustin (Poblacion)', 'Santo Rosario', 
-          'Tagulod', 'Talang', 'Tenejero', 'Vizal San Pablo', 
+          'Salapungan', 'San Agustin (Poblacion)', 'Santo Rosario',
+          'Tagulod', 'Talang', 'Tenejero', 'Vizal San Pablo',
           'Vizal Santo Cristo', 'Vizal Santo Niño'
         ]
       },
@@ -97,22 +99,22 @@ export const locations = [
           'Cabangcalan', 'Calantas', 'Carmencita', 'Consuelo', 'Dampe',
           'Del Carmen', 'Fortuna', 'Gutad', 'Mabical', 'Malabo',
           'Maligaya', 'Nabuclod', 'Pabanlag', 'Paguiruan', 'Palmayo',
-          'Pandaguirig', 'Población', 'San Antonio', 'San Isidro', 
-          'San Jose', 'San Nicolas', 'San Pedro', 'San Ramon', 
+          'Pandaguirig', 'Población', 'San Antonio', 'San Isidro',
+          'San Jose', 'San Nicolas', 'San Pedro', 'San Ramon',
           'San Roque', 'Santa Monica', 'Solib', 'Valdez', 'Mawacat'
         ]
       },
       {
         name: 'Guagua',
         barangays: [
-          'Bancal', 'Plaza Burgos', 'San Nicolas 1st', 'San Pedro', 
+          'Bancal', 'Plaza Burgos', 'San Nicolas 1st', 'San Pedro',
           'San Rafael', 'San Roque', 'Santa Filomena', 'Santo Cristo',
           'Santo Niño', 'San Vicente (Ebus)', 'Lambac', 'Magsaysay',
           'Maquiapo', 'Natividad', 'Pulungmasle', 'Rizal', 'Ascomo',
           'Jose Abad Santos (Siran)', 'San Pablo', 'San Juan 1st',
           'San Jose', 'San Matias', 'San Isidro', 'San Antonio',
           'San Agustin', 'San Juan Bautista', 'San Juan Nepomuceno',
-          'San Miguel', 'San Nicolas 2nd', 'Santa Ines', 
+          'San Miguel', 'San Nicolas 2nd', 'Santa Ines',
           'Santa Ursula'
         ]
       },
@@ -121,23 +123,23 @@ export const locations = [
         barangays: [
           'San Isidro', 'Santiago', 'Santo Niño (Prado Saba)',
           'San Roque Arbol', 'Baruya (San Rafael)', 'Lourdes (Lauc Pau)',
-          'Prado Siongco', 'San Jose Gumi', 'Balantacan', 
-          'Santa Teresa 2nd', 'Bancal Sinubli', 'Bancal Pugad', 
-          'Calangain', 'San Pedro Palcarangan', 'San Pedro Saug', 
+          'Prado Siongco', 'San Jose Gumi', 'Balantacan',
+          'Santa Teresa 2nd', 'Bancal Sinubli', 'Bancal Pugad',
+          'Calangain', 'San Pedro Palcarangan', 'San Pedro Saug',
           'San Pablo 1st', 'San Pablo 2nd', 'De La Paz', 'Santa Cruz'
         ]
       },
       {
         name: 'Macabebe',
         barangays: [
-          'Batasan', 'Caduang Tete', 'Candelaria', 'Castuli', 
-          'Consuelo', 'Dalayap', 'Mataguiti', 'San Esteban', 
-          'San Francisco', 'San Gabriel (Poblacion)', 
-          'San Isidro (Poblacion)', 'San Jose', 'San Juan', 
-          'San Rafael', 'San Roque (Poblacion)', 'San Vicente', 
-          'Santa Cruz (Poblacion)', 'Santa Lutgarda', 
-          'Santa Maria', 'Santa Rita (Poblacion)', 'Santo Niño', 
-          'Santo Rosario (Poblacion)', 'Saplad David', 
+          'Batasan', 'Caduang Tete', 'Candelaria', 'Castuli',
+          'Consuelo', 'Dalayap', 'Mataguiti', 'San Esteban',
+          'San Francisco', 'San Gabriel (Poblacion)',
+          'San Isidro (Poblacion)', 'San Jose', 'San Juan',
+          'San Rafael', 'San Roque (Poblacion)', 'San Vicente',
+          'Santa Cruz (Poblacion)', 'Santa Lutgarda',
+          'Santa Maria', 'Santa Rita (Poblacion)', 'Santo Niño',
+          'Santo Rosario (Poblacion)', 'Saplad David',
           'Tacasan', 'Telacsan'
         ]
       }
@@ -164,7 +166,7 @@ export class ProviderProfileComponent implements OnInit {
   // ✅ Service Categories
   serviceCategories: any[] = [];
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private cdr: ChangeDetectorRef) { }
 
   ngOnInit(): void {
     this.fetchProviderProfile();
@@ -229,19 +231,21 @@ export class ProviderProfileComponent implements OnInit {
   // ✅ Save Profile Changes
   saveProfile() {
     const token = localStorage.getItem('authToken');
-
+  
+    // ✅ Send profile data as JSON
     const updatedData = {
-      email: this.provider.email,
-      contact_no: this.provider.contact_no,
-      office_add: this.provider.office_add,
-      brgy: this.provider.brgy,
-      city: this.provider.city,
-      province: this.provider.province,
-      contact_person: this.provider.contact_person,
-      service_type: this.provider.service_type, // ✅ Make sure this is sending the category_id
-      password: this.provider.new_password ? this.provider.new_password : null  // ✅ Send new password if provided
+      email: this.provider.email || '',
+      contact_no: this.provider.contact_no || '',
+      office_add: this.provider.office_add || '',
+      brgy: this.provider.brgy || '',
+      city: this.provider.city || '',
+      province: this.provider.province || '',
+      contact_person: this.provider.contact_person || '',
+      password: this.provider.new_password ? this.provider.new_password : null
     };
-
+  
+    console.log('Sending JSON Data:', updatedData); // ✅ Debug JSON data
+  
     this.http.put('http://127.0.0.1:8000/api/provider/update-profile', updatedData, {
       headers: {
         Authorization: `Bearer ${token}`,
@@ -250,16 +254,51 @@ export class ProviderProfileComponent implements OnInit {
     }).subscribe(
       (response) => {
         console.log('Profile updated successfully:', response);
-        Swal.fire('Success', 'Profile updated successfully!', 'success'); // ✅ Add Success Alert
+  
+        // ✅ If image is selected, upload it separately
+        if (this.selectedBusinessLogo) {
+          this.uploadProfilePicture();
+        } else {
+          Swal.fire('Success', 'Profile updated successfully!', 'success');
+          this.isEditing = false;
+          this.fetchProviderProfile();
+        }
+      },
+      (error) => {
+        console.error('Error updating profile:', error);
+        Swal.fire('Error', 'Failed to update profile.', 'error');
+      }
+    );
+  }
+  
+  uploadProfilePicture() {
+    const token = localStorage.getItem('authToken');
+    const formData = new FormData();
+  
+    formData.append('profile_pic', this.selectedBusinessLogo!);
+  
+    console.log('Uploading Image:', this.selectedBusinessLogo); // ✅ Debug Image Upload
+  
+    this.http.post('http://127.0.0.1:8000/api/provider/upload-profile-picture', formData, {
+      headers: { Authorization: `Bearer ${token}` }
+    }).subscribe(
+      (response) => {
+        console.log('Profile picture uploaded:', response);
+        Swal.fire('Success', 'Profile picture updated successfully!', 'success');
         this.isEditing = false;
         this.fetchProviderProfile();
       },
       (error) => {
-        console.error('Error updating profile:', error);
-        Swal.fire('Error', 'Failed to update profile.', 'error'); // ✅ Add Error Alert
+        console.error('Error uploading profile picture:', error);
+        Swal.fire('Error', 'Failed to upload profile picture.', 'error');
       }
     );
   }
+  
+  
+  
+  
+  
 
   // ✅ Handle Province Change
   onProvinceChange(provinceName: string) {
@@ -282,4 +321,20 @@ export class ProviderProfileComponent implements OnInit {
       this.provider.brgy = '';
     }
   }
+
+  onFileSelected(event: any) {
+    const file: File = event.target.files[0];
+
+    if (file) {
+      this.selectedBusinessLogo = file;
+
+      // Preview the image
+      const reader = new FileReader();
+      reader.onload = (e: any) => {
+        this.provider.profile_pic = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+  }
+
 }

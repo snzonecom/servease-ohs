@@ -45,7 +45,7 @@ export class MyTransactionsComponent implements OnInit {
       headers: { Authorization: `Bearer ${token}` }
     }).subscribe(
       (response) => {
-        console.log('Fetched Provider Bookings:', response);
+        // console.log('Fetched Provider Bookings:', response);
 
         // ✅ Parse services immediately after fetching
         this.pendingBookings = response.pending.map((booking: any) => ({
@@ -71,30 +71,18 @@ export class MyTransactionsComponent implements OnInit {
 
 
   // ✅ Show Booking Details
-  showPendingBookingDetails(booking: any) {  // ✅ Explicitly typed as 'any'
-    this.selectedBooking = {
-      ...booking,
-      provider: booking.provider || { provider_name: 'N/A' },
-      services: this.parseServices(booking.services) // ✅ Parse services if needed
-    };
-    this.pendingDialogVisible = true;
+  showPendingBookingDetails(booking: any) {
+    this.selectedBooking = { ...booking }; // ✅ Assign booking object
+    this.pendingDialogVisible = true;      // ✅ Show the dialog
   }
 
-  showOngoingBookingDetails(booking: any) {  // ✅ Explicitly typed as 'any'
-    this.selectedBooking = {
-      ...booking,
-      provider: booking.provider || { provider_name: 'N/A' },
-      services: this.parseServices(booking.services)
-    };
+  showOngoingBookingDetails(booking: any) {
+    this.selectedBooking = { ...booking };
     this.ongoingDialogVisible = true;
   }
 
-  showCompletedBookingDetails(booking: any) {  // ✅ Explicitly typed as 'any'
-    this.selectedBooking = {
-      ...booking,
-      provider: booking.provider || { provider_name: 'N/A' },
-      services: this.parseServices(booking.services)
-    };
+  showCompletedBookingDetails(booking: any) {
+    this.selectedBooking = { ...booking };
     this.completedDialogVisible = true;
   }
 

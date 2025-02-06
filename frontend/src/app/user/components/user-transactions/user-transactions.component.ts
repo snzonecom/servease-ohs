@@ -230,6 +230,12 @@ export class UserTransactionsComponent implements OnInit {
       (response) => {
         console.log('⭐ Rating Submitted:', response);
         alert('Rating submitted successfully!');
+
+        // ✅ Reset inputs after successful submission
+        this.rating = 0;
+        this.ratingFeedback = '';
+
+        // ✅ Close the rating dialog
         this.ratingDialogVisible = false;
       },
       (error) => {
@@ -257,8 +263,17 @@ export class UserTransactionsComponent implements OnInit {
    * Opens the Rating Dialog
    */
   openRatingDialog() {
+    // ✅ Close the completed booking dialog if it's open
+    this.completedDialogVisible = false;
+
+    // ✅ Reset the rating inputs
+    this.rating = 0;
+    this.ratingFeedback = '';
+
+    // ✅ Open the rating dialog
     this.ratingDialogVisible = true;
   }
+
 
   /**
    * Closes the Rating Dialog

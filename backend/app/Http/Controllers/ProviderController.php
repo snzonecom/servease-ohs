@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Carbon\Carbon;
 use App\Models\Service;
+use Illuminate\Support\Facades\Storage;
 
 class ProviderController extends Controller
 {
@@ -31,7 +32,7 @@ class ProviderController extends Controller
     public function update(Request $request)
     {
         $provider = Provider::where('user_id', Auth::id())->first();
-        $user = User::find(Auth::id()); // ✅ Get the corresponding user
+        $user = User::find(Auth::id());
     
         if (!$provider || !$user) {
             return response()->json(['message' => 'Provider not found'], 404);
@@ -46,20 +47,19 @@ class ProviderController extends Controller
             'city' => 'nullable|string',
             'province' => 'nullable|string',
             'contact_person' => 'nullable|string',
-            'service_type' => 'nullable|integer',
-            'password' => 'nullable|string|min:6',  // ✅ Add password validation
+            'password' => 'nullable|string|min:6',
+            'profile_pic' => 'nullable|image|mimes:jpeg,png,jpg|max:2048'
         ]);
     
-        // ✅ Update Provider Information
-        $provider->update($request->only([
-            'contact_no',
-            'office_add',
-            'brgy',
-            'city',
-            'province',
-            'contact_person',
-            'service_type'
-        ]));
+        // ✅ Prevent Null Values from Overwriting Existing Data
+        $provider->update([
+            'contact_no' => $request->input('contact_no') ?? $provider->contact_no,
+            'office_add' => $request->input('office_add') ?? $provider->office_add,
+            'brgy' => $request->input('brgy') ?? $provider->brgy,
+            'city' => $request->input('city') ?? $provider->city,
+            'province' => $request->input('province') ?? $provider->province,
+            'contact_person' => $request->input('contact_person') ?? $provider->contact_person,
+        ]);
     
         // ✅ Update Email in Users Table
         if ($request->has('email')) {
@@ -73,11 +73,54 @@ class ProviderController extends Controller
             $user->save();
         }
     
+        // ✅ Handle Profile Picture Upload
+        if ($request->hasFile('profile_pic')) {
+            if ($provider->profile_pic) {
+                Storage::delete($provider->profile_pic);
+            }
+            $path = $request->file('profile_pic')->store('uploads/logos', 'public');
+        $provider->profile_pic = 'storage/' . $path;
+        $provider->save();
+        }
+    
         return response()->json([
             'message' => 'Profile updated successfully!',
             'provider' => $provider
         ]);
     }
+
+    public function uploadProfilePicture(Request $request)
+{
+    $provider = Provider::where('user_id', Auth::id())->first();
+
+    if (!$provider) {
+        return response()->json(['message' => 'Provider not found'], 404);
+    }
+
+    // ✅ Validate Image
+    $request->validate([
+        'profile_pic' => 'required|image|mimes:jpeg,png,jpg|max:2048'
+    ]);
+
+    // ✅ Store New Image
+    if ($request->hasFile('profile_pic')) {
+        if ($provider->profile_pic) {
+            Storage::delete($provider->profile_pic);
+        }
+        $path = $request->file('profile_pic')->store('uploads/logos', 'public');
+        $provider->profile_pic = 'storage/' . $path;
+        $provider->save();
+    }
+
+    return response()->json([
+        'message' => 'Profile picture updated successfully!',
+        'profile_pic' => asset($provider->profile_pic)
+    ]);
+}
+
+    
+    
+
 
     // ✅ Delete a provider
     public function destroy($id)
@@ -358,8 +401,6 @@ public function getTodaysBookings($providerId)
 
     return response()->json($bookings);
 }
-
-
 
 
 }
