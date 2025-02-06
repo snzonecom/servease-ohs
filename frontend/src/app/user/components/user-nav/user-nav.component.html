@@ -15,7 +15,7 @@
             </svg>
         </label>
 
-        <a class="home-link" [routerLink]="['/user/home']">LOGO GOES HERE</a>
+        <a class="home-link" [routerLink]="['/user/home']"><img src="assets/img/servease-logo.png" alt="servease logo" width="50px"></a>
         <a [routerLink]="['/user/home']">Home</a>
         <a [routerLink]="['/user/home']" fragment="service">Service Categories</a>
         <a [routerLink]="['/user/home']" fragment="about">About</a>
@@ -25,7 +25,7 @@
         <div class="dropdown">
             <input type="checkbox" id="dropdown-active" class="dropdown-checkbox" [checked]="dropdownOpen">
             <label for="dropdown-active" class="dropdown-toggle">
-                Hello, Name Here!
+                Hello, {{ customerName }}!
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" viewBox="0 0 24 24" fill="none" stroke="white"
                     stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <polyline points="6 9 12 15 18 9"></polyline>

@@ -11,18 +11,51 @@ import Swal from 'sweetalert2';
 export class BookServiceComponent implements OnInit {
   provider: any = {};
   availableServices: any[] = [];
-  displayedFeedbacks: any[] = [];
   showAllReviews = false;
+
+  feedbacks: any[] = [];
+  displayedFeedbacks: any[] = [];
 
   constructor(private route: ActivatedRoute, private http: HttpClient) { }
 
   ngOnInit(): void {
     const providerId = this.route.snapshot.paramMap.get('providerId');
     if (providerId) {
-      this.fetchProviderDetails(providerId);
+      this.fetchProviderDetails(providerId); // Existing Function
+      this.fetchProviderFeedbacks(providerId); // ✅ New Function to Fetch Feedbacks
     }
-    this.updateDisplayedFeedbacks();
+    this.updateDisplayedFeedbacks(); // Existing Function
   }
+
+  fetchProviderFeedbacks(providerId: string) {
+    this.http.get<any[]>(`http://127.0.0.1:8000/api/provider/${providerId}/feedbacks`).subscribe(
+      (feedbacks) => {
+        this.feedbacks = feedbacks.map(feedback => ({
+          clientName: feedback.clientName || 'Anonymous',  // ✅ Default fallback
+          reviewText: feedback.reviewText,
+          rating: Math.round(feedback.rating),             // ✅ Round the rating for correct display
+        }));
+        this.displayedFeedbacks = this.feedbacks.slice(0, 3); // ✅ Show only the first 3 by default
+      },
+      (error) => {
+        console.error('Error fetching feedbacks:', error);
+      }
+    );
+  }
+
+
+
+  // Function to get filled stars
+  getFilledStars(rating: number): any[] {
+    return Array(Math.round(rating)).fill(1);  // ✅ Round the rating to the nearest whole number
+  }
+
+  // Function to get empty stars
+  getEmptyStars(rating: number): any[] {
+    return Array(5 - Math.round(rating)).fill(1);  // ✅ Fill remaining with empty stars
+  }
+
+
 
   // ✅ Fetch provider details
   fetchProviderDetails(providerId: string): void {
@@ -42,9 +75,13 @@ export class BookServiceComponent implements OnInit {
   }
 
   toggleReviews() {
-    this.showAllReviews = !this.showAllReviews;
-    this.updateDisplayedFeedbacks();
+    if (this.displayedFeedbacks.length === 3) {
+      this.displayedFeedbacks = this.feedbacks; // ✅ Show all feedbacks
+    } else {
+      this.displayedFeedbacks = this.feedbacks.slice(0, 3); // ✅ Show only first 3
+    }
   }
+
 
   private updateDisplayedFeedbacks() {
     if (this.showAllReviews) {

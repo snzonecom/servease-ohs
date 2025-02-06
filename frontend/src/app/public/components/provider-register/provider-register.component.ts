@@ -33,29 +33,118 @@ export const locations = [
           'Santo Niño', 'Santo Rosario', 'Sindalan', 'Telabastagan'
         ]
       },
-      { name: 'Mabalacat City', barangays: [] },
-      { name: 'Apalit', barangays: [] },
-      { name: 'Arayat', barangays: [] },
-      { name: 'Bacolor', barangays: [] },
-      { name: 'Candaba', barangays: [] },
-      { name: 'Floridablanca', barangays: [] },
-      { name: 'Guagua', barangays: [] },
-      { name: 'Lubao', barangays: [] },
-      { name: 'Macabebe', barangays: [] },
-      { name: 'Magalang', barangays: [] },
-      { name: 'Masantol', barangays: [] },
-      { name: 'Mexico', barangays: [] },
-      { name: 'Minalin', barangays: [] },
-      { name: 'Porac', barangays: [] },
-      { name: 'San Luis', barangays: [] },
-      { name: 'San Simon', barangays: [] },
-      { name: 'Santa Ana', barangays: [] },
-      { name: 'Santa Rita', barangays: [] },
-      { name: 'Santo Tomas', barangays: [] },
-      { name: 'Sasmuan', barangays: [] }
+      {
+        name: 'Mabalacat City',
+        barangays: [
+          'Atlu-Bola', 'Bical', 'Bundagul', 'Cacutud', 'Calumpang',
+          'Camachiles', 'Dapdap', 'Dau', 'Dolores', 'Duquit',
+          'Lakandula', 'Mabiga', 'Macapagal Village', 'Mamatitang', 
+          'Mangalit', 'Marcos Village', 'Mawaque', 'Paralayunan', 
+          'Poblacion', 'San Francisco', 'San Joaquin', 'Santa Ines', 
+          'Santa Maria', 'Santo Rosario', 'Sapang Balen', 
+          'Sapang Biabas', 'Tabun'
+        ]
+      },
+      {
+        name: 'Apalit',
+        barangays: [
+          'Balucuc', 'Calantipe', 'Cansinala', 'Capalangan', 'Colgante',
+          'Paligui', 'Sampaloc', 'San Juan', 'San Vicente', 'Sucad',
+          'Sulipan', 'Tabuyuc'
+        ]
+      },
+      {
+        name: 'Arayat',
+        barangays: [
+          'Arenas', 'Baliti', 'Batasan', 'Buensuceso', 'Candating',
+          'Gatiawin', 'Guemasan', 'La Paz (Turu)', 'Lacmit', 'Lacquios',
+          'Mangga-Cacutud', 'Mapalad', 'Palinlang', 'Paralaya', 
+          'Plazang Luma', 'Poblacion', 'San Agustin Norte', 
+          'San Agustin Sur', 'San Antonio', 'San Jose Mesulo', 
+          'San Juan Bano', 'San Mateo', 'San Nicolas', 
+          'San Roque Bitas', 'Cupang (Santa Lucia)', 
+          'Matamo (Santa Lucia)', 'Santo Niño Tabuan', 
+          'Suclayin', 'Telapayong', 'Kaledian (Camba)'
+        ]
+      },
+      {
+        name: 'Bacolor',
+        barangays: [
+          'Balas', 'Cabalantian', 'Cabambangan (Poblacion)', 'Cabetican',
+          'Calibutbut', 'Concepcion', 'Dolores', 'Duat', 'Macabacle',
+          'Magliman', 'Maliwalu', 'Mesalipit', 'Parulog', 'Potrero',
+          'San Antonio', 'San Isidro', 'San Vicente', 'Santa Barbara',
+          'Santa Ines', 'Talba', 'Tinajero'
+        ]
+      },
+      {
+        name: 'Candaba',
+        barangays: [
+          'Bahay Pare', 'Bambang', 'Barangca', 'Barit', 'Buas (Poblacion)',
+          'Cuayang Bugtong', 'Dalayap', 'Dulong Ilog', 'Gulap', 'Lanang',
+          'Lourdes', 'Magumbali', 'Mandasig', 'Mandili', 'Mangga',
+          'Mapaniqui', 'Paligui', 'Pangclara', 'Pansinao', 'Paralaya (Poblacion)',
+          'Pasig', 'Pescadores (Poblacion)', 'Pulong Gubat', 'Pulong Palazan',
+          'Salapungan', 'San Agustin (Poblacion)', 'Santo Rosario', 
+          'Tagulod', 'Talang', 'Tenejero', 'Vizal San Pablo', 
+          'Vizal Santo Cristo', 'Vizal Santo Niño'
+        ]
+      },
+      {
+        name: 'Floridablanca',
+        barangays: [
+          'Anon', 'Apalit', 'Basa Air Base', 'Benedicto', 'Bodega',
+          'Cabangcalan', 'Calantas', 'Carmencita', 'Consuelo', 'Dampe',
+          'Del Carmen', 'Fortuna', 'Gutad', 'Mabical', 'Malabo',
+          'Maligaya', 'Nabuclod', 'Pabanlag', 'Paguiruan', 'Palmayo',
+          'Pandaguirig', 'Población', 'San Antonio', 'San Isidro', 
+          'San Jose', 'San Nicolas', 'San Pedro', 'San Ramon', 
+          'San Roque', 'Santa Monica', 'Solib', 'Valdez', 'Mawacat'
+        ]
+      },
+      {
+        name: 'Guagua',
+        barangays: [
+          'Bancal', 'Plaza Burgos', 'San Nicolas 1st', 'San Pedro', 
+          'San Rafael', 'San Roque', 'Santa Filomena', 'Santo Cristo',
+          'Santo Niño', 'San Vicente (Ebus)', 'Lambac', 'Magsaysay',
+          'Maquiapo', 'Natividad', 'Pulungmasle', 'Rizal', 'Ascomo',
+          'Jose Abad Santos (Siran)', 'San Pablo', 'San Juan 1st',
+          'San Jose', 'San Matias', 'San Isidro', 'San Antonio',
+          'San Agustin', 'San Juan Bautista', 'San Juan Nepomuceno',
+          'San Miguel', 'San Nicolas 2nd', 'Santa Ines', 
+          'Santa Ursula'
+        ]
+      },
+      {
+        name: 'Lubao',
+        barangays: [
+          'San Isidro', 'Santiago', 'Santo Niño (Prado Saba)',
+          'San Roque Arbol', 'Baruya (San Rafael)', 'Lourdes (Lauc Pau)',
+          'Prado Siongco', 'San Jose Gumi', 'Balantacan', 
+          'Santa Teresa 2nd', 'Bancal Sinubli', 'Bancal Pugad', 
+          'Calangain', 'San Pedro Palcarangan', 'San Pedro Saug', 
+          'San Pablo 1st', 'San Pablo 2nd', 'De La Paz', 'Santa Cruz'
+        ]
+      },
+      {
+        name: 'Macabebe',
+        barangays: [
+          'Batasan', 'Caduang Tete', 'Candelaria', 'Castuli', 
+          'Consuelo', 'Dalayap', 'Mataguiti', 'San Esteban', 
+          'San Francisco', 'San Gabriel (Poblacion)', 
+          'San Isidro (Poblacion)', 'San Jose', 'San Juan', 
+          'San Rafael', 'San Roque (Poblacion)', 'San Vicente', 
+          'Santa Cruz (Poblacion)', 'Santa Lutgarda', 
+          'Santa Maria', 'Santa Rita (Poblacion)', 'Santo Niño', 
+          'Santo Rosario (Poblacion)', 'Saplad David', 
+          'Tacasan', 'Telacsan'
+        ]
+      }
     ]
   }
 ];
+
 
 @Component({
   selector: 'app-provider-register',

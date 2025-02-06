@@ -35,7 +35,7 @@
       </div>
       <div class="card-row">
         <div class="description-container">
-          <p>User Reports</p> <!-- Replace with description text -->
+          <p>Registered Service Providers</p> <!-- Replace with description text -->
         </div>
       </div>
     </div>
@@ -52,7 +52,7 @@
       </div>
       <div class="card-row">
         <div class="description-container">
-          <p>Provider Reports</p> <!-- Replace with description text -->
+          <p>Existing Service Categories</p> <!-- Replace with description text -->
         </div>
       </div>
     </div>
@@ -69,7 +69,7 @@
       </div>
       <div class="card-row">
         <div class="description-container">
-          <p>Newly Registered Users</p> <!-- Replace with description text -->
+          <p>Total Number of Registered Users</p> <!-- Replace with description text -->
         </div>
       </div>
     </div>
@@ -81,7 +81,7 @@
     <div class="left-division">
       <h3>Popular Services</h3>
       <!-- Replace this chart with the actual data and options -->
-      <div style="align-self: center; min-width: 45rem;">
+      <div>
         <p-chart type="bar" [data]="popularServicesData" [options]="chartOptions"></p-chart>
       </div>
 
@@ -109,79 +109,6 @@
           </tr>
         </ng-template>
       </p-table>
-    </div>
-  </div>
-
-  <!-- Third Section: System Current Status and Accumulated Bookings -->
-  <div class="third-section">
-    <!-- Left Division: System Current Status with Cards -->
-    <div class="current-status">
-      <p>System Current Status</p> <!-- Update the title based on content -->
-
-      <!-- Main Card Containing Status Information -->
-      <div class="status-card">
-        <!-- Container for 2 Columns -->
-        <div class="status-inner-cards-container">
-
-          <!-- Card 1: Total Number of Users -->
-          <div class="status-inner-card">
-            <div class="status-content">
-              <div class="status-icon">
-                <i class="pi pi-users"></i> <!-- Replace icon as needed -->
-              </div>
-              <h2>1200</h2> <!-- Replace with dynamic data -->
-              <div class="status-info">
-                <h4>Total Number of Registered Users</h4> <!-- Update description -->
-              </div>
-            </div>
-          </div>
-
-          <!-- Card 2: Total Number of Bookings -->
-          <div class="status-inner-card">
-            <div class="status-content">
-              <div class="status-icon">
-                <i class="pi pi-calendar"></i> <!-- Replace icon as needed -->
-              </div>
-              <h2>3500</h2> <!-- Replace with dynamic data -->
-              <div class="status-info">
-                <h4>Total Number of Bookings</h4> <!-- Update description -->
-              </div>
-            </div>
-          </div>
-
-          <!-- Card 3: Total Number of Registered Service Providers -->
-          <div class="status-inner-card">
-            <div class="status-content">
-              <div class="status-icon">
-                <i class="pi pi-briefcase"></i> <!-- Replace icon as needed -->
-              </div>
-              <h2>80</h2> <!-- Replace with dynamic data -->
-              <div class="status-info">
-                <h4>Registered Service Providers</h4> <!-- Update description -->
-              </div>
-            </div>
-          </div>
-
-          <!-- Card 4: Total Number of Service Categories -->
-          <div class="status-inner-card">
-            <div class="status-content">
-              <div class="status-icon">
-                <i class="pi pi-tags"></i> <!-- Replace icon as needed -->
-              </div>
-              <h2>15</h2> <!-- Replace with dynamic data -->
-              <div class="status-info">
-                <h4>Recorded Service Categories</h4> <!-- Update description -->
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Right Division: Accumulated Bookings Line Chart -->
-    <div class="accumulated-bookings">
-      <!-- Replace this chart with actual accumulated bookings data -->
-      <p-chart type="line" [data]="accumulatedBookingsData" [options]="chartOptions"></p-chart>
     </div>
   </div>
 

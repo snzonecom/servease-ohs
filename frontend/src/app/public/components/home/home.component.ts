@@ -1,65 +1,37 @@
-import { Component, AfterViewInit } from '@angular/core';
+import { Component, AfterViewInit, OnInit } from '@angular/core';
 import { ActivatedRoute, Router, NavigationEnd } from '@angular/router';
 import { filter } from 'rxjs/operators';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
   styleUrl: './home.component.css'
 })
-export class HomeComponent implements AfterViewInit {
+export class HomeComponent implements OnInit {
 
   registerDialogVisible: boolean = false;
   loginFirstVisible: boolean = false;
 
-  constructor(private router: Router, private activatedRoute: ActivatedRoute) { }
+  constructor(private router: Router, private activatedRoute: ActivatedRoute, private http: HttpClient) { }
 
   loginFirstDialog() {
     this.registerDialogVisible = true;
   }
 
-  // Function to show the dialog
   showRegisterDialog() {
     this.registerDialogVisible = true;
   }
 
+
   activeAccordion: number | null = null;
 
   toggleAccordion(index: number): void {
-    // Toggle between open and closed for the clicked section
     this.activeAccordion = this.activeAccordion === index ? null : index;
   }
 
-  services = [
-    { name: 'Cleaning', description: 'Professional cleaning services for your home and office.' },
-    { name: 'Plumbing', description: 'Expert plumbers to handle all your plumbing needs.' },
-    { name: 'Electrician', description: 'Licensed electricians for repairs and installations.' },
-    { name: 'Gardening', description: 'Gardening services to keep your yard in top condition.' },
-    { name: 'Pest Control', description: 'Get rid of pests quickly with reliable pest control experts.' },
-  ];
-
-  businesses = [
-    {
-      name: 'Sunshine Bakery',
-      logo: 'https://placehold.co/600x600', // Replace with actual logo URLs
-      description: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Minus, autem? Magnam sunt nulla in. Eius nulla exercitationem mollitia doloribus? Neque eos voluptatum, voluptatibus rem dicta natus atque quae vitae qui.',
-    },
-    {
-      name: 'Ocean Spa',
-      logo: 'https://placehold.co/600x600',
-      description: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Minus, autem? Magnam sunt nulla in. Eius nulla exercitationem mollitia doloribus? Neque eos voluptatum, voluptatibus rem dicta natus atque quae vitae qui.',
-    },
-    {
-      name: 'TechWorld',
-      logo: 'https://placehold.co/600x600',
-      description: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Minus, autem? Magnam sunt nulla in. Eius nulla exercitationem mollitia doloribus? Neque eos voluptatum, voluptatibus rem dicta natus atque quae vitae qui.',
-    },
-    {
-      name: 'Fitness Pro Gym',
-      logo: 'https://placehold.co/600x600',
-      description: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Minus, autem? Magnam sunt nulla in. Eius nulla exercitationem mollitia doloribus? Neque eos voluptatum, voluptatibus rem dicta natus atque quae vitae qui.',
-    }
-  ];
+  services: any[] = []; // Dynamic services from API
+  topProviders: any[] = []; // ✅ For Top Providers
 
   responsiveOptions = [
     {
@@ -79,20 +51,40 @@ export class HomeComponent implements AfterViewInit {
     }
   ];
 
-  ngAfterViewInit(): void {
-    // Listen to router events to handle fragment-based scrolling
-    this.router.events.pipe(
-      filter(event => event instanceof NavigationEnd)
-    ).subscribe(() => {
-      // After navigation, check if there's a fragment
-      const fragment = this.activatedRoute.snapshot.fragment;
-      if (fragment) {
-        // Scroll to the element with the given fragment
-        const element = document.getElementById(fragment);
-        if (element) {
-          element.scrollIntoView({ behavior: 'smooth' });
-        }
+  ngOnInit(): void {
+    this.fetchServiceCategories();
+    this.fetchTopProviders(); // ✅ Fetch top providers
+  }
+
+  navigateTo(route: string): void {
+    this.registerDialogVisible = false;  // Ensure the dialog is closed
+
+    setTimeout(() => {
+      // Remove any lingering scroll lock after dialog closes
+      document.body.classList.remove('ui-overflow-hidden');
+
+      // Navigate to the selected registration page
+      this.router.navigate([route]);
+    }, 100); // Slight delay ensures the dialog is fully closed before navigating
+  }
+
+
+  fetchServiceCategories(): void {
+    this.http.get('http://127.0.0.1:8000/api/service-categories').subscribe(
+      (data: any) => {
+        this.services = data; // Assuming API returns an array of categories
+      },
+      (error) => {
+        console.error('Error fetching service categories:', error);
       }
-    });
+    );
+  }
+
+  // ✅ Fetch Top Providers
+  fetchTopProviders(): void {
+    this.http.get('http://127.0.0.1:8000/api/top-providers').subscribe(
+      (data: any) => this.topProviders = data,
+      (error) => console.error('Error fetching top providers:', error)
+    );
   }
 }

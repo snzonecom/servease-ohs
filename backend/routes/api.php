@@ -86,4 +86,19 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::put('/provider/update-profile', [ProviderController::class, 'update']);
 });
 
+// For Public Home - To Get the Top Providers (based on number of bookings, and average rating)
+Route::get('/top-providers', [ProviderController::class, 'getTopProviders']);
+
+// For Registered User Home - To get the Reco Providers (Criteria: same brgy, city, number of bookings, average rating)
+Route::middleware('auth:sanctum')->get('/recommended-providers', [ProviderController::class, 'getRecommendedProviders']);
+
+Route::get('/provider/{providerId}/feedbacks', [ProviderController::class, 'getProviderFeedbacks']);
+
+
+// Will allow the users to cancel a transaction when it is still Pending
+Route::post('/bookings/{bookingId}/cancel', [BookingController::class, 'cancelBooking']);
+
+// For service provider dashboard
+Route::get('/provider/{providerId}/dashboard-stats', [ProviderController::class, 'getDashboardStats']);
+Route::get('/provider/{providerId}/todays-bookings', [ProviderController::class, 'getTodaysBookings']);
 

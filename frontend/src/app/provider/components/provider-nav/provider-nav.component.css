@@ -5,6 +5,8 @@ nav {
     display: flex;
     justify-content: flex-end;
     align-items: center;
+    padding-inline: 20px;
+    padding-block: 10px;
 }
 
 .links-container {
@@ -46,6 +48,34 @@ nav svg {
     display: none;
 }
 
+/* Style Login and Register Buttons */
+nav a.login-btn,
+nav a.register-btn {
+    background-color: white;
+    color: #428eba;
+    padding: 8px 20px;
+    border-radius: 20px;
+    font-weight: 600;
+    text-decoration: none;
+    border: none;
+    transition: background-color 0.3s, color 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 36px;
+    min-width: 90px;
+    margin-left: 10px;
+}
+
+/* Hover Effect */
+nav a.login-btn:hover,
+nav a.register-btn:hover {
+    background-color: #e0e0e0;
+    color: #2d6b8a;
+}
+
+
+
 @media(max-width: 450px) {
     .links-container {
         flex-direction: column;
@@ -68,6 +98,14 @@ nav svg {
         width: 100%;
         padding: 20px 30px;
         justify-content: flex-start;
+    }
+
+    nav a.login-btn,
+    nav a.register-btn {
+        display: block;
+        text-align: center;
+        width: 50%;
+        margin-bottom: 10px;
     }
 
     .open-sidebar-button,
@@ -188,4 +226,68 @@ nav svg {
         left: 0;
         z-index: 9;
     }
+}
+
+/* Dialog Box Styling */
+::ng-deep .p-dialog {
+    margin: 0 2rem;
+}
+
+::ng-deep .p-dialog .p-dialog-content {
+    padding: 0 2rem 2rem 2rem;
+}
+
+::ng-deep .p-dialog-header {
+    padding: 1.5rem 1.5rem 0.5rem 2rem;
+}
+
+/* Label text styling */
+.review-text {
+    padding-bottom: 12px;
+    display: block;
+}
+
+/* Buttons */
+.register-options {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.customer-button,
+.provider-button {
+    width: 100%;
+    padding: 0.5rem 0;
+    background-color: #428eba;
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+    ::ng-deep .p-dialog .p-dialog-content {
+        padding: 1rem;
+    }
+
+    ::ng-deep .p-dialog-header {
+        padding: 1rem;
+    }
+}
+
+@media (max-width: 450px) {
+
+    /* Dialog Content */
+    ::ng-deep .p-dialog .p-dialog-content {
+        padding: 0.5rem;
+    }
+
+    ::ng-deep .p-dialog-header {
+        padding: 0.5rem;
+    }
+}
+
+.divider {
+    height: 1px;
+    background-color: #ccc;
+    margin: 10px 0;
+    width: 90%;
+    align-self: center;
 }

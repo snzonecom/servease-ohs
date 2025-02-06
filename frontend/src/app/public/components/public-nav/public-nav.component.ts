@@ -7,11 +7,12 @@ import { filter } from 'rxjs/operators';
   templateUrl: './public-nav.component.html',
   styleUrl: './public-nav.component.css'
 })
-export class PublicNavComponent implements AfterViewInit {
+export class PublicNavComponent {
 
   registerDialogVisible: boolean = false;
 
-  constructor(private router: Router, private activatedRoute: ActivatedRoute) { }
+  constructor(private router: Router, private activatedRoute: ActivatedRoute) {
+  }
 
   // Function to show the dialog
   showRegisterDialog() {
@@ -22,21 +23,5 @@ export class PublicNavComponent implements AfterViewInit {
   closeRegisterDialog() {
     this.registerDialogVisible = false;
   }
-
-  ngAfterViewInit(): void {
-    // Listen to router events to handle fragment-based scrolling
-    this.router.events.pipe(
-      filter(event => event instanceof NavigationEnd)
-    ).subscribe(() => {
-      // After navigation, check if there's a fragment
-      const fragment = this.activatedRoute.snapshot.fragment;
-      if (fragment) {
-        // Scroll to the element with the given fragment
-        const element = document.getElementById(fragment);
-        if (element) {
-          element.scrollIntoView({ behavior: 'smooth' });
-        }
-      }
-    });
-  }
+  
 }

@@ -316,5 +316,19 @@ class AuthController extends Controller
             return response()->json(['message' => 'No changes detected.']);
         }
     }
+
+    public function getProfile($userId)
+{
+    $customer = Customer::where('user_id', $userId)->first(); // Get the customer info
+
+    if (!$customer) {
+        return response()->json(['message' => 'Customer not found'], 404);
+    }
+
+    return response()->json([
+        'customer_name' => $customer->customer_name ?? 'User', // Return customer name
+    ], 200);
+}
+
     
 }

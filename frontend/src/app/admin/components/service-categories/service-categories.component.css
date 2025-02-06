@@ -1,5 +1,5 @@
 body {
-  width: 85rem;
+  width: 100%;
   margin: 1rem;
 }
 
@@ -12,9 +12,12 @@ body {
 
 .cards-container {
   display: grid;
-  grid-template-columns: repeat(4, 1fr); /* 4 columns */
-  gap: 1rem; /* Space between cards */
-  padding: 1rem; /* Padding around the grid */
+  grid-template-columns: repeat(4, 1fr);
+  /* 4 columns */
+  gap: 1rem;
+  /* Space between cards */
+  padding: 1rem;
+  /* Padding around the grid */
 }
 
 .custom-card {
@@ -47,11 +50,13 @@ body {
   text-align: left;
   padding-right: 2rem;
   display: -webkit-box;
-  -webkit-line-clamp: 3; /* Limit to 3 lines */
+  -webkit-line-clamp: 3;
+  /* Limit to 3 lines */
   -webkit-box-orient: vertical;
   overflow: hidden;
   text-overflow: ellipsis;
-  white-space: normal; /* Allow wrapping within the lines */
+  white-space: normal;
+  /* Allow wrapping within the lines */
 }
 
 
@@ -62,14 +67,19 @@ body {
 }
 
 .left-division p-chart {
-  flex-grow: 1;  /* This will make the chart grow to take up the available space */
-  width: 100%;   /* Fill the entire width of the parent */
-  height: 100%;  /* Fill the entire height of the parent */
-  min-height: 400px;  /* Ensure it never gets smaller than 400px */
+  flex-grow: 1;
+  /* This will make the chart grow to take up the available space */
+  width: 100%;
+  /* Fill the entire width of the parent */
+  height: 100%;
+  /* Fill the entire height of the parent */
+  min-height: 400px;
+  /* Ensure it never gets smaller than 400px */
 }
 
 
-.left-division, .right-division {
+.left-division,
+.right-division {
   width: calc(50% - 0.5rem);
   padding: 1rem;
   background-color: #f9f9f9;
@@ -78,21 +88,25 @@ body {
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   display: flex;
   flex-direction: column;
-  height: auto; /* Define a fixed height for the left division */
+  height: auto;
+  /* Define a fixed height for the left division */
 }
 
-.left-division h3, .right-division h3 {
+.left-division h3,
+.right-division h3 {
   font-size: 1.5rem;
   font-weight: 600;
   margin-bottom: 1rem;
 }
 
-.left-division ul, .right-division ul {
+.left-division ul,
+.right-division ul {
   list-style-type: none;
   padding: 0;
 }
 
-.left-division li, .right-division li {
+.left-division li,
+.right-division li {
   font-size: 1.1rem;
   margin-bottom: 0.5rem;
 }
@@ -119,7 +133,8 @@ body {
   max-height: 200px;
 }
 
-.right-division th, .right-division td {
+.right-division th,
+.right-division td {
   text-align: center;
   padding: 0.8rem;
 }
@@ -128,15 +143,16 @@ body {
   background-color: #f1f1f1;
 }
 
-.right-division p-table .p-datatable-tbody > tr {
+.right-division p-table .p-datatable-tbody>tr {
   border: none;
 }
 
-.right-division p-table th, .right-division p-table td {
+.right-division p-table th,
+.right-division p-table td {
   border: none;
 }
 
-.right-division p-table .p-datatable-tbody > tr:hover {
+.right-division p-table .p-datatable-tbody>tr:hover {
   background-color: #f4f4f4;
 }
 
@@ -282,12 +298,14 @@ h2 {
 }
 
 .button-row {
-  text-align: center; /* Center the button horizontally */
+  text-align: center;
+  /* Center the button horizontally */
   margin-top: 1rem;
 }
 
 .edit-button {
-  background-color: #3b82f6; /* Primary blue color */
+  background-color: #3b82f6;
+  /* Primary blue color */
   color: #fff;
   border: none;
   border-radius: 5px;
@@ -299,18 +317,24 @@ h2 {
 }
 
 .edit-button:hover {
-  background-color: #0056b3; /* Darker blue on hover */
+  background-color: #0056b3;
+  /* Darker blue on hover */
 }
 
 .search-add-container {
-  display: flex; /* Arrange items side by side */
-  gap: 1rem; /* Space between the search bar and button */
-  margin-bottom: 1rem; /* Add spacing below the container */
-  align-items: center; /* Align items vertically in the center */
+  display: flex;
+  /* Arrange items side by side */
+  gap: 1rem;
+  /* Space between the search bar and button */
+  margin-bottom: 1rem;
+  /* Add spacing below the container */
+  align-items: center;
+  /* Align items vertically in the center */
 }
 
 .search-bar {
-  flex-grow: 1; /* Make the search bar take up available space */
+  flex-grow: 1;
+  /* Make the search bar take up available space */
   padding: 0.5rem;
   border: 1px solid #ccc;
   border-radius: 5px;
@@ -318,7 +342,8 @@ h2 {
 }
 
 .add-button {
-  background-color: #3b82f6; /* Primary blue color */
+  background-color: #3b82f6;
+  /* Primary blue color */
   color: #fff;
   border: none;
   border-radius: 5px;
@@ -326,11 +351,13 @@ h2 {
   font-size: 1rem;
   cursor: pointer;
   transition: background-color 0.3s ease;
-  white-space: nowrap; /* Prevent text from wrapping */
+  white-space: nowrap;
+  /* Prevent text from wrapping */
 }
 
 .add-button:hover {
-  background-color: #0056b3; /* Darker blue on hover */
+  background-color: #0056b3;
+  /* Darker blue on hover */
 }
 
 .card {

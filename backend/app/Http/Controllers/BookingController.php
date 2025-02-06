@@ -153,5 +153,24 @@ public function getProviderTransactions($providerId)
 return response()->json($bookings);
 
 }
+
+public function cancelBooking($bookingId)
+{
+    $booking = Booking::find($bookingId);
+
+    if (!$booking) {
+        return response()->json(['message' => 'Booking not found'], 404);
+    }
+
+    if ($booking->book_status !== 'Pending') {
+        return response()->json(['message' => 'Only pending bookings can be cancelled.'], 400);
+    }
+
+    $booking->book_status = 'Cancelled';
+    $booking->save();
+
+    return response()->json(['message' => 'Booking cancelled successfully.', 'booking' => $booking], 200);
+}
+
     
 }

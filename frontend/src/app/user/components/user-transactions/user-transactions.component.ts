@@ -122,6 +122,28 @@ export class UserTransactionsComponent implements OnInit {
     this.completedDialogVisible = true;
   }
 
+  cancelBooking(bookingId: number) {
+    const token = localStorage.getItem('authToken');
+
+    if (confirm('Are you sure you want to cancel this booking?')) {
+      this.http.post(`http://127.0.0.1:8000/api/bookings/${bookingId}/cancel`, {}, {
+        headers: { Authorization: `Bearer ${token}` }
+      }).subscribe(
+        (response: any) => {
+          console.log('Booking cancelled successfully:', response);
+          alert('Booking cancelled successfully!');
+          this.fetchBookings(); // ✅ Refresh the bookings list
+          this.pendingDialogVisible = false; // ✅ Close the dialog
+        },
+        (error) => {
+          console.error('Error cancelling booking:', error);
+          alert('Failed to cancel booking.');
+        }
+      );
+    }
+  }
+
+
   /**
    * ✅ Parse services if it's a JSON string
    */

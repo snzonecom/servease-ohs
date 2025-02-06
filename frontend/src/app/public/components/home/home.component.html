@@ -15,32 +15,33 @@
     </div>
 </div>
 
-<!-- Recommended Carousel -->
+<!-- Top Service Providers Carousel -->
 <div class="carousel-div">
-    <h2 class="recommended-services-header">Recommended Service Providers</h2>
-    <p-carousel [value]="businesses" [numVisible]="3" [numScroll]="3" [circular]="false"
+    <h2 class="recommended-services-header">Top Service Providers</h2>
+    <p-carousel [value]="topProviders" [numVisible]="3" [numScroll]="3" [circular]="false"
         [responsiveOptions]="responsiveOptions" autoplayInterval="3000">
-        <ng-template let-business pTemplate="item">
+        <ng-template let-provider pTemplate="item">
             <div class="carousel-item">
                 <div class="carousel-card">
                     <!-- Business Logo -->
                     <div class="carousel-card-header">
-                        <img [src]="business.logo" [alt]="business.name" class="carousel-card-logo" />
+                        <img [src]="provider.logo" [alt]="provider.name" class="carousel-card-logo" />
                     </div>
 
                     <!-- Business Details -->
                     <div class="carousel-card-body">
-                        <h4 class="carousel-card-title">{{ business.name }}</h4>
-                        <p class="carousel-card-description">
-                            {{ business.description }}
-                        </p>
+                        <h4 class="carousel-card-title">{{ provider.name }}</h4>
+                        <p class="carousel-card-description">{{ provider.location }}</p>
+                        <p class="carousel-card-description">⭐ {{ provider.average_rating }} ({{ provider.bookings_count
+                            }} bookings)</p>
                     </div>
 
                     <!-- Call-to-Action Button -->
                     <div class="carousel-card-footer">
                         <button icon="pi pi-calendar-plus" (click)="loginFirstVisible = true"
                             class="carousel-card-button">
-                            Book Now</button>
+                            Book Now
+                        </button>
                     </div>
                 </div>
             </div>
@@ -76,7 +77,6 @@
 </div>
 
 <!-- Offered Services Section -->
-
 <div class="offered-services" id="service">
     <div class="offered-services-content">
         <h2>We Offer You the Following Service Categories</h2>
@@ -84,19 +84,16 @@
         <div class="service-columns">
             <div *ngFor="let service of services" class="service-column">
                 <div class="service-card">
-                    <h3 class="service-name">{{ service.name }}</h3>
-                    <p class="service-description">{{ service.description }}</p>
-                    <a routerLink="/providers-list" style="text-decoration: none; color: white;"><button
-                            class="view-providers-btn">
-                            View Available Providers
-                        </button></a>
+                    <h3 class="service-name">{{ service.category_name }}</h3>
+                    <p class="service-description">{{ service.category_description }}</p>
+                    <a (click)="loginFirstVisible = true" style="text-decoration: none; color: white;">
+                        <button class="view-providers-btn">View Available Providers</button>
+                    </a>
                 </div>
             </div>
         </div>
     </div>
 </div>
-
-
 
 <!-- FAQs Section -->
 <div class="faq-section" id="faq">
@@ -214,21 +211,6 @@
     <div class="register-options">
         <button pButton label="Log In" routerLink="/login" class="customer-button"></button>
         <div class="divider"></div>
-        <button pButton label="Register" (click)="registerDialogVisible = true" class="provider-button"></button>
-    </div>
-</p-dialog>
-
-<!-- Dialog displaying Register Type -->
-<p-dialog header="Register an account to get started!" [modal]="true" [(visible)]="registerDialogVisible"
-    [style]="{ width: '40rem'}">
-    <span class="review-text">
-        Choose <b>Customer</b> if you’re seeking professional services for your household needs, or select <b>Service
-            Provider</b> to
-        offer your expertise and connect with potential clients.
-    </span>
-    <div class="register-options">
-        <button pButton label="Customer" routerLink="/user-register" class="customer-button"></button>
-        <div class="divider"></div>
-        <button pButton label="Service Provider" routerLink="/provider-register" class="provider-button"></button>
+        <button pButton label="User Register" routerLink="/user-register" class="provider-button"></button>
     </div>
 </p-dialog>

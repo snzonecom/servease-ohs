@@ -51,7 +51,7 @@
                                 <i class="pi pi-clock"></i>
                                 <p>{{ booking.book_time || 'N/A' }}</p>
                             </div>
-                            <button class="see-booking-btn" (click)="showPendingBookingDetails(booking)">View
+                            <button class="see-booking-btn" (click)="showOngoingBookingDetails(booking)">View
                                 Booking</button>
                         </div>
                     </div>
@@ -153,7 +153,9 @@
     </div>
 
     <div class="flex-right">
-        <button pButton label="Close" class="reject-button" (click)="pendingDialogVisible = false"></button>
+        <button pButton label="Cancel Booking" class="reject-button"
+            (click)="cancelBooking(selectedBooking.booking_id)">
+        </button>
     </div>
 </p-dialog>
 
@@ -164,28 +166,53 @@
         service.
     </span>
 
+    <!-- ✅ Service Provider Name -->
     <div class="flex flex-column gap-3 mb-3">
         <label for="serviceProvider" class="field-label">
             <span class="label-text"><i class="pi pi-id-card"></i> Service Provider</span>
-            <input pInputText id="serviceProvider" [value]="selectedBooking.provider?.provider_name" [disabled]="true"
+            <input pInputText id="serviceProvider" [value]="selectedBooking.provider?.provider_name || 'N/A'"
+                [disabled]="true" class="field-input" />
+        </label>
+    </div>
+
+    <!-- ✅ Services Availed -->
+    <div class="flex flex-column gap-3 mb-3" *ngIf="selectedBooking.services?.length">
+        <label class="field-label">
+            <span class="label-text"><i class="pi pi-wrench"></i> Services Availed</span>
+        </label>
+        <ul class="services-availed">
+            <li *ngFor="let serviceId of selectedBooking.services">
+                {{ getServiceName(serviceId) }}
+            </li>
+        </ul>
+    </div>
+
+    <!-- ✅ Booked Date -->
+    <div class="flex flex-column gap-3 mb-3">
+        <label for="bookDate" class="field-label">
+            <span class="label-text"><i class="pi pi-calendar"></i> Booked Date</span>
+            <input pInputText id="bookDate" [(ngModel)]="selectedBooking.book_date" [disabled]="true"
                 class="field-input" />
         </label>
     </div>
 
-    <div class="flex flex-column gap-3 mb-3">
-        <label for="bookDate" class="field-label">
-            <span class="label-text"><i class="pi pi-calendar"></i> Booked Date</span>
-            <input pInputText id="bookDate" [value]="selectedBooking.book_date" [disabled]="true" class="field-input" />
-        </label>
-    </div>
-
+    <!-- ✅ Booked Time -->
     <div class="flex flex-column gap-3 mb-3">
         <label for="bookTime" class="field-label">
             <span class="label-text"><i class="pi pi-clock"></i> Booked Time</span>
-            <input pInputText id="bookTime" [value]="selectedBooking.book_time" [disabled]="true" class="field-input" />
+            <input pInputText id="bookTime" [(ngModel)]="selectedBooking.book_time" [disabled]="true"
+                class="field-input" />
         </label>
     </div>
 
+    <!-- ✅ Booking Status -->
+    <div class="flex flex-column gap-3 mb-3">
+        <label for="status" class="field-label">
+            <span class="label-text"><i class="pi pi-info-circle"></i> Status</span>
+            <input pInputText id="status" [(ngModel)]="selectedBooking.book_status" [disabled]="true"
+                class="field-input" />
+        </label>
+    </div>
     <div class="flex-right">
         <button pButton label="Close" class="reject-button" (click)="ongoingDialogVisible = false"></button>
     </div>

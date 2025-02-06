@@ -12,7 +12,7 @@
                 <div class="card-icon">
                     <i class="pi pi-hourglass"></i>
                 </div>
-                <h3>5</h3>
+                <h3>{{ pendingCount }}</h3>
                 <p>Pending Bookings</p>
             </div>
         </div>
@@ -21,7 +21,7 @@
                 <div class="card-icon">
                     <i class="pi pi-calendar"></i>
                 </div>
-                <h3>3</h3>
+                <h3>{{ongoingCount}}</h3>
                 <p>Scheduled Bookings</p>
             </div>
         </div>
@@ -30,7 +30,7 @@
                 <div class="card-icon">
                     <i class="pi pi-check-square"></i>
                 </div>
-                <h3>8</h3>
+                <h3>{{completedCount}}</h3>
                 <p>Completed Transactions</p>
             </div>
         </div>
@@ -40,39 +40,55 @@
     <div class="booking-schedule">
         <h2>Today's Bookings</h2>
 
-        <!-- Morning Section -->
-        <div class="schedule-section">
-            <h3>🌅 Morning (8 AM - 12 PM)</h3>
-            <div class="schedule-item">
-                <p><strong>Service:</strong> Plumbing Service</p>
-                <p><strong>Customer:</strong> John Doe</p>
-                <p><strong>Address:</strong> 123 Main St, Springfield</p>
-            </div>
-            <div class="schedule-item">
-                <p><strong>Service:</strong> Aircon Maintenance</p>
-                <p><strong>Customer:</strong> Alice Johnson</p>
-                <p><strong>Address:</strong> 45 Oak Lane, Greenville</p>
-            </div>
-        </div>
-
-        <!-- Afternoon Section -->
-        <div class="schedule-section">
-            <h3>🌤️ Afternoon (12 PM - 6 PM)</h3>
-            <div class="schedule-item">
-                <p><strong>Service:</strong> Electrical Repair</p>
-                <p><strong>Customer:</strong> Jane Smith</p>
-                <p><strong>Address:</strong> 789 Elm St, Hilltown</p>
+        <!-- Morning Section (9 AM - 12 PM) -->
+        <div class="schedule-section" *ngIf="morningBookings.length > 0">
+            <h3>🌅 Morning (9 AM - 12 PM)</h3>
+            <div *ngFor="let booking of morningBookings" class="schedule-item">
+                <p><strong>Service:</strong>
+                    <span *ngFor="let service of booking.services; let i = index">
+                        {{ service.service_name }}<span *ngIf="i < booking.services.length - 1">, </span>
+                    </span>
+                </p>
+                <p><strong>Customer:</strong> {{ booking.customer?.name || 'Anonymous' }}</p>
+                <p><strong>Address:</strong> {{ booking.customer?.address || 'N/A' }}</p>
+                <p><strong>Time:</strong> {{ booking.book_time }}</p>
             </div>
         </div>
 
-        <!-- Evening Section -->
-        <div class="schedule-section">
-            <h3>🌙 Evening (6 PM - 10 PM)</h3>
-            <div class="schedule-item">
-                <p><strong>Service:</strong> Appliance Repair</p>
-                <p><strong>Customer:</strong> Emma Wilson</p>
-                <p><strong>Address:</strong> 22 Maple Ave, Riverview</p>
+        <!-- Afternoon Section (1 PM - 4 PM) -->
+        <div class="schedule-section" *ngIf="afternoonBookings.length > 0">
+            <h3>🌤️ Afternoon (1 PM - 4 PM)</h3>
+            <div *ngFor="let booking of afternoonBookings" class="schedule-item">
+                <p><strong>Service:</strong>
+                    <span *ngFor="let service of booking.services; let i = index">
+                        {{ service.service_name }}<span *ngIf="i < booking.services.length - 1">, </span>
+                    </span>
+                </p>
+                <p><strong>Customer:</strong> {{ booking.customer?.name || 'Anonymous' }}</p>
+                <p><strong>Address:</strong> {{ booking.customer?.address || 'N/A' }}</p>
+                <p><strong>Time:</strong> {{ booking.book_time }}</p>
             </div>
         </div>
+
+        <!-- Evening Section (5 PM - 8 PM) -->
+        <div class="schedule-section" *ngIf="eveningBookings.length > 0">
+            <h3>🌙 Evening (5 PM - 8 PM)</h3>
+            <div *ngFor="let booking of eveningBookings" class="schedule-item">
+                <p><strong>Service:</strong>
+                    <span *ngFor="let service of booking.services; let i = index">
+                        {{ service.service_name }}<span *ngIf="i < booking.services.length - 1">, </span>
+                    </span>
+                </p>
+                <p><strong>Customer:</strong> {{ booking.customer?.name || 'Anonymous' }}</p>
+                <p><strong>Address:</strong> {{ booking.customer?.address || 'N/A' }}</p>
+                <p><strong>Time:</strong> {{ booking.book_time }}</p>
+            </div>
+        </div>
+
+        <!-- No Bookings Placeholder -->
+        <ng-template #noBookings>
+            <p>No bookings for today.</p>
+        </ng-template>
     </div>
+
 </div>

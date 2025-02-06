@@ -13,28 +13,7 @@ export class UserHomeComponent implements AfterViewInit, OnInit {
   activeAccordion: number | null = null;
   services: any[] = []; // Dynamic services from the API
 
-  businesses = [
-    {
-      name: 'Sunshine Bakery',
-      logo: 'https://placehold.co/600x600',
-      description: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Minus, autem? Magnam sunt nulla in. Eius nulla exercitationem mollitia doloribus? Neque eos voluptatum, voluptatibus rem dicta natus atque quae vitae qui.',
-    },
-    {
-      name: 'Ocean Spa',
-      logo: 'https://placehold.co/600x600',
-      description: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Minus, autem? Magnam sunt nulla in. Eius nulla exercitationem mollitia doloribus? Neque eos voluptatum, voluptatibus rem dicta natus atque quae vitae qui.',
-    },
-    {
-      name: 'TechWorld',
-      logo: 'https://placehold.co/600x600',
-      description: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Minus, autem? Magnam sunt nulla in. Eius nulla exercitationem mollitia doloribus? Neque eos voluptatum, voluptatibus rem dicta natus atque quae vitae qui.',
-    },
-    {
-      name: 'Fitness Pro Gym',
-      logo: 'https://placehold.co/600x600',
-      description: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Minus, autem? Magnam sunt nulla in. Eius nulla exercitationem mollitia doloribus? Neque eos voluptatum, voluptatibus rem dicta natus atque quae vitae qui.',
-    }
-  ];
+  recommendedProviders: any[] = [];
 
   responsiveOptions = [
     {
@@ -54,14 +33,26 @@ export class UserHomeComponent implements AfterViewInit, OnInit {
     }
   ];
 
-  constructor(private router: Router, private activatedRoute: ActivatedRoute, private http: HttpClient) {}
+  constructor(private router: Router, private activatedRoute: ActivatedRoute, private http: HttpClient) { }
 
   ngOnInit(): void {
     this.fetchServiceCategories();
+    this.fetchRecommendedProviders();
   }
 
   toggleAccordion(index: number): void {
     this.activeAccordion = this.activeAccordion === index ? null : index;
+  }
+
+  fetchRecommendedProviders(): void {
+    const token = localStorage.getItem('authToken');
+
+    this.http.get('http://127.0.0.1:8000/api/recommended-providers', {
+      headers: { Authorization: `Bearer ${token}` }
+    }).subscribe(
+      (data: any) => this.recommendedProviders = data,
+      (error) => console.error('Error fetching recommended providers:', error)
+    );
   }
 
   fetchServiceCategories(): void {

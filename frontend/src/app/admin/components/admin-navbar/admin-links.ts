@@ -10,16 +10,6 @@ export const adminLinks = [
         label: 'Pending Application'
     },
     {
-        routeLink: '/admin/reports-list',
-        icon: 'pi pi-exclamation-circle',
-        label: 'Pending Reports'
-    },
-    {
-        routeLink: '/admin/suspended-accounts',
-        icon: 'pi pi-user-minus',
-        label: 'Suspended Accounts'
-    },
-    {
         routeLink: '/admin/service-categories',
         icon: 'pi pi-tags',
         label: 'Service Categories'

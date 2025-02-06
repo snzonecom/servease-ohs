@@ -44,42 +44,35 @@
                         <!-- Line Separator -->
                         <hr />
 
-                        <!-- Rates and Feedbacks -->
+                        <!-- ⭐ Ratings & Feedbacks Section -->
                         <div class="feedbacks">
                             <h2>Ratings & Feedbacks</h2>
                             <div class="feedback-cards">
-                                <!-- Feedbacks loop -->
-                                <div *ngFor="let feedback of displayedFeedbacks" class="feedback-card">
-                                    <div class="feedback-header">
-                                        <h3>{{ feedback.clientName }}</h3>
-                                    </div>
-                                    <div class="feedback-content">
-                                        <div class="rating">
-                                            <span *ngFor="let star of feedback.rating" class="star">&#9733;</span>
-                                            <span *ngFor="let emptyStar of feedback.emptyStars"
-                                                class="star">&#9734;</span>
-                                        </div>
-                                        <div class="feedback-text">
-                                            <p>{{ feedback.reviewText }}</p>
-                                        </div>
-                                    </div>
+                              <div *ngFor="let feedback of displayedFeedbacks" class="feedback-card">
+                                <div class="feedback-header">
+                                  <h3>{{ feedback.clientName }}</h3>
                                 </div>
+                                <div class="feedback-content">
+                                    <div class="rating">
+                                        <!-- Filled Stars -->
+                                        <ng-container *ngFor="let star of getFilledStars(feedback.rating)">
+                                          <span class="star" style="color: gold;">&#9733;</span>
+                                        </ng-container>
+                                      
+                                        <!-- Empty Stars -->
+                                        <ng-container *ngFor="let star of getEmptyStars(feedback.rating)">
+                                          <span class="star" style="color: gray;">&#9734;</span>
+                                        </ng-container>
+                                      </div>
+                                      
+                                  <div class="feedback-text">
+                                    <p>{{ feedback.reviewText }}</p>
+                                  </div>
+                                </div>
+                              </div>
                             </div>
-
-                            <!-- Show All Reviews Button -->
-                            <!-- <button *ngIf="feedbacks.length > 3 && !showAllReviews" (click)="toggleReviews()"
-                                class="show-reviews-btn">
-                                Show All Reviews
-                            </button>
-
-                            <button *ngIf="feedbacks.length > 3 && showAllReviews" (click)="toggleReviews()"
-                                class="show-reviews-btn">
-                                Show Less Reviews
-                            </button> -->
-                        </div>
-
-
-
+                          </div>
+                          
 
                     </div>
                 </p-card>
