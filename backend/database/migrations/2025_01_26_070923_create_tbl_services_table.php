@@ -4,8 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class extends Migration {
     /**
      * Run the migrations.
      */
@@ -18,7 +17,7 @@ return new class extends Migration
             $table->string('service_description');
             $table->decimal('price_start', 8, 2);
             $table->timestamps();
-    
+
             // Foreign key constraint
             $table->foreign('provider_id')->references('provider_id')->on('tbl_provider_info');
 

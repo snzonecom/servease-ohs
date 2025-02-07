@@ -11,13 +11,15 @@ use Illuminate\Support\Facades\Hash;
 use Carbon\Carbon;
 use App\Models\Service;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\DB;
+
 
 class ProviderController extends Controller
 {
     // ✅ List all providers
     public function index()
     {
-        $providers = Provider::with('user',)->get();
+        $providers = Provider::with('user', )->get();
         return response()->json($providers);
     }
 
@@ -33,11 +35,11 @@ class ProviderController extends Controller
     {
         $provider = Provider::where('user_id', Auth::id())->first();
         $user = User::find(Auth::id());
-    
+
         if (!$provider || !$user) {
             return response()->json(['message' => 'Provider not found'], 404);
         }
-    
+
         // ✅ Validate Input
         $request->validate([
             'email' => 'email|unique:users,email,' . Auth::id(),
@@ -50,7 +52,7 @@ class ProviderController extends Controller
             'password' => 'nullable|string|min:6',
             'profile_pic' => 'nullable|image|mimes:jpeg,png,jpg|max:2048'
         ]);
-    
+
         // ✅ Prevent Null Values from Overwriting Existing Data
         $provider->update([
             'contact_no' => $request->input('contact_no') ?? $provider->contact_no,
@@ -60,29 +62,29 @@ class ProviderController extends Controller
             'province' => $request->input('province') ?? $provider->province,
             'contact_person' => $request->input('contact_person') ?? $provider->contact_person,
         ]);
-    
+
         // ✅ Update Email in Users Table
         if ($request->has('email')) {
             $user->email = $request->input('email');
             $user->save();
         }
-    
+
         // ✅ Update Password if provided
         if ($request->filled('password')) {
             $user->password = Hash::make($request->input('password'));
             $user->save();
         }
-    
+
         // ✅ Handle Profile Picture Upload
         if ($request->hasFile('profile_pic')) {
             if ($provider->profile_pic) {
                 Storage::delete($provider->profile_pic);
             }
             $path = $request->file('profile_pic')->store('uploads/logos', 'public');
-        $provider->profile_pic = 'storage/' . $path;
-        $provider->save();
+            $provider->profile_pic = 'storage/' . $path;
+            $provider->save();
         }
-    
+
         return response()->json([
             'message' => 'Profile updated successfully!',
             'provider' => $provider
@@ -90,37 +92,33 @@ class ProviderController extends Controller
     }
 
     public function uploadProfilePicture(Request $request)
-{
-    $provider = Provider::where('user_id', Auth::id())->first();
+    {
+        $provider = Provider::where('user_id', Auth::id())->first();
 
-    if (!$provider) {
-        return response()->json(['message' => 'Provider not found'], 404);
-    }
-
-    // ✅ Validate Image
-    $request->validate([
-        'profile_pic' => 'required|image|mimes:jpeg,png,jpg|max:2048'
-    ]);
-
-    // ✅ Store New Image
-    if ($request->hasFile('profile_pic')) {
-        if ($provider->profile_pic) {
-            Storage::delete($provider->profile_pic);
+        if (!$provider) {
+            return response()->json(['message' => 'Provider not found'], 404);
         }
-        $path = $request->file('profile_pic')->store('uploads/logos', 'public');
-        $provider->profile_pic = 'storage/' . $path;
-        $provider->save();
+
+        // ✅ Validate Image
+        $request->validate([
+            'profile_pic' => 'required|image|mimes:jpeg,png,jpg|max:2048'
+        ]);
+
+        // ✅ Store New Image
+        if ($request->hasFile('profile_pic')) {
+            if ($provider->profile_pic) {
+                Storage::delete($provider->profile_pic);
+            }
+            $path = $request->file('profile_pic')->store('uploads/logos', 'public');
+            $provider->profile_pic = 'storage/' . $path;
+            $provider->save();
+        }
+
+        return response()->json([
+            'message' => 'Profile picture updated successfully!',
+            'profile_pic' => asset($provider->profile_pic)
+        ]);
     }
-
-    return response()->json([
-        'message' => 'Profile picture updated successfully!',
-        'profile_pic' => asset($provider->profile_pic)
-    ]);
-}
-
-    
-    
-
 
     // ✅ Delete a provider
     public function destroy($id)
@@ -243,11 +241,11 @@ class ProviderController extends Controller
         $provider = Provider::with(['user', 'serviceCategory']) // ✅ Include serviceCategory relationship
             ->where('provider_id', $id)
             ->first();
-    
+
         if (!$provider) {
             return response()->json(['message' => 'Provider not found'], 404);
         }
-    
+
         return response()->json([
             'provider' => $provider,
             'email' => $provider->user->email ?? 'N/A',
@@ -257,150 +255,163 @@ class ProviderController extends Controller
     }
 
     public function getTopProviders()
-{
-    $topProviders = Provider::with(['bookings', 'user'])
-        ->where('account_status', 'approved')
-        ->get()
-        ->map(function ($provider) {
-            $bookingsCount = $provider->bookings->count();
-            $averageRating = $provider->bookings->avg('provider_rate') ?? 0;
+    {
+        $topProviders = Provider::with(['bookings', 'user'])
+            ->where('account_status', 'approved')
+            ->get()
+            ->map(function ($provider) {
+                $bookingsCount = $provider->bookings->count();
+                $averageRating = $provider->bookings->avg('provider_rate') ?? 0;
 
-            return [
-                'provider_id' => $provider->provider_id,
-                'name' => $provider->provider_name,
-                'logo' => $provider->profile_pic ? asset($provider->profile_pic) : 'https://placehold.co/600x600',
-                'location' => "{$provider->city}, {$provider->province}",
-                'bookings_count' => $bookingsCount,
-                'average_rating' => round($averageRating, 1),
-            ];
-        })
-        ->sortByDesc(function ($provider) {
-            return $provider['bookings_count'] * 0.7 + $provider['average_rating'] * 0.3; // Weighted Ranking
-        })
-        ->take(6)  // Limit to top 6 providers
-        ->values();
+                return [
+                    'provider_id' => $provider->provider_id,
+                    'name' => $provider->provider_name,
+                    'logo' => $provider->profile_pic ? asset($provider->profile_pic) : 'https://placehold.co/600x600',
+                    'location' => "{$provider->city}, {$provider->province}",
+                    'bookings_count' => $bookingsCount,
+                    'average_rating' => round($averageRating, 1),
+                ];
+            })
+            ->sortByDesc(function ($provider) {
+                return $provider['bookings_count'] * 0.7 + $provider['average_rating'] * 0.3; // Weighted Ranking
+            })
+            ->take(6)  // Limit to top 6 providers
+            ->values();
 
-    return response()->json($topProviders);
-}
+        return response()->json($topProviders);
+    }
 
-public function getRecommendedProviders(Request $request)
-{
-    $user = Auth::user(); // Get the authenticated customer
-    $customerBarangay = $user->brgy;
-    $customerCity = $user->city;
+    public function getRecommendedProviders(Request $request)
+    {
+        $user = Auth::user(); // Get the authenticated customer
+        $customerBarangay = $user->brgy;
+        $customerCity = $user->city;
 
-    // Fetch approved providers
-    $providers = Provider::with('bookings')
-        ->where('account_status', 'approved')
-        ->get()
-        ->map(function ($provider) {
-            $bookingsCount = $provider->bookings->count();
-            $averageRating = $provider->bookings->avg('provider_rate') ?? 0;
+        // Fetch approved providers
+        $providers = Provider::with('bookings')
+            ->where('account_status', 'approved')
+            ->get()
+            ->map(function ($provider) {
+                $bookingsCount = $provider->bookings->count();
+                $averageRating = $provider->bookings->avg('provider_rate') ?? 0;
 
-            return [
-                'provider_id' => $provider->provider_id,
-                'name' => $provider->provider_name,
-                'logo' => $provider->profile_pic ? asset($provider->profile_pic) : 'https://placehold.co/600x600',
-                'location' => "{$provider->city}, {$provider->province}",
-                'barangay' => $provider->brgy,
-                'city' => $provider->city,
-                'bookings_count' => $bookingsCount,
-                'average_rating' => round($averageRating, 1),
-            ];
-        });
+                return [
+                    'provider_id' => $provider->provider_id,
+                    'name' => $provider->provider_name,
+                    'logo' => $provider->profile_pic ? asset($provider->profile_pic) : 'https://placehold.co/600x600',
+                    'location' => "{$provider->city}, {$provider->province}",
+                    'barangay' => $provider->brgy,
+                    'city' => $provider->city,
+                    'bookings_count' => $bookingsCount,
+                    'average_rating' => round($averageRating, 1),
+                ];
+            });
 
-    // Apply sorting based on priority
-    $recommendedProviders = $providers->sortByDesc(function ($provider) use ($customerBarangay, $customerCity) {
-        $score = 0;
+        // Apply sorting based on priority
+        $recommendedProviders = $providers->sortByDesc(function ($provider) use ($customerBarangay, $customerCity) {
+            $score = 0;
 
-        if ($provider['barangay'] === $customerBarangay) {
-            $score += 50; // Same barangay bonus
-        }
+            if ($provider['barangay'] === $customerBarangay) {
+                $score += 50; // Same barangay bonus
+            }
 
-        if ($provider['city'] === $customerCity) {
-            $score += 30; // Same city bonus
-        }
+            if ($provider['city'] === $customerCity) {
+                $score += 30; // Same city bonus
+            }
 
-        $score += $provider['bookings_count'] * 0.1; // Weight for bookings
-        $score += $provider['average_rating'] * 2;   // Weight for rating
+            $score += $provider['bookings_count'] * 0.1; // Weight for bookings
+            $score += $provider['average_rating'] * 2;   // Weight for rating
 
-        return $score;
-    })->take(6)->values(); // Limit to 6 recommended providers
+            return $score;
+        })->take(6)->values(); // Limit to 6 recommended providers
 
-    return response()->json($recommendedProviders);
-}
+        return response()->json($recommendedProviders);
+    }
 
-public function getProviderFeedbacks($providerId)
-{
-    $feedbacks = Booking::where('provider_id', $providerId)
-        ->whereNotNull('provider_feedback') // ✅ Only get bookings with feedback
-        ->with('customer')                 // ✅ Fetch customer info using hasOne
-        ->get()
-        ->map(function ($booking) {
-            return [
-                'clientName' => $booking->customer->customer_name ?? 'Anonymous', // ✅ Display customer name
-                'rating' => $booking->provider_rate,
-                'reviewText' => $booking->provider_feedback,
-            ];
-        });
+    public function getProviderFeedbacks($providerId)
+    {
+        $feedbacks = Booking::where('provider_id', $providerId)
+            ->whereNotNull('provider_feedback') // ✅ Only get bookings with feedback
+            ->with('customer')                 // ✅ Fetch customer info using hasOne
+            ->get()
+            ->map(function ($booking) {
+                return [
+                    'clientName' => $booking->customer->customer_name ?? 'Anonymous', // ✅ Display customer name
+                    'rating' => $booking->provider_rate,
+                    'reviewText' => $booking->provider_feedback,
+                ];
+            });
 
-    return response()->json($feedbacks);
-}
+        return response()->json($feedbacks);
+    }
 
-public function getDashboardStats($providerId)
-{
-    $pendingCount = Booking::where('provider_id', $providerId)
-        ->where('book_status', 'Pending')
-        ->count();
+    public function getDashboardStats($providerId)
+    {
+        $pendingCount = Booking::where('provider_id', $providerId)
+            ->where('book_status', 'Pending')
+            ->count();
 
-    $ongoingCount = Booking::where('provider_id', $providerId)
-        ->where('book_status', 'Ongoing')
-        ->count();
+        $ongoingCount = Booking::where('provider_id', $providerId)
+            ->where('book_status', 'Ongoing')
+            ->count();
 
-    $completedCount = Booking::where('provider_id', $providerId)
-        ->where('book_status', 'Completed')
-        ->count();
+        $completedCount = Booking::where('provider_id', $providerId)
+            ->where('book_status', 'Completed')
+            ->count();
 
-    return response()->json([
-        'pending' => $pendingCount,
-        'ongoing' => $ongoingCount,
-        'completed' => $completedCount
-    ]);
-}
+        return response()->json([
+            'pending' => $pendingCount,
+            'ongoing' => $ongoingCount,
+            'completed' => $completedCount
+        ]);
+    }
 
-public function getTodaysBookings($providerId)
-{
-    $today = Carbon::today();
+    public function getTodaysBookings($providerId)
+    {
+        $today = Carbon::today();
 
-    $bookings = Booking::with('customer') // ✅ Eager load customer data
-        ->where('provider_id', $providerId)
-        ->whereDate('book_date', $today)
-        ->get()
-        ->map(function ($booking) {
-            // ✅ Decode JSON-encoded service IDs
-            $serviceIds = json_decode($booking->services, true);
+        $bookings = Booking::with('customer') // ✅ Eager load customer data
+            ->where('provider_id', $providerId)
+            ->whereDate('book_date', $today)
+            ->get()
+            ->map(function ($booking) {
+                // ✅ Decode JSON-encoded service IDs
+                $serviceIds = json_decode($booking->services, true);
 
-            // ✅ Fetch services based on service IDs
-            $services = Service::whereIn('service_id', $serviceIds)->get(['service_id', 'service_name']);
+                // ✅ Fetch services based on service IDs
+                $services = Service::whereIn('service_id', $serviceIds)->get(['service_id', 'service_name']);
 
-            return [
-                'booking_id'   => $booking->booking_id,
-                'book_date'    => $booking->book_date,
-                'book_time'    => $booking->book_time,
-                'book_status'  => $booking->book_status,
-                'services'     => $services, // ✅ Attach fetched services
-                'customer'     => $booking->customer ? [
-                    'name'    => $booking->customer->customer_name,
-                    'address' => "{$booking->customer->house_add}, {$booking->customer->brgy}, {$booking->customer->city}, {$booking->customer->province}"
-                ] : [
-                    'name'    => 'Anonymous',
-                    'address' => 'N/A'
-                ] // ✅ Attach customer details (with fallback)
-            ];
-        });
+                return [
+                    'booking_id' => $booking->booking_id,
+                    'book_date' => $booking->book_date,
+                    'book_time' => $booking->book_time,
+                    'book_status' => $booking->book_status,
+                    'services' => $services, // ✅ Attach fetched services
+                    'customer' => $booking->customer ? [
+                        'name' => $booking->customer->customer_name,
+                        'address' => "{$booking->customer->house_add}, {$booking->customer->brgy}, {$booking->customer->city}, {$booking->customer->province}"
+                    ] : [
+                        'name' => 'Anonymous',
+                        'address' => 'N/A'
+                    ] // ✅ Attach customer details (with fallback)
+                ];
+            });
 
-    return response()->json($bookings);
-}
+        return response()->json($bookings);
+    }
+    public function getAdminDashboardStats()
+    {
+        $pendingProviders = Provider::where('account_status', 'pending')->count();
+        $registeredProviders = Provider::where('account_status', 'approved')->count();
+        $serviceCategories = DB::table('tbl_categories')->count();
+        $registeredUsers = DB::table('users')->count();
 
+        return response()->json([
+            'pending_providers' => $pendingProviders,
+            'registered_providers' => $registeredProviders,
+            'service_categories' => $serviceCategories,
+            'registered_users' => $registeredUsers
+        ]);
+    }
 
 }

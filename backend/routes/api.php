@@ -8,9 +8,9 @@ use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\BookingController;
 
 
-/* ✅ Authentication Routes */
+// Authentication Routes
 Route::post('/register', [AuthController::class, 'register']);
-Route::post('/register-provider', [AuthController::class, 'registerProvider']); // ✅ Registration here
+Route::post('/register-provider', [AuthController::class, 'registerProvider']);
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/forgot-password', [AuthController::class, 'forgotPassword']);
 Route::post('/reset-password', [AuthController::class, 'resetPassword']);
@@ -22,7 +22,8 @@ Route::middleware('auth:sanctum')->group(function () {
 });
 Route::middleware('auth:sanctum')->post('/user/upload-profile-photo', [AuthController::class, 'uploadProfilePhoto']);
 
-/* ✅ Service Categories */
+
+// Service Categories
 Route::get('/service-category', [ServiceCategoryController::class, 'index']);
 Route::get('/service-categories', [ServiceCategoryController::class, 'getCategories']); // display all categories
 Route::post('/service-category', [ServiceCategoryController::class, 'store']);
@@ -30,7 +31,8 @@ Route::put('/service-category/{id}', [ServiceCategoryController::class, 'update'
 Route::delete('/service-category/{id}', [ServiceCategoryController::class, 'destroy']);
 Route::get('/providers-by-category/{categoryId}', [ProviderController::class, 'getProvidersByCategory']);
 
-/* ✅ Service Providers */
+
+// Service Providers
 Route::prefix('providers')->group(function () {
     Route::get('/', [ProviderController::class, 'index']);
     Route::get('/{id}', [ProviderController::class, 'show']);
@@ -40,7 +42,6 @@ Route::prefix('providers')->group(function () {
     Route::post('/{id}/reject', [ProviderController::class, 'reject']); //used in admin pending applications
     Route::get('/count/approved', [ProviderController::class, 'countApprovedProviders']);
 });
-
 Route::get('/provider/{id}', [ProviderController::class, 'getProviderDetails']); // get details of a specific service provider
 
 // FOR ADMIN - PENDING APPLICATIONS PAGE
@@ -64,18 +65,25 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/user/bookings', [BookingController::class, 'userBookings']);      // ✅ Get user's bookings
     Route::put('/bookings/{id}/status', [BookingController::class, 'updateStatus']); // ✅ Update booking status
 });
+Route::put('/bookings/{bookingId}/status', [BookingController::class, 'updateBookingStatus']);
 
+// Get all the bookings of the an user
 Route::middleware('auth:sanctum')->get('/user/{userId}/bookings', [BookingController::class, 'getBookingsByUser']);
-Route::get('/services', [ServiceController::class, 'getAllServices']);  // ✅ Fetch all services
 
+// Get all services
+Route::get('/services', [ServiceController::class, 'getAllServices']);
+
+// Submit a rating attached to a booking transaction
 Route::post('/bookings/{id}/rate', [BookingController::class, 'submitRating']);
 
-
-Route::put('/bookings/{bookingId}/status', [BookingController::class, 'updateBookingStatus']);
+// See all bookings of provider
 Route::get('/provider/{providerId}/bookings', [BookingController::class, 'getBookingsByProvider']);
-Route::middleware('auth:sanctum')->put('/bookings/{id}/set-price', [BookingController::class, 'setPrice']);
-Route::get('/provider/{providerId}/transactions', [BookingController::class, 'getProviderTransactions']);
 
+// Attach a price to a booking - by service provider
+Route::middleware('auth:sanctum')->put('/bookings/{id}/set-price', [BookingController::class, 'setPrice']);
+
+// Get all the transactions of a specific user
+Route::get('/provider/{providerId}/transactions', [BookingController::class, 'getProviderTransactions']);
 
 // User Edit Profile
 Route::middleware('auth:sanctum')->get('/user', [AuthController::class, 'getUserProfile']);
@@ -83,10 +91,9 @@ Route::middleware('auth:sanctum')->put('/user/update-profile', [AuthController::
 
 // Provider Edit Profile
 Route::middleware('auth:sanctum')->group(function () {
-    Route::get('/provider/{id}/profile', [ProviderController::class, 'getProfile']);  // ✅ Using {id}
+    Route::get('/provider/{id}/profile', [ProviderController::class, 'getProfile']);
     Route::put('/provider/update-profile', [ProviderController::class, 'update']);
 });
-
 Route::middleware('auth:sanctum')->post('/provider/upload-profile-picture', [ProviderController::class, 'uploadProfilePicture']);
 
 
@@ -96,8 +103,8 @@ Route::get('/top-providers', [ProviderController::class, 'getTopProviders']);
 // For Registered User Home - To get the Reco Providers (Criteria: same brgy, city, number of bookings, average rating)
 Route::middleware('auth:sanctum')->get('/recommended-providers', [ProviderController::class, 'getRecommendedProviders']);
 
+// Get the feedbacks of a provider
 Route::get('/provider/{providerId}/feedbacks', [ProviderController::class, 'getProviderFeedbacks']);
-
 
 // Will allow the users to cancel a transaction when it is still Pending
 Route::post('/bookings/{bookingId}/cancel', [BookingController::class, 'cancelBooking']);
@@ -105,4 +112,10 @@ Route::post('/bookings/{bookingId}/cancel', [BookingController::class, 'cancelBo
 // For service provider dashboard
 Route::get('/provider/{providerId}/dashboard-stats', [ProviderController::class, 'getDashboardStats']);
 Route::get('/provider/{providerId}/todays-bookings', [ProviderController::class, 'getTodaysBookings']);
+
+Route::get('/admin/dashboard-stats', [ProviderController::class, 'getAdminDashboardStats']);
+Route::get('/admin/top-providers', [ProviderController::class, 'getTopProviders']);
+Route::get('/admin/popular-services', [ServiceController::class, 'getPopularServices']);
+Route::get('/admin/accumulated-bookings', [BookingController::class, 'getAccumulatedBookings']);
+
 

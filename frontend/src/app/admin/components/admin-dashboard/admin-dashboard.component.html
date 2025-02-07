@@ -10,7 +10,7 @@
     <div class="custom-card">
       <div class="card-row">
         <div class="number-container">
-          <h2>888</h2> <!-- Replace this number with dynamic data -->
+          <h2>{{ dashboardStats.pending_providers }}</h2> <!-- Replace this number with dynamic data -->
         </div>
         <div class="icon-container">
           <i class="pi pi-file-o"></i> <!-- Replace icon as needed -->
@@ -27,7 +27,7 @@
     <div class="custom-card">
       <div class="card-row">
         <div class="number-container">
-          <h2>999</h2> <!-- Replace this number with dynamic data -->
+          <h2>{{ dashboardStats.registered_providers }}</h2> <!-- Replace this number with dynamic data -->
         </div>
         <div class="icon-container">
           <i class="pi pi-exclamation-circle"></i> <!-- Replace icon as needed -->
@@ -44,7 +44,7 @@
     <div class="custom-card">
       <div class="card-row">
         <div class="number-container">
-          <h2>555</h2> <!-- Replace this number with dynamic data -->
+          <h2>{{ dashboardStats.service_categories }}</h2> <!-- Replace this number with dynamic data -->
         </div>
         <div class="icon-container">
           <i class="pi pi-exclamation-circle"></i> <!-- Replace icon as needed -->
@@ -61,7 +61,7 @@
     <div class="custom-card">
       <div class="card-row">
         <div class="number-container">
-          <h2>777</h2> <!-- Replace this number with dynamic data -->
+          <h2>{{ dashboardStats.registered_users }}</h2> <!-- Replace this number with dynamic data -->
         </div>
         <div class="icon-container">
           <i class="pi pi-bell"></i> <!-- Replace icon as needed -->
@@ -80,10 +80,12 @@
     <!-- Left Division: Popular Services Chart -->
     <div class="left-division">
       <h3>Popular Services</h3>
-      <!-- Replace this chart with the actual data and options -->
-      <div>
+    <div *ngIf="popularServicesData?.labels?.length > 0; else noData">
         <p-chart type="bar" [data]="popularServicesData" [options]="chartOptions"></p-chart>
-      </div>
+    </div>
+    <ng-template #noData>
+        <p>No popular services data available.</p>
+    </ng-template>
 
     </div>
 
@@ -100,9 +102,9 @@
             <th>Acquired Bookings</th>
           </tr>
         </ng-template>
-        <ng-template pTemplate="body" let-provider>
+        <ng-template pTemplate="body" *ngFor="let provider of topProviders; let i = index">
           <tr>
-            <td><span class="rank-box">{{ provider.rank }}</span></td>
+            <td><span class="rank-box">{{ i + 1 }}</span></td>
             <td>{{ provider.name }}</td>
             <td>{{ provider.serviceCategory }}</td>
             <td>{{ provider.acquiredBookings }}</td>

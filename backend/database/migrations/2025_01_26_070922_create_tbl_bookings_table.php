@@ -4,8 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class extends Migration {
     /**
      * Run the migrations.
      */
@@ -23,7 +22,7 @@ return new class extends Migration
             // $table->decimal('provider_rate', 8, 2)->nullable();
             // $table->text('provider_feedback')->nullable();
             $table->timestamps();
-        
+
             // // Foreign key constraints
             // $table->foreign('provider_id')->references('provider_id')->on('tbl_provider_info')->onDelete('cascade');
             // $table->foreign('service_id')->references('service_id')->on('tbl_services')->onDelete('cascade');
