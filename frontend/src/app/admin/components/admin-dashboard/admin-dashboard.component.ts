@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-admin-dashboard',
@@ -7,6 +8,8 @@ import { HttpClient } from '@angular/common/http';
   styleUrl: './admin-dashboard.component.css'
 })
 export class AdminDashboardComponent implements OnInit {
+
+  providerCategoryData: any;
 
   dashboardStats = {
     pending_providers: 0,
@@ -19,14 +22,18 @@ export class AdminDashboardComponent implements OnInit {
   popularServicesData: any = {}; // ✅ Ensure it's initialized
   accumulatedBookingsData: any = {}; // ✅ Ensure it's initialized
   chartOptions: any;
+  chartDoughnutOptions: any;
+  newApplications: any[] = [];
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private router: Router) { }
 
   ngOnInit(): void {
     this.fetchDashboardStats();
     this.fetchTopProviders();
     this.fetchPopularServices();
     this.fetchAccumulatedBookings();
+    this.fetchNewApplications();
+    this.fetchProviderCategories();
 
     // ✅ Initialize Chart Options (Fix issue where chart does not render)
     this.chartOptions = {
@@ -62,13 +69,15 @@ export class AdminDashboardComponent implements OnInit {
   fetchTopProviders() {
     this.http.get<any[]>('http://127.0.0.1:8000/api/admin/top-providers').subscribe(
       (data) => {
+        console.log("🔥 Top Providers Data:", data); // ✅ Debug API response
         this.topProviders = data;
       },
       (error) => {
         console.error('❌ Error fetching top providers:', error);
       }
     );
-  }
+  }  
+  
 
   /**
    * ✅ Fetch Popular Services for Chart
@@ -77,12 +86,12 @@ export class AdminDashboardComponent implements OnInit {
     this.http.get<any[]>('http://127.0.0.1:8000/api/admin/popular-services').subscribe(
       (data) => {
         this.popularServicesData = {
-          labels: data.map(service => service.service_name), // ✅ Extract service names
+          labels: data.map(service => service.service_name), // ✅ Use service names
           datasets: [
             {
-              label: 'Acquired Bookings',
-              data: data.map(service => service.total_bookings), // ✅ Extract total bookings
-              backgroundColor: ['#66b9e1', '#ffa726', '#ff7043', '#42a5f5'], // Colors for bars
+              label: 'Total Bookings',
+              data: data.map(service => service.total_bookings), // ✅ Number of bookings per service (top 5)
+              backgroundColor: '#66b9e1', // Colors for bars
               borderColor: '#005f7f',
               borderWidth: 1
             }
@@ -119,4 +128,72 @@ export class AdminDashboardComponent implements OnInit {
       }
     );
   }
+
+  fetchNewApplications() {
+    this.http.get<any[]>('http://127.0.0.1:8000/api/admin/new-applications').subscribe(
+      (data) => {
+        this.newApplications = data;
+      },
+      (error) => {
+        console.error('❌ Error fetching new applications:', error);
+      }
+    );
+  }
+
+  /**
+   * ✅ Fetch Count of Approved Providers per Category
+   */
+  fetchProviderCategories() {
+    this.http.get<any[]>('http://127.0.0.1:8000/api/admin/approved-providers-per-category').subscribe(
+      (data) => {
+        this.providerCategoryData = {
+          labels: data.map(category => category.category_name), // Category names
+          datasets: [
+            {
+              data: data.map(category => category.total_providers), // Count per category
+              backgroundColor: [
+                '#67b9e1',
+                '#91ccea',
+                '#b8ddf0',
+                '#dbf2ff'
+              ],
+              hoverBackgroundColor: [
+                '#2196f3',
+              ]
+            }
+          ]
+        };
+
+        this.chartDoughnutOptions = {
+          responsive: true,
+          maintainAspectRatio: false, // ✅ Allow custom sizing
+          cutout: '60%', // Adjusts the size of the hole in the center
+          plugins: {
+            legend: {
+              position: 'bottom', // Move legend below the chart
+              labels: {
+                color: '#333', // Legend text color
+                font: {
+                  size: 14 // Adjust legend font size
+                }
+              }
+            }
+          }
+        };
+
+      },
+      (error) => {
+        console.error('❌ Error fetching provider categories:', error);
+      }
+    );
+  }
+
+
+  /**
+   * ✅ Redirect to Pending Applications Page
+   */
+  goToPendingApplications() {
+    this.router.navigate(['/admin/pending-applications']); // ✅ Redirect to Pending Applications Page
+  }
+
 }

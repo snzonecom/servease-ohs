@@ -10,10 +10,11 @@ class ServiceCategoryController extends Controller
 {
     // Get All Categories
     public function index()
-    {
-        $serviceCategories = ServiceCategory::all();
-        return response()->json($serviceCategories);
-    }
+{
+    $categories = ServiceCategory::whereNull('deleted_at')->get();
+    return response()->json($categories);
+}
+
 
     // Create New Category
     public function store(Request $request)
@@ -44,17 +45,32 @@ class ServiceCategoryController extends Controller
         return response()->json($category);
     }
 
-    // Delete a Category
-    public function destroy($id)
-    {
-        $category = ServiceCategory::find($id);
-        if (!$category) {
-            return response()->json(['message' => 'Category not found'], 404);
-        }
+// Soft Delete a Category
+public function destroy($id)
+{
+    $category = ServiceCategory::find($id);
 
-        $category->delete();
-        return response()->json(['message' => 'Category deleted successfully']);
+    if (!$category) {
+        return response()->json(['message' => 'Category not found'], 404);
     }
+
+    $category->delete(); // ✅ Soft Delete Instead of Permanent Deletion
+    return response()->json(['message' => 'Category soft deleted successfully']);
+}
+
+public function restore($id)
+{
+    $category = ServiceCategory::withTrashed()->find($id);
+
+    if (!$category) {
+        return response()->json(['message' => 'Category not found'], 404);
+    }
+
+    $category->restore();
+    return response()->json(['message' => 'Category restored successfully']);
+}
+
+
 
     // Show the count of categories
     public function getCategoryCount()
@@ -68,4 +84,10 @@ class ServiceCategoryController extends Controller
     {
         return response()->json(ServiceCategory::all());
     }
+
+    public function getDeletedCategories()
+{
+    $deletedCategories = ServiceCategory::onlyTrashed()->get();
+    return response()->json($deletedCategories);
+}
 }

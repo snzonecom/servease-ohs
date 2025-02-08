@@ -1,6 +1,6 @@
 <body>
     <div class="header-title">
-        <div class="section-header">All Verified Service Providers</div>
+        <div class="section-header">All Deleted Service Providers</div>
         <div class="search-container">
             <input type="text" [(ngModel)]="searchQuery" placeholder="Search Here" class="search-bar" />
         </div>
@@ -13,7 +13,7 @@
                     <th pSortableColumn="provider_id">ID <p-sortIcon field="provider_id"></p-sortIcon></th>
                     <th class="provider_name">Provider Name</th>
                     <th class="contact_no">Contact Number</th>
-                    <th pSortableColumn="created_at">Created At<p-sortIcon field="created_at"></p-sortIcon></th>
+                    <th pSortableColumn="deleted_at">Deleted At<p-sortIcon field="deleted_at"></p-sortIcon></th>
                     <th class="action-column">Action</th>
                 </tr>
             </ng-template>
@@ -23,7 +23,7 @@
                     <td>{{ provider.provider_id }}</td>
                     <td>{{ provider.provider_name }}</td>
                     <td>{{ provider.contact_no }}</td>
-                    <td>{{ provider.created_at | date }}</td>
+                    <td>{{ provider.deleted_at | date }}</td>
                     <td class="action-column">
                         <button p-button (click)="showDialog(provider)">See Details</button>
                     </td>
@@ -32,12 +32,13 @@
         </p-table>
     </div>
 
-    <!-- Dialog displaying the details of the approved service provider -->
+
+    <!-- Dialog displaying the details of the deleted provider -->
     <div class="card flex justify-content-center">
-        <p-dialog header="Service Provider Information" [modal]="true" [(visible)]="visible"
+        <p-dialog header="Deleted Provider Information" [modal]="true" [(visible)]="visible"
             [style]="{ width: '40rem'}">
             <span class="p-text-secondary block mb-5">
-                The details below are of a verified service provider. Please ensure data accuracy when referencing.
+                This provider has been deleted. You may restore them if necessary.
             </span>
 
             <!-- Business Logo -->
@@ -62,7 +63,7 @@
                 <label class="font-semibold">
                     <i class="pi pi-envelope" style="margin-right: 10px;"></i> Email Address
                 </label>
-                <input pInputText [value]="selectedProvider?.email" [disabled]="true" class="w-full" />
+                <input pInputText [value]="selectedProvider?.user.email" [disabled]="true" class="w-full" />
             </div>
 
             <!-- Contact Number -->
@@ -109,28 +110,20 @@
             </div>
 
             <!-- Service Type -->
-            <!-- Service Type -->
             <div class="flex flex-column align-items-start gap-3 mb-3">
                 <label class="font-semibold">
                     <i class="pi pi-cog" style="margin-right: 10px;"></i> Service Type
                 </label>
-                <input pInputText [value]="selectedProvider?.service_type_name" [disabled]="true" class="w-full" />
+                <input pInputText [value]="selectedProvider?.service_category?.category_name" [disabled]="true"
+                    class="w-full" />
             </div>
 
-
-            <span class="p-text-secondary block end-statement">
-                This provider is verified and registered in the system. Contact details are confidential.
-            </span>
-
-            <!-- Delete Button -->
-            <div class="mb-3"></div>
+            <!-- Restore Button -->
             <div class="flex justify-content-end gap-2">
-                <button p-button class="reject-button" (click)="deleteProvider(selectedProvider.provider_id)">
-                    Delete Service Provider
+                <button p-button class="approve-button" (click)="restoreProvider(selectedProvider?.provider_id)">
+                    Restore Provider
                 </button>
             </div>
         </p-dialog>
     </div>
-
-
 </body>

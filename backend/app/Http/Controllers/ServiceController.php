@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Service;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use App\Models\Booking;
 
 
 class ServiceController extends Controller
@@ -108,15 +109,41 @@ class ServiceController extends Controller
 
     public function getPopularServices()
     {
-        $popularServices = DB::table('tbl_services')
-            ->join('tbl_bookings', 'tbl_services.service_id', '=', 'tbl_bookings.services')
-            ->select('tbl_services.service_name', DB::raw('COUNT(tbl_bookings.booking_id) as total_bookings'))
-            ->groupBy('tbl_services.service_name')
-            ->orderByDesc('total_bookings')
-            ->limit(5)
-            ->get();
-
+        // ✅ Fetch all bookings and decode services JSON
+        $bookings = Booking::select('services')->get();
+    
+        $serviceCount = [];
+    
+        // ✅ Extract service IDs and count occurrences
+        foreach ($bookings as $booking) {
+            $serviceIds = json_decode($booking->services, true);
+    
+            if (is_array($serviceIds)) {
+                foreach ($serviceIds as $serviceId) {
+                    if (isset($serviceCount[$serviceId])) {
+                        $serviceCount[$serviceId]++;
+                    } else {
+                        $serviceCount[$serviceId] = 1;
+                    }
+                }
+            }
+        }
+    
+        // ✅ Get service names for the counted service IDs
+        $popularServices = Service::whereIn('service_id', array_keys($serviceCount))
+            ->get(['service_id', 'service_name'])
+            ->map(function ($service) use ($serviceCount) {
+                return [
+                    'service_name' => $service->service_name,
+                    'total_bookings' => $serviceCount[$service->service_id] ?? 0,
+                ];
+            })
+            ->sortByDesc('total_bookings')
+            ->take(5)  // ✅ Limit to top 5
+            ->values();
+    
         return response()->json($popularServices);
     }
+    
 
 }

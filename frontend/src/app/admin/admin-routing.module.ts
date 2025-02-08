@@ -10,6 +10,9 @@ import { ReportsListComponent } from './components/reports-list/reports-list.com
 import { SuspendedAccountsComponent } from './components/suspended-accounts/suspended-accounts.component';
 import { ServiceCategoriesComponent } from './components/service-categories/service-categories.component';
 import { ListProvidersComponent } from './components/list-providers/list-providers.component';
+import { DeletedCategoriesComponent } from './components/deleted-categories/deleted-categories.component';
+import { DeletedProvidersComponent } from './components/deleted-providers/deleted-providers.component';
+import { SystemDetailsComponent } from './components/system-details/system-details.component';
 
 const routes: Routes = [
   {
@@ -23,6 +26,9 @@ const routes: Routes = [
       {path: 'suspended-accounts', component: SuspendedAccountsComponent},
       {path: 'service-categories', component: ServiceCategoriesComponent},
       {path: 'providers-list', component: ListProvidersComponent},
+      {path: 'deleted-categories', component: DeletedCategoriesComponent},
+      {path: 'deleted-providers', component: DeletedProvidersComponent},
+      {path: 'system-details', component: SystemDetailsComponent},
     ]
   }
 ];

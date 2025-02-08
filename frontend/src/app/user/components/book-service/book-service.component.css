@@ -162,7 +162,7 @@ hr {
 }
 
 .offered-services h2 {
-    font-size: 2rem;
+    font-size: 1.7rem;
     /* Default size in rem */
     font-weight: bold;
     color: #2c3e50;
@@ -186,7 +186,7 @@ hr {
 
 .service-header h3 {
     margin: 0;
-    font-size: 1.5rem;
+    font-size: 1.2rem;
     /* Default size in rem */
     font-weight: 600;
 }
@@ -259,7 +259,7 @@ hr {
 }
 
 .feedbacks h2 {
-    font-size: 2rem;
+    font-size: 1.7rem;
     /* Default size in rem */
     font-weight: bold;
     color: #2c3e50;
@@ -291,7 +291,7 @@ hr {
 
 /* Feedback Header (Client Name) */
 .feedback-header h3 {
-    font-size: 1.5rem;
+    font-size: 1.2rem;
     font-weight: 600;
     color: #34495e;
 }

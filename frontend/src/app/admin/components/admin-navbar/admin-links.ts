@@ -16,8 +16,23 @@ export const adminLinks = [
     },
     {
         routeLink: '/admin/providers-list',
-        icon: 'pi pi-folder-open',
+        icon: 'pi pi-list-check',
         label: 'Service Providers'
+    },
+    {
+        routeLink: '/admin/deleted-categories',
+        icon: 'pi pi-trash',
+        label: 'Deleted Categories'
+    },
+    {
+        routeLink: '/admin/deleted-providers',
+        icon: 'pi pi-folder-open',
+        label: 'Deleted Providers'
+    },
+    {
+        routeLink: '/admin/system-details',
+        icon: 'pi pi-cog',
+        label: 'System Settings'
     },
     {
         routeLink: '',

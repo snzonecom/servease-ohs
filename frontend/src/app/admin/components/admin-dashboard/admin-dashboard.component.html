@@ -75,17 +75,50 @@
     </div>
   </div>
 
+  <!-- Notification and Popular Services Section -->
+  <div class="services-container">
+    <!-- Left Division: Notifications of Newly Submitted Applications -->
+    <div class="left-division">
+      <div class="notification-div">
+        <h2 class="notifications-title">📩 New Applications</h2>
+
+        <div class="notifications-container">
+          <div *ngIf="newApplications.length > 0; else noApplications">
+            <div *ngFor="let application of newApplications" class="notification-card"
+              (click)="goToPendingApplications()">
+              <p class="notification-message">
+                <strong>{{ application.applicant_name }}</strong> submitted a new application!
+              </p>
+              <span class="notification-time">{{ application.submitted_time }}</span>
+            </div>
+          </div>
+          <ng-template #noApplications>
+            <p>No new applications.</p>
+          </ng-template>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Division: Popular Services Chart -->
+    <div class="right-division">
+      <h3>Popular Services</h3>
+      <div *ngIf="popularServicesData?.labels?.length > 0; else noData">
+        <p-chart type="bar" [data]="popularServicesData" [options]="chartOptions"></p-chart>
+      </div>
+      <ng-template #noData>
+        <p>No data about services available.</p>
+      </ng-template>
+    </div>
+  </div>
+
   <!-- Services and Providers Section -->
   <div class="services-container">
-    <!-- Left Division: Popular Services Chart -->
+    <!-- Left Division: Service CategoriesChart -->
     <div class="left-division">
-      <h3>Popular Services</h3>
-    <div *ngIf="popularServicesData?.labels?.length > 0; else noData">
-        <p-chart type="bar" [data]="popularServicesData" [options]="chartOptions"></p-chart>
-    </div>
-    <ng-template #noData>
-        <p>No popular services data available.</p>
-    </ng-template>
+      <h3>Service Categories</h3>
+      <div>
+        <p-chart type="doughnut" [data]="providerCategoryData" [options]="chartDoughnutOptions" height="400px"></p-chart>
+      </div>
 
     </div>
 
@@ -102,15 +135,17 @@
             <th>Acquired Bookings</th>
           </tr>
         </ng-template>
-        <ng-template pTemplate="body" *ngFor="let provider of topProviders; let i = index">
+        <ng-template pTemplate="body" let-provider let-rowIndex="rowIndex"> <!-- ✅ Use rowIndex instead of i -->
           <tr>
-            <td><span class="rank-box">{{ i + 1 }}</span></td>
+            <td><span class="rank-box">{{ rowIndex + 1 }}</span></td> <!-- ✅ Fix Rank Issue -->
             <td>{{ provider.name }}</td>
             <td>{{ provider.serviceCategory }}</td>
             <td>{{ provider.acquiredBookings }}</td>
           </tr>
         </ng-template>
       </p-table>
+
+
     </div>
   </div>
 

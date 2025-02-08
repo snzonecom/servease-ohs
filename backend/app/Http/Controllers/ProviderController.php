@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use App\Models\Provider;
 use App\Models\User;
 use App\Models\Booking;
@@ -12,7 +13,7 @@ use Carbon\Carbon;
 use App\Models\Service;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
-
+use Illuminate\Http\JsonResponse;
 
 class ProviderController extends Controller
 {
@@ -120,14 +121,75 @@ class ProviderController extends Controller
         ]);
     }
 
-    // ✅ Delete a provider
+/**
+     * ✅ Soft Delete a Provider (instead of permanent deletion)
+     */
     public function destroy($id)
     {
-        $provider = Provider::findOrFail($id);
+        $provider = Provider::find($id);
+    
+        if (!$provider) {
+            return response()->json(['message' => 'Provider not found'], 404);
+        }
+    
+        // ✅ Soft Delete the Provider
         $provider->delete();
-
-        return response()->json(['message' => 'Provider deleted successfully.']);
+    
+        // ✅ Soft Delete the Associated User
+        $user = User::find($provider->user_id);
+        if ($user) {
+            $user->delete();
+        }
+    
+        return response()->json(['message' => 'Provider and account soft-deleted successfully']);
     }
+    
+
+    /**
+     * ✅ Restore a Soft-Deleted Provider
+     */
+    public function restoreProvider($id)
+    {
+        $provider = Provider::onlyTrashed()->find($id);
+        if (!$provider) {
+            return response()->json(['message' => 'Provider not found or not deleted'], 404);
+        }
+    
+        // ✅ Restore the Provider
+        $provider->restore();
+    
+        // ✅ Restore the Associated User
+        $user = User::onlyTrashed()->find($provider->user_id);
+        if ($user) {
+            $user->restore();
+        }
+    
+        return response()->json(['message' => 'Provider and account restored successfully']);
+    }
+    
+
+    /**
+     * ✅ Permanently Delete a Provider (Force Delete)
+     */
+    public function forceDeleteProvider($id)
+    {
+        $provider = Provider::onlyTrashed()->find($id);
+        if (!$provider) {
+            return response()->json(['message' => 'Provider not found or not deleted'], 404);
+        }
+    
+        // ✅ Find and Permanently Delete the Associated User
+        $user = User::onlyTrashed()->find($provider->user_id);
+        if ($user) {
+            $user->forceDelete();
+        }
+    
+        // ✅ Permanently Delete the Provider
+        $provider->forceDelete();
+    
+        return response()->json(['message' => 'Provider and account permanently deleted']);
+    }
+    
 
     // ✅ Approve provider application
     public function approve($id)
@@ -256,31 +318,32 @@ class ProviderController extends Controller
 
     public function getTopProviders()
     {
-        $topProviders = Provider::with(['bookings', 'user'])
+        $topProviders = Provider::with(['bookings', 'serviceCategory']) // ✅ Load service category
             ->where('account_status', 'approved')
             ->get()
             ->map(function ($provider) {
                 $bookingsCount = $provider->bookings->count();
                 $averageRating = $provider->bookings->avg('provider_rate') ?? 0;
-
+    
                 return [
                     'provider_id' => $provider->provider_id,
                     'name' => $provider->provider_name,
+                    'serviceCategory' => $provider->serviceCategory ? $provider->serviceCategory->category_name : 'N/A', // ✅ Ensure category is included
+                    'acquiredBookings' => $bookingsCount, // ✅ Ensure booking count is included
                     'logo' => $provider->profile_pic ? asset($provider->profile_pic) : 'https://placehold.co/600x600',
                     'location' => "{$provider->city}, {$provider->province}",
-                    'bookings_count' => $bookingsCount,
                     'average_rating' => round($averageRating, 1),
                 ];
             })
             ->sortByDesc(function ($provider) {
-                return $provider['bookings_count'] * 0.7 + $provider['average_rating'] * 0.3; // Weighted Ranking
+                return $provider['acquiredBookings'] * 0.7 + $provider['average_rating'] * 0.3; // Weighted Ranking
             })
-            ->take(6)  // Limit to top 6 providers
+            ->take(6)  // ✅ Limit to top 6 providers
             ->values();
-
+    
         return response()->json($topProviders);
     }
-
+    
     public function getRecommendedProviders(Request $request)
     {
         $user = Auth::user(); // Get the authenticated customer
@@ -412,6 +475,48 @@ class ProviderController extends Controller
             'service_categories' => $serviceCategories,
             'registered_users' => $registeredUsers
         ]);
+    }
+
+public function getNewApplications()
+{
+    // ✅ Fetch the most recent pending applications
+    $applications = Provider::where('account_status', 'pending')
+        ->orderBy('created_at', 'desc') // Sort by newest first
+        ->limit(7) // ✅ Get the latest 7 applications
+        ->get()
+        ->map(function ($provider) {
+            return [
+                'applicant_name' => $provider->provider_name,
+                'submitted_time' => Carbon::parse($provider->created_at)->diffForHumans() // ✅ Convert timestamp to 'X minutes ago'
+            ];
+        });
+
+    return response()->json($applications);
+}
+
+public function getApprovedProvidersByCategory()
+{
+    $categories = DB::table('tbl_provider_info')
+        ->join('tbl_categories', 'tbl_provider_info.service_type', '=', 'tbl_categories.category_id')
+        ->where('tbl_provider_info.account_status', 'approved')
+        ->select('tbl_categories.category_name', DB::raw('COUNT(tbl_provider_info.provider_id) as total_providers'))
+        ->groupBy('tbl_categories.category_name')
+        ->orderByDesc('total_providers')
+        ->get();
+
+    return response()->json($categories);
+}   
+
+/**
+     * ✅ Get Soft-Deleted Providers
+     */
+    public function getDeletedProviders()
+    {
+        $deletedProviders = Provider::onlyTrashed()->get();
+    
+        \Log::info('Soft Deleted Providers:', ['providers' => $deletedProviders]);
+    
+        return response()->json($deletedProviders);
     }
 
 }

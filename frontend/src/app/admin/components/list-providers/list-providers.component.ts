@@ -80,4 +80,20 @@ export class ListProvidersComponent implements OnInit {
     this.visible = true;
     this.cdr.detectChanges();
   }
+
+  deleteProvider(providerId: number) {
+    if (confirm('Are you sure you want to delete this provider?')) {
+      this.http.delete(`http://127.0.0.1:8000/api/providers/${providerId}`).subscribe(
+        () => {
+          this.approvedProviders = this.approvedProviders.filter(p => p.provider_id !== providerId);
+          this.visible = false;  // ✅ Close modal after deletion
+          alert('Provider deleted successfully!');
+        },
+        (error) => {
+          console.error('❌ Error deleting provider:', error);
+        }
+      );
+    }
+  }
+  
 }

@@ -5,16 +5,18 @@ namespace App\Models;
 use DB;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Provider extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
 
     // Specify the table name
     protected $table = 'tbl_provider_info';
 
     // Specify the primary key
     protected $primaryKey = 'provider_id';
+    protected $dates = ['deleted_at'];
 
     // Allow mass assignment for these fields
     protected $fillable = [

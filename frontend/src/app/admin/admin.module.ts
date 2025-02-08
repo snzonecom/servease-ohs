@@ -19,6 +19,9 @@ import { DialogModule } from 'primeng/dialog';
 import { InputTextModule } from 'primeng/inputtext';
 import { ServiceCategoriesComponent } from './components/service-categories/service-categories.component';
 import { ListProvidersComponent } from './components/list-providers/list-providers.component';
+import { DeletedCategoriesComponent } from './components/deleted-categories/deleted-categories.component';
+import { DeletedProvidersComponent } from './components/deleted-providers/deleted-providers.component';
+import { SystemDetailsComponent } from './components/system-details/system-details.component';
 
 @NgModule({
   declarations: [
@@ -29,7 +32,10 @@ import { ListProvidersComponent } from './components/list-providers/list-provide
     ReportsListComponent,
     SuspendedAccountsComponent,
     ServiceCategoriesComponent,
-    ListProvidersComponent
+    ListProvidersComponent,
+    DeletedCategoriesComponent,
+    DeletedProvidersComponent,
+    SystemDetailsComponent
   ],
   imports: [
     CommonModule,

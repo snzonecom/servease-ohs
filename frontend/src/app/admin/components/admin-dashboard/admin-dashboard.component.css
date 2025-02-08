@@ -56,14 +56,18 @@ body {
 }
 
 .left-division p-chart {
-  flex-grow: 1;  /* This will make the chart grow to take up the available space */
-  width: 100%;   /* Fill the entire width of the parent */
-  height: 100%;  /* Fill the entire height of the parent */
-  min-height: 400px;  /* Ensure it never gets smaller than 400px */
+  flex-grow: 1;
+  /* This will make the chart grow to take up the available space */
+  width: 100%;
+  /* Fill the entire width of the parent */
+  height: 100%;
+  /* Fill the entire height of the parent */
+  min-height: 400px;
+  /* Ensure it never gets smaller than 400px */
 }
 
-
-.left-division, .right-division {
+.left-division,
+.right-division {
   width: calc(50% - 0.5rem);
   padding: 1rem;
   background-color: #f9f9f9;
@@ -72,21 +76,25 @@ body {
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   display: flex;
   flex-direction: column;
-  height: auto; /* Define a fixed height for the left division */
+  height: auto;
+  /* Define a fixed height for the left division */
 }
 
-.left-division h3, .right-division h3 {
+.left-division h3,
+.right-division h3 {
   font-size: 1.5rem;
   font-weight: 600;
   margin-bottom: 1rem;
 }
 
-.left-division ul, .right-division ul {
+.left-division ul,
+.right-division ul {
   list-style-type: none;
   padding: 0;
 }
 
-.left-division li, .right-division li {
+.left-division li,
+.right-division li {
   font-size: 1.1rem;
   margin-bottom: 0.5rem;
 }
@@ -113,7 +121,8 @@ body {
   max-height: 200px;
 }
 
-.right-division th, .right-division td {
+.right-division th,
+.right-division td {
   text-align: center;
   padding: 0.8rem;
 }
@@ -122,15 +131,16 @@ body {
   background-color: #f1f1f1;
 }
 
-.right-division p-table .p-datatable-tbody > tr {
+.right-division p-table .p-datatable-tbody>tr {
   border: none;
 }
 
-.right-division p-table th, .right-division p-table td {
+.right-division p-table th,
+.right-division p-table td {
   border: none;
 }
 
-.right-division p-table .p-datatable-tbody > tr:hover {
+.right-division p-table .p-datatable-tbody>tr:hover {
   background-color: #f4f4f4;
 }
 
@@ -273,4 +283,56 @@ h2 {
 
 .custom-card:hover {
   background-color: #b8dbf1;
+}
+
+/* Title */
+.notifications-title {
+  font-size: 22px;
+  color: #333;
+  text-align: center;
+  margin-bottom: 15px;
+}
+
+/* Notifications Container (Scrollable) */
+.notifications-container {
+  max-height: 350px;
+  overflow-y: auto;
+  padding-right: 10px;
+}
+
+/* Notification Card */
+.notification-card {
+  background-color: #93c9ed;
+  /* Lightest blue */
+  padding: 12px;
+  border-radius: 8px;
+  margin-bottom: 10px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+}
+
+.notification-card:hover {
+  background-color: #b8dbf1;
+  /* Slightly darker blue */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+}
+
+/* Notification Message */
+.notification-message {
+  font-size: 16px;
+  color: #333;
+  margin-bottom: 5px;
+}
+
+/* Notification Time */
+.notification-time {
+  font-size: 14px;
+  color: #777;
+  text-align: right;
+}
+
+.notification-div {
+  padding: 10px;
+  width: 100%;
 }

@@ -6,6 +6,8 @@ use App\Http\Controllers\ServiceCategoryController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\BookingController;
+use App\Http\Controllers\DeletedProviderController;
+
 
 
 // Authentication Routes
@@ -30,7 +32,8 @@ Route::post('/service-category', [ServiceCategoryController::class, 'store']);
 Route::put('/service-category/{id}', [ServiceCategoryController::class, 'update']);
 Route::delete('/service-category/{id}', [ServiceCategoryController::class, 'destroy']);
 Route::get('/providers-by-category/{categoryId}', [ProviderController::class, 'getProvidersByCategory']);
-
+Route::post('/service-category/{id}/restore', [ServiceCategoryController::class, 'restore']);
+Route::get('/service-categories/deleted', [ServiceCategoryController::class, 'getDeletedCategories']);
 
 // Service Providers
 Route::prefix('providers')->group(function () {
@@ -43,6 +46,12 @@ Route::prefix('providers')->group(function () {
     Route::get('/count/approved', [ProviderController::class, 'countApprovedProviders']);
 });
 Route::get('/provider/{id}', [ProviderController::class, 'getProviderDetails']); // get details of a specific service provider
+Route::prefix('providers')->group(function () {
+    Route::get('/deleted', [ProviderController::class, 'getDeletedProviders']);  // ✅ Get Soft-Deleted Providers
+    Route::post('/{id}/restore', [ProviderController::class, 'restoreProvider']);  // ✅ Restore Provider
+    Route::delete('/{id}/force-delete', [ProviderController::class, 'forceDeleteProvider']); // ✅ Permanently Delete Provider
+});
+
 
 // FOR ADMIN - PENDING APPLICATIONS PAGE
 Route::get('/pending-providers', [ProviderController::class, 'pendingProviders']);
@@ -58,6 +67,14 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::put('/provider/{providerId}/services/{id}', [ServiceController::class, 'update']);
     Route::delete('/provider/{providerId}/services/{id}', [ServiceController::class, 'destroy']);
 });
+Route::delete('/providers/{id}', [ProviderController::class, 'destroy']);  // ✅ Soft Delete Provider
+
+Route::prefix('deleted-providers')->group(function () {
+    Route::get('/', [DeletedProviderController::class, 'index']);  // ✅ Get Soft-Deleted Providers
+    Route::post('/{id}/restore', [DeletedProviderController::class, 'restore']);  // ✅ Restore Provider
+    Route::delete('/{id}/force-delete', [DeletedProviderController::class, 'forceDelete']); // ✅ Permanently Delete Provider
+});
+
 
 // BOOKINGS
 Route::middleware('auth:sanctum')->group(function () {
@@ -117,5 +134,12 @@ Route::get('/admin/dashboard-stats', [ProviderController::class, 'getAdminDashbo
 Route::get('/admin/top-providers', [ProviderController::class, 'getTopProviders']);
 Route::get('/admin/popular-services', [ServiceController::class, 'getPopularServices']);
 Route::get('/admin/accumulated-bookings', [BookingController::class, 'getAccumulatedBookings']);
+
+// For notification feature of admin
+Route::get('/admin/new-applications', [ProviderController::class, 'getNewApplications']);
+
+// For Doughnut graph - admin dashboard
+Route::get('/admin/approved-providers-per-category', [ProviderController::class, 'getApprovedProvidersByCategory']);
+
 
 
