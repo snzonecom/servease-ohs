@@ -17,7 +17,7 @@ export class PendingApplicationsComponent implements OnInit {
   private approveUrl = 'http://127.0.0.1:8000/api/providers';
   private rejectUrl = 'http://127.0.0.1:8000/api/providers';
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   ngOnInit(): void {
     this.fetchPendingProviders();
@@ -49,18 +49,30 @@ export class PendingApplicationsComponent implements OnInit {
     );
   }
 
-  // ✅ Reject Application
+  // ✅ Soft Delete (Reject Application)
   rejectApplication(providerId: number): void {
-    this.http.post(`${this.rejectUrl}/${providerId}/reject`, {}).subscribe(
-      () => {
-        Swal.fire('Success!', 'Application rejected.', 'success');
-        this.fetchPendingProviders();
-        this.visible = false;
-      },
-      (error) => {
-        Swal.fire('Error!', 'Failed to reject the application.', 'error');
+    Swal.fire({
+      title: 'Are you sure?',
+      text: 'Do you want to reject this application? This action can be undone.',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#3085d6',
+      confirmButtonText: 'Yes, Reject'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.http.delete(`http://localhost:8000/api/providers/${providerId}`).subscribe(
+          () => {
+            Swal.fire('Success!', 'Application rejected (soft deleted).', 'success');
+            this.fetchPendingProviders(); // Refresh list
+            this.visible = false;
+          },
+          (error) => {
+            Swal.fire('Error!', 'Failed to reject the application.', 'error');
+          }
+        );
       }
-    );
+    });
   }
 
   // ✅ Open Application Details Dialog

@@ -1,17 +1,32 @@
-import { Component, AfterViewInit } from '@angular/core';
-import { ActivatedRoute, Router, NavigationEnd } from '@angular/router';
-import { filter } from 'rxjs/operators';
+import { Component, OnInit } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-public-nav',
   templateUrl: './public-nav.component.html',
-  styleUrl: './public-nav.component.css'
+  styleUrls: ['./public-nav.component.css']
 })
-export class PublicNavComponent {
-
+export class PublicNavComponent implements OnInit {
+  logoUrl: string = 'assets/img/servease-logo.png'; // Default logo
   registerDialogVisible: boolean = false;
 
-  constructor(private router: Router, private activatedRoute: ActivatedRoute) {
+  private apiUrl = 'http://localhost:8000/api/system-info'; // Laravel API URL
+
+  constructor(private http: HttpClient, private router: Router, private activatedRoute: ActivatedRoute) {}
+
+  ngOnInit() {
+    this.loadSystemLogo();
+  }
+
+  // Function to fetch the logo from the API
+  loadSystemLogo() {
+    this.http.get<any>(this.apiUrl).subscribe((data) => {
+      this.logoUrl = data.logo ?? 'assets/img/servease-logo.png'; // Use API logo or fallback
+    }, error => {
+      console.error('Error loading system logo:', error);
+      this.logoUrl = 'assets/img/servease-logo.png'; // Use default if API fails
+    });
   }
 
   // Function to show the dialog
@@ -23,5 +38,4 @@ export class PublicNavComponent {
   closeRegisterDialog() {
     this.registerDialogVisible = false;
   }
-  
 }

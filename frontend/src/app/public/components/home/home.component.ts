@@ -13,6 +13,13 @@ export class HomeComponent implements OnInit {
   registerDialogVisible: boolean = false;
   loginFirstVisible: boolean = false;
 
+  logoUrl: string = '';
+  aboutText: string = '';  // Stores About information
+  faqs: any[] = [];        // Stores FAQ list
+  contacts: string[] = []; // Stores Contact Information
+
+  private apiUrl = 'http://localhost:8000/api/system-info'; // Laravel API URL
+
   constructor(private router: Router, private activatedRoute: ActivatedRoute, private http: HttpClient) { }
 
   loginFirstDialog() {
@@ -26,8 +33,9 @@ export class HomeComponent implements OnInit {
 
   activeAccordion: number | null = null;
 
-  toggleAccordion(index: number): void {
-    this.activeAccordion = this.activeAccordion === index ? null : index;
+  // Toggle FAQ accordion items
+  toggleAccordion(index: number) {
+    this.faqs[index].isOpen = !this.faqs[index].isOpen;
   }
 
   services: any[] = []; // Dynamic services from API
@@ -54,6 +62,7 @@ export class HomeComponent implements OnInit {
   ngOnInit(): void {
     this.fetchServiceCategories();
     this.fetchTopProviders(); // ✅ Fetch top providers
+    this.loadSystemInfo();
   }
 
   navigateTo(route: string): void {
@@ -68,6 +77,18 @@ export class HomeComponent implements OnInit {
     }, 100); // Slight delay ensures the dialog is fully closed before navigating
   }
 
+  // Fetch system information from the backend
+  loadSystemInfo() {
+    this.http.get<any>(this.apiUrl).subscribe((data) => {
+      this.logoUrl = data.logo ?? 'assets/img/servease-logo.png'; // Use API logo or fallback
+      this.aboutText = data.about_text ?? 'No About Information Available';
+      this.faqs = data.faqs ?? [];
+      this.contacts = Array.isArray(data.contacts) ? data.contacts : [];
+    }, error => {
+      console.error('Error loading system info:', error);
+      this.logoUrl = 'assets/img/servease-logo.png'; // Use default if API fails
+    });
+  }
 
   fetchServiceCategories(): void {
     this.http.get('http://127.0.0.1:8000/api/service-categories').subscribe(

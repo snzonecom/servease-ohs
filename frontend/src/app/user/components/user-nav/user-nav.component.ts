@@ -13,6 +13,9 @@ export class UserNavComponent implements AfterViewInit, OnInit {
 
   dropdownOpen = false;  // Start with the dropdown closed by default
   customerName: string = 'Guest';
+  logoUrl: string = 'assets/img/servease-logo.png'; // Default logo
+
+  private apiUrl = 'http://localhost:8000/api/system-info'; // Laravel API URL
 
   constructor(
     private router: Router,
@@ -23,6 +26,17 @@ export class UserNavComponent implements AfterViewInit, OnInit {
 
   ngOnInit(): void {
     this.fetchCustomerName(); // ✅ Fetch customer name on component initialization
+    this.loadSystemLogo();
+  }
+
+  // Function to fetch the logo from the API
+  loadSystemLogo() {
+    this.http.get<any>(this.apiUrl).subscribe((data) => {
+      this.logoUrl = data.logo ?? 'assets/img/servease-logo.png'; // Use API logo or fallback
+    }, error => {
+      console.error('Error loading system logo:', error);
+      this.logoUrl = 'assets/img/servease-logo.png'; // Use default if API fails
+    });
   }
 
   fetchCustomerName(): void {

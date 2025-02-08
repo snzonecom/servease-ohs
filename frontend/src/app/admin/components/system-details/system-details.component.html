@@ -1,1 +1,85 @@
-<p>system-details works!</p>
+<div class="system-container">
+    <!-- System Logo Section -->
+    <div class="card">
+        <h2>System Logo</h2>
+        <div class="logo-container">
+            <img [src]="logoUrl" alt="System Logo" class="system-logo">
+            <button class="save-button" *ngIf="!isEditingLogo" (click)="toggleLogoEdit()">Edit System Logo</button>
+        </div>
+        <div *ngIf="isEditingLogo" class="logo-edit-container">
+            <input type="file" class="logo-upload" (change)="onLogoChange($event)">
+            <div class="button-group">
+                <button class="save-button" (click)="toggleLogoEdit()">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- About Section -->
+    <div class="card">
+        <h2>About Our System</h2>
+        <textarea [(ngModel)]="aboutText" [readonly]="!isEditingAbout" class="about-textarea"></textarea>
+        <button class="save-button" (click)="toggleAboutEdit()">{{ isEditingAbout ? 'Save' : 'Edit About' }}</button>
+    </div>
+
+    <!-- FAQs Section -->
+    <div class="card">
+        <h2>Frequently Asked Questions</h2>
+        <div class="faq-card new-faq-card" *ngIf="showNewFaq">
+            <div class="faq-fields">
+                <input type="text" placeholder="New Question" [(ngModel)]="newFaq.question" class="faq-input">
+                <input type="text" placeholder="New Answer" [(ngModel)]="newFaq.answer" class="faq-input">
+            </div>
+            <button class="save-button" (click)="addFAQ()">Save</button>
+        </div>
+        <button class="faq-button" (click)="showNewFaq = !showNewFaq">{{ showNewFaq ? 'Cancel' : 'Add New FAQ'
+            }}</button>
+        <div class="faq-card" *ngFor="let faq of faqs; let i = index">
+            <div class="faq-content">
+                <div *ngIf="!faq.isEditing">
+                    <h3>{{ faq.question }}</h3>
+                    <p>{{ faq.answer }}</p>
+                </div>
+                <div *ngIf="faq.isEditing" class="faq-fields">
+                    <input type="text" [(ngModel)]="faq.question" class="faq-input">
+                    <input type="text" [(ngModel)]="faq.answer" class="faq-input">
+                </div>
+            </div>
+            <div class="faq-actions">
+                <button class="save-button" (click)="editFAQ(i)">{{ faq.isEditing ? 'Save' : 'Edit' }}</button>
+                <button class="delete-button" (click)="deleteFAQ(i)">Delete</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Contact Information Section -->
+    <div class="card">
+        <h2>Contact Information</h2>
+
+        <div class="contact-container">
+            <!-- Add New Contact Section -->
+            <div *ngIf="showNewContact" class="contact-item">
+                <input type="text" placeholder="Enter new contact info" [(ngModel)]="newContact.value"
+                    class="faq-input">
+                <button class="save-button" (click)="addContact()">Save</button>
+            </div>
+
+            <!-- Add Contact Button -->
+            <button class="faq-button" *ngIf="!showNewContact" (click)="showNewContact = true">Add Contact</button>
+        </div>
+
+
+        <!-- Existing Contact Fields -->
+        <div *ngFor="let contact of contacts; let i = index" class="contact-item">
+            <input *ngIf="contact.isEditing" type="text" [(ngModel)]="contact.value" class="faq-input">
+            <span *ngIf="!contact.isEditing">{{ contact.value }}</span>
+
+            <div class="contact-buttons">
+                <button class="save-button" (click)="editContact(i)">
+                    {{ contact.isEditing ? 'Save' : 'Edit' }}
+                </button>
+                <button class="delete-button" (click)="deleteContact(i)">Delete</button>
+            </div>
+        </div>
+    </div>
+
+</div>

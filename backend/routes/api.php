@@ -7,6 +7,8 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\BookingController;
 use App\Http\Controllers\DeletedProviderController;
+use Illuminate\Http\Request;
+use App\Http\Controllers\SystemInfoController;
 
 
 
@@ -141,5 +143,10 @@ Route::get('/admin/new-applications', [ProviderController::class, 'getNewApplica
 // For Doughnut graph - admin dashboard
 Route::get('/admin/approved-providers-per-category', [ProviderController::class, 'getApprovedProvidersByCategory']);
 
+// Get system information
+Route::get('/system-info', [SystemInfoController::class, 'index']);
+
+// Update system information
+Route::post('/system-info/update', [SystemInfoController::class, 'update']);
 
 

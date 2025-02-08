@@ -3,6 +3,7 @@ import { adminLinks } from './admin-links';
 import { animate, keyframes, style, transition, trigger } from '@angular/animations';
 import { Router, NavigationEnd } from '@angular/router';
 import { AuthService } from '../../../services/auth.service';
+import { HttpClient } from '@angular/common/http';
 
 interface SideNavToggle {
   screenWidth: number;
@@ -40,8 +41,11 @@ export class AdminNavbarComponent implements OnInit {
   collapsed = false;
   screenWidth = 0;
   navData = adminLinks;
+  logoUrl: string = 'assets/img/servease-logo.png'; // Default logo
 
-  constructor(private authService: AuthService, private router: Router) { }
+  private apiUrl = 'http://localhost:8000/api/system-info'; // Laravel API URL
+
+  constructor(private authService: AuthService, private router: Router, private http: HttpClient) { }
 
   @HostListener('window:resize', ['$event'])
   onResize(event: any) {
@@ -54,6 +58,17 @@ export class AdminNavbarComponent implements OnInit {
 
   ngOnInit(): void {
     this.screenWidth = window.innerWidth;
+    this.loadSystemLogo();
+  }
+
+  // Function to fetch the logo from the API
+  loadSystemLogo() {
+    this.http.get<any>(this.apiUrl).subscribe((data) => {
+      this.logoUrl = data.logo ?? 'assets/img/servease-logo.png'; // Use API logo or fallback
+    }, error => {
+      console.error('Error loading system logo:', error);
+      this.logoUrl = 'assets/img/servease-logo.png'; // Use default if API fails
+    });
   }
 
   toggleCollapse(): void {

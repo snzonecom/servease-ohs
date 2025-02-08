@@ -13,6 +13,13 @@ export class UserHomeComponent implements AfterViewInit, OnInit {
   activeAccordion: number | null = null;
   services: any[] = []; // Dynamic services from the API
 
+  logoUrl: string = '';
+  aboutText: string = '';  // Stores About information
+  faqs: any[] = [];        // Stores FAQ list
+  contacts: string[] = []; // Stores Contact Information
+
+  private apiUrl = 'http://localhost:8000/api/system-info'; // Laravel API URL
+
   recommendedProviders: any[] = [];
 
   responsiveOptions = [
@@ -38,6 +45,20 @@ export class UserHomeComponent implements AfterViewInit, OnInit {
   ngOnInit(): void {
     this.fetchServiceCategories();
     this.fetchRecommendedProviders();
+    this.loadSystemInfo();
+  }
+
+  // Fetch system information from the backend
+  loadSystemInfo() {
+    this.http.get<any>(this.apiUrl).subscribe((data) => {
+      this.logoUrl = data.logo ?? 'assets/img/servease-logo.png'; // Use API logo or fallback
+      this.aboutText = data.about_text ?? 'No About Information Available';
+      this.faqs = data.faqs ?? [];
+      this.contacts = Array.isArray(data.contacts) ? data.contacts : [];
+    }, error => {
+      console.error('Error loading system info:', error);
+      this.logoUrl = 'assets/img/servease-logo.png'; // Use default if API fails
+    });
   }
 
   toggleAccordion(index: number): void {

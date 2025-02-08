@@ -15,7 +15,7 @@
             </svg>
         </label>
 
-        <a class="home-link" routerLink="/"><img src="assets/img/servease-logo.png" alt="servease logo" width="50px"></a>
+        <a class="home-link" routerLink="/"><img [src]="logoUrl" alt="servease logo" height="50px"></a>
         <a routerLink="/">Home</a>
         <a [routerLink]="['/']" fragment="service">Service Categories</a>
         <a [routerLink]="['/']" fragment="about">About</a>
