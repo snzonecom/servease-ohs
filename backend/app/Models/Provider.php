@@ -23,6 +23,7 @@ class Provider extends Model
         'user_id',
         'profile_pic',
         'provider_name',
+        'description',
         'contact_no',
         'office_add',
         'street',

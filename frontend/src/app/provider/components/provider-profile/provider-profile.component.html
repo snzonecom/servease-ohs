@@ -29,6 +29,12 @@
                 </div>
 
                 <div class="info-row">
+                    <label for="description">About Your Business:</label>
+                    <textarea id="description" [(ngModel)]="provider.description" [disabled]="!isEditing" rows="4"
+                        class="w-full p-inputtext" placeholder="Enter description here..."></textarea>
+                </div>
+
+                <div class="info-row">
                     <label for="email">Email Address:</label>
                     <input id="email" type="email" [(ngModel)]="provider.email" [disabled]="!isEditing" />
                 </div>
@@ -80,16 +86,12 @@
 
                 <div class="info-row">
                     <label for="serviceType">Service Type:</label>
-                    <select id="serviceType" [(ngModel)]="provider.service_type" disabled
-                        class="custom-dropdown">
+                    <select id="serviceType" [(ngModel)]="provider.service_type" disabled class="custom-dropdown">
                         <option *ngFor="let category of serviceCategories" [value]="category.category_id">
                             {{ category.category_name }}
                         </option>
                     </select>
                 </div>
-
-
-
 
                 <!-- ✅ New Password Field (Visible in Edit Mode Only) -->
                 <div class="info-row" *ngIf="isEditing">

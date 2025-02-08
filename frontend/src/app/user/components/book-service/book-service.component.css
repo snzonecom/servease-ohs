@@ -206,6 +206,13 @@ hr {
     font-weight: bold;
 }
 
+/* Disabled input fields */
+.book-now-form-group input:disabled,
+.book-now-form-group select:disabled {
+    background-color: #f1f1f1;
+    cursor: not-allowed;
+}
+
 /* Responsive font sizes */
 @media (max-width: 1200px) {
     .offered-services h2 {
@@ -483,6 +490,44 @@ hr {
     font-weight: bold;
     color: #2ecc71;
 }
+
+/* Terms & Conditions Container */
+.tnc-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+/* Custom Checkbox Styling */
+.tnc-container input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    accent-color: #2980b9; /* Matches theme color */
+    cursor: pointer;
+    border-radius: 3px;
+}
+
+/* Label Styling */
+.tnc-container .label {
+    font-size: 0.9rem;
+    font-weight: normal;
+    color: #2c3e50;
+    cursor: pointer;
+    margin-block: 5px;
+}
+
+/* Terms and Conditions Link */
+.tnc-container label a {
+    color: #2980b9;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.tnc-container label a:hover {
+    text-decoration: underline;
+}
+
 
 /* Selected State for Book Now */
 .book-now-service-card.selected {

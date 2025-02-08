@@ -12,6 +12,7 @@
                             <h3 class="business-name">{{ provider.provider_name }}</h3>
                             <p class="business-email"><i class="pi pi-envelope"></i> {{ provider.email }}</p>
                             <p class="business-address"><i class="pi pi-map-marker"></i> {{ provider.location }}</p>
+                            <p class="business-description">{{ provider.description }}</p>
                         </div>
 
                         <!-- Line Separator -->
@@ -35,8 +36,6 @@
                             </div>
                         </div>
 
-
-
                         <!-- Line Separator -->
                         <hr />
 
@@ -44,37 +43,34 @@
                         <div class="feedbacks">
                             <h2>Ratings & Feedbacks</h2>
                             <div class="feedback-cards">
-                              <div *ngFor="let feedback of displayedFeedbacks" class="feedback-card">
-                                <div class="feedback-header">
-                                  <h3>{{ feedback.clientName }}</h3>
-                                </div>
-                                <div class="feedback-content">
-                                    <div class="rating">
-                                        <!-- Filled Stars -->
-                                        <ng-container *ngFor="let star of getFilledStars(feedback.rating)">
-                                          <span class="star" style="color: gold;">&#9733;</span>
-                                        </ng-container>
-                                      
-                                        <!-- Empty Stars -->
-                                        <ng-container *ngFor="let star of getEmptyStars(feedback.rating)">
-                                          <span class="star" style="color: gray;">&#9734;</span>
-                                        </ng-container>
-                                      </div>
-                                      
-                                  <div class="feedback-text">
-                                    <p>{{ feedback.reviewText }}</p>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                          
+                                <div *ngFor="let feedback of displayedFeedbacks" class="feedback-card">
+                                    <div class="feedback-header">
+                                        <h3>{{ feedback.clientName }}</h3>
+                                    </div>
+                                    <div class="feedback-content">
+                                        <div class="rating">
+                                            <!-- Filled Stars -->
+                                            <ng-container *ngFor="let star of getFilledStars(feedback.rating)">
+                                                <span class="star" style="color: gold;">&#9733;</span>
+                                            </ng-container>
 
+                                            <!-- Empty Stars -->
+                                            <ng-container *ngFor="let star of getEmptyStars(feedback.rating)">
+                                                <span class="star" style="color: gray;">&#9734;</span>
+                                            </ng-container>
+                                        </div>
+
+                                        <div class="feedback-text">
+                                            <p>{{ feedback.reviewText }}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </p-card>
             </div>
         </div>
-
 
         <!-- Second Column - Right -->
         <div class="column">
@@ -95,17 +91,18 @@
                             </div>
                         </div>
 
-
                         <!-- Select Date Section -->
                         <div class="book-now-form-group">
                             <label for="booking-date">Select Date</label>
-                            <input type="date" id="booking-date" class="form-control" />
+                            <input type="date" id="booking-date" class="form-control" [disabled]="!isServiceSelected"
+                                [(ngModel)]="bookingDate" />
                         </div>
 
                         <!-- Select Time Section -->
                         <div class="book-now-form-group">
                             <label for="booking-time">Select Available Time</label>
-                            <select id="booking-time" class="form-control">
+                            <select id="booking-time" class="form-control" [disabled]="!bookingDate"
+                                [(ngModel)]="bookingTime">
                                 <option value="" disabled selected>Choose a time slot</option>
                                 <option value="Morning (9:00 AM - 12:00 PM)">Morning (9:00 AM - 12:00 PM)</option>
                                 <option value="Afternoon (1:00 PM - 4:00 PM)">Afternoon (1:00 PM - 4:00 PM)</option>
@@ -113,16 +110,61 @@
                             </select>
                         </div>
 
+                        <!-- Terms and Conditions -->
+                        <div class="book-now-form-group">
+                            <!-- Terms and Conditions -->
+                            <div class="tnc-container">
+                                <input type="checkbox" id="tnc" [(ngModel)]="agreedToTnC" />
+                                <label for="tnc" class="label">
+                                    By proceeding with this booking, you confirm that you have read, understood, and
+                                    agreed to these
+                                    <a (click)="tncDialogVisible = true">Terms and Conditions.</a>
+                                </label>
+                            </div>
+                        </div>
+
                         <!-- Book Now Button -->
+                        <!-- Book Now Button (No longer disabled) -->
                         <div class="book-now-form-group">
                             <button class="book-now-btn" (click)="showConfirmation()">Submit Booking</button>
                         </div>
+
                     </div>
                 </div>
-
             </div>
         </div>
-
-
     </div>
 </div>
+
+
+<!-- Terms and Conditions Dialog for Booking -->
+<p-dialog header="Booking Terms and Conditions" [modal]="true" [(visible)]="tncDialogVisible"
+    [style]="{ width: '40rem' }">
+    <div class="terms-content">
+        <p>By booking a service through our platform, you agree to the following terms and conditions:</p>
+        <br>
+        <p><strong>1. Booking Confirmation:</strong></p>
+        <p>(a) Your booking request is subject to provider availability and confirmation.</p>
+        <p>(b) The service provider has the right to accept or decline your request.</p>
+        <br>
+        <p><strong>2. Payments & Pricing:</strong></p>
+        <p>(c) The price displayed is an estimate and may vary depending on the final service provided.</p>
+        <p>(d) Any additional services requested during the appointment may incur extra charges.</p>
+        <br>
+        <p><strong>3. Cancellation & Rescheduling:</strong></p>
+        <p>(e) Cancellations may be made if your booking is still in pending status. However, cancellations or
+            reschedules must be discussed by both parties once the booking was prior accepted.</p>
+        <p>(f) The service provider may cancel a booking due to unforeseen circumstances.</p>
+        <br>
+        <p><strong>4. Service Execution:</strong></p>
+        <p>(g) You must ensure access to your home at the scheduled time.</p>
+        <p>(h) The provider must perform the service professionally and in accordance with industry standards.</p>
+        <br>
+        <p><strong>5. Liability & Complaints:</strong></p>
+        <p>(i) The platform is not responsible for any damage or disputes between customers and providers.</p>
+        <br>
+        <p><strong>6. Privacy & Customer Conduct:</strong></p>
+        <p>(j) Your personal information will only be shared with the assigned provider.</p>
+        <p>(k) Customers must treat service providers with respect and ensure a safe working environment.</p>
+    </div>
+</p-dialog>

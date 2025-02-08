@@ -34,6 +34,13 @@
           <input id="businessName" type="text" [(ngModel)]="providerData.fullName" placeholder="Your Business Name" />
         </div>
 
+        <!-- Business Description -->
+        <div class="info-row">
+          <label for="description">Tell Us about your Business:</label>
+          <textarea id="description" [(ngModel)]="providerData.description" rows="4" class="w-full p-inputtext"
+            placeholder="Enter description here..."></textarea>
+        </div>
+
         <!-- Email Address -->
         <div class="info-row">
           <label for="email">Email Address:</label>
@@ -55,7 +62,8 @@
         <!-- Barangay Dropdown -->
         <div class="info-row">
           <label for="brgy">Barangay:</label>
-          <select id="brgy" [(ngModel)]="providerData.brgy" [disabled]="!barangays.length" class="custom-dropdown" required>
+          <select id="brgy" [(ngModel)]="providerData.brgy" [disabled]="!barangays.length" class="custom-dropdown"
+            required>
             <option value="" disabled selected>Select your City/Municipality First</option>
             <option *ngFor="let brgy of barangays" [value]="brgy">{{ brgy }}</option>
           </select>
@@ -64,8 +72,8 @@
         <!-- City/Municipality Dropdown -->
         <div class="info-row">
           <label for="city">City/Municipality:</label>
-          <select id="city" [(ngModel)]="providerData.city" (change)="onCityChange()" class="custom-dropdown" [disabled]="!cities.length"
-            required>
+          <select id="city" [(ngModel)]="providerData.city" (change)="onCityChange()" class="custom-dropdown"
+            [disabled]="!cities.length" required>
             <option value="" disabled selected>Select Your Province First</option>
             <option *ngFor="let city of cities" [value]="city.name">{{ city.name }}</option>
           </select>
@@ -74,7 +82,8 @@
         <!-- Province Dropdown -->
         <div class="info-row">
           <label for="province">Province:</label>
-          <select id="province" [(ngModel)]="providerData.province" (change)="onProvinceChange()" class="custom-dropdown" required>
+          <select id="province" [(ngModel)]="providerData.province" (change)="onProvinceChange()"
+            class="custom-dropdown" required>
             <option value="" disabled selected>Select Province</option>
             <option *ngFor="let province of provinces" [value]="province.province">{{ province.province }}</option>
           </select>
@@ -154,29 +163,29 @@
 <!-- Dialog displaying Terms and Conditions -->
 <p-dialog header="Terms and Conditions" [modal]="true" [(visible)]="tncDialogVisible" [style]="{ width: '40rem' }">
   <div class="terms-content">
-      <p>By registering as a provider on SERVEASE, you agree to comply with the following terms and
-          conditions:</p>
-      <br>
-      <p>(1) All information provided during registration must be accurate, complete, and up to date. Providing false
-          or misleading details may result in the account not being approved.</p>
-      <p>(2) You are responsible for maintaining the confidentiality of your account credentials.</p>
-      <p>(3) Any unauthorized access or suspicious activity must be reported to SERVEASE immediately.
-      </p>
-      <p>(4) Providers are expected to deliver services professionally, adhering to ethical and industry standards.
-      </p>
-      <p>(5) Misrepresentation, fraudulent activities, or failure to meet client expectations may lead to warnings,
-          suspension, or permanent removal from the platform.</p>
-      <p>(6) SERVEASE acts solely as a connecting platform and is not responsible for disputes
-          between providers and clients.</p>
-      <p>(7) Providers assume full responsibility for the services they offer, including pricing, client
-          communication, and dispute resolution.</p>
-      <p>(8) Providers must adhere to data protection laws and respect client privacy.</p>
-      <p>(9) SERVEASE reserves the right to review provider accounts to ensure compliance with
-          platform policies.</p>
-      <p>(10) These terms may be updated periodically, and continued use of the platform signifies acceptance of any
-          modifications.</p>
-      <br>
-      <p><strong>By registering, you confirm that you have read, understood, and agreed to these Terms and
-              Conditions.</strong></p>
+    <p>By registering as a provider on SERVEASE, you agree to comply with the following terms and
+      conditions:</p>
+    <br>
+    <p>(1) All information provided during registration must be accurate, complete, and up to date. Providing false
+      or misleading details may result in the account not being approved.</p>
+    <p>(2) You are responsible for maintaining the confidentiality of your account credentials.</p>
+    <p>(3) Any unauthorized access or suspicious activity must be reported to SERVEASE immediately.
+    </p>
+    <p>(4) Providers are expected to deliver services professionally, adhering to ethical and industry standards.
+    </p>
+    <p>(5) Misrepresentation, fraudulent activities, or failure to meet client expectations may lead to warnings,
+      suspension, or permanent removal from the platform.</p>
+    <p>(6) SERVEASE acts solely as a connecting platform and is not responsible for disputes
+      between providers and clients.</p>
+    <p>(7) Providers assume full responsibility for the services they offer, including pricing, client
+      communication, and dispute resolution.</p>
+    <p>(8) Providers must adhere to data protection laws and respect client privacy.</p>
+    <p>(9) SERVEASE reserves the right to review provider accounts to ensure compliance with
+      platform policies.</p>
+    <p>(10) These terms may be updated periodically, and continued use of the platform signifies acceptance of any
+      modifications.</p>
+    <br>
+    <p><strong>By registering, you confirm that you have read, understood, and agreed to these Terms and
+        Conditions.</strong></p>
   </div>
 </p-dialog>

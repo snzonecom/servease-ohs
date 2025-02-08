@@ -39,7 +39,8 @@
 
                     <!-- Call-to-Action Button -->
                     <div class="carousel-card-footer">
-                        <a [routerLink]="['/user/book-service']" style="text-decoration: none; color: white;">
+                        <a [routerLink]="['/user/book-service', provider.provider_id]"
+                            style="text-decoration: none; color: white;">
                             <button icon="pi pi-calendar-plus" class="carousel-card-button">
                                 Book Now</button></a>
                     </div>
@@ -94,7 +95,8 @@
     <h2>Frequently Asked Questions</h2>
     <div class="accordion">
         <!-- Accordion Item 1 -->
-        <div *ngFor="let faq of faqs; let i = index" class="accordion-item" [class.active]="faq.isOpen" (click)="toggleAccordion(i)">
+        <div *ngFor="let faq of faqs; let i = index" class="accordion-item" [class.active]="faq.isOpen"
+            (click)="toggleAccordion(i)">
             <div class="accordion-header">
                 <span class="accordion-title">{{ faq.question }}</span>
                 <span class="accordion-icon">{{ faq.isOpen ? '-' : '+' }}</span>

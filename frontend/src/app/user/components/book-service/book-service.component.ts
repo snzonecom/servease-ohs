@@ -6,12 +6,18 @@ import Swal from 'sweetalert2';
 @Component({
   selector: 'app-book-service',
   templateUrl: './book-service.component.html',
-  styleUrl: './book-service.component.css'
+  styleUrls: ['./book-service.component.css']
 })
 export class BookServiceComponent implements OnInit {
   provider: any = {};
   availableServices: any[] = [];
+  bookingDate: string = '';
+  bookingTime: string = '';
+  agreedToTnC: boolean = false;
   showAllReviews = false;
+
+  tncDialogVisible: boolean = false;
+
 
   feedbacks: any[] = [];
   displayedFeedbacks: any[] = [];
@@ -20,22 +26,29 @@ export class BookServiceComponent implements OnInit {
 
   ngOnInit(): void {
     const providerId = this.route.snapshot.paramMap.get('providerId');
+
+    console.log("✅ Retrieved Provider ID:", providerId);
+
     if (providerId) {
-      this.fetchProviderDetails(providerId); // Existing Function
-      this.fetchProviderFeedbacks(providerId); // ✅ New Function to Fetch Feedbacks
+      console.log("✅ Provider ID Retrieved:", providerId);
+      this.fetchProviderDetails(providerId);
+      this.fetchProviderFeedbacks(providerId);
+    } else {
+      Swal.fire('Error!', 'Provider ID is missing from the URL.', 'error');
     }
-    this.updateDisplayedFeedbacks(); // Existing Function
+
+    this.updateDisplayedFeedbacks();
   }
 
   fetchProviderFeedbacks(providerId: string) {
     this.http.get<any[]>(`http://127.0.0.1:8000/api/provider/${providerId}/feedbacks`).subscribe(
       (feedbacks) => {
         this.feedbacks = feedbacks.map(feedback => ({
-          clientName: feedback.clientName || 'Anonymous',  // ✅ Default fallback
+          clientName: feedback.clientName || 'Anonymous',
           reviewText: feedback.reviewText,
-          rating: Math.round(feedback.rating),             // ✅ Round the rating for correct display
+          rating: Math.round(feedback.rating),
         }));
-        this.displayedFeedbacks = this.feedbacks.slice(0, 3); // ✅ Show only the first 3 by default
+        this.displayedFeedbacks = this.feedbacks.slice(0, 3);
       },
       (error) => {
         console.error('Error fetching feedbacks:', error);
@@ -43,31 +56,32 @@ export class BookServiceComponent implements OnInit {
     );
   }
 
-
-
-  // Function to get filled stars
   getFilledStars(rating: number): any[] {
-    return Array(Math.round(rating)).fill(1);  // ✅ Round the rating to the nearest whole number
+    return Array(Math.round(rating)).fill(1);
   }
 
-  // Function to get empty stars
   getEmptyStars(rating: number): any[] {
-    return Array(5 - Math.round(rating)).fill(1);  // ✅ Fill remaining with empty stars
+    return Array(5 - Math.round(rating)).fill(1);
   }
 
-
-
-  // ✅ Fetch provider details
   fetchProviderDetails(providerId: string): void {
     this.http.get<any>(`http://127.0.0.1:8000/api/provider/${providerId}`).subscribe(
       (data) => {
         this.provider = data;
-        this.availableServices = data.services || []; // Ensure services is an array
+        this.availableServices = data.services || [];
       },
       (error) => {
         console.error('Error fetching provider details:', error);
       }
     );
+  }
+
+  get isServiceSelected(): boolean {
+    return this.availableServices.some(service => service.isSelected);
+  }
+
+  get canSubmitBooking(): boolean {
+    return this.isServiceSelected && !!this.bookingDate && !!this.bookingTime && this.agreedToTnC;
   }
 
   toggleServiceSelection(service: any) {
@@ -76,12 +90,11 @@ export class BookServiceComponent implements OnInit {
 
   toggleReviews() {
     if (this.displayedFeedbacks.length === 3) {
-      this.displayedFeedbacks = this.feedbacks; // ✅ Show all feedbacks
+      this.displayedFeedbacks = this.feedbacks;
     } else {
-      this.displayedFeedbacks = this.feedbacks.slice(0, 3); // ✅ Show only first 3
+      this.displayedFeedbacks = this.feedbacks.slice(0, 3);
     }
   }
-
 
   private updateDisplayedFeedbacks() {
     if (this.showAllReviews) {
@@ -91,51 +104,59 @@ export class BookServiceComponent implements OnInit {
     }
   }
 
-  // ✅ Booking Confirmation
   showConfirmation() {
-    const selectedServices = this.availableServices.filter(service => service.isSelected);
-    const bookingDate = (document.getElementById('booking-date') as HTMLInputElement)?.value;
-    const bookingTime = (document.getElementById('booking-time') as HTMLSelectElement)?.value;
-
-    if (selectedServices.length === 0 || !bookingDate || !bookingTime) {
-      Swal.fire('Error!', 'Please select services, date, and time.', 'error');
-      return;
+    if (!this.isServiceSelected) {
+        Swal.fire('Warning!', 'Please select at least one service before proceeding.', 'warning');
+        return;
+    }
+    if (!this.bookingDate) {
+        Swal.fire('Warning!', 'Please select a booking date before proceeding.', 'warning');
+        return;
+    }
+    if (!this.bookingTime) {
+        Swal.fire('Warning!', 'Please select a booking time before proceeding.', 'warning');
+        return;
+    }
+    if (!this.agreedToTnC) {
+        Swal.fire('Warning!', 'You must agree to the Terms and Conditions before submitting.', 'warning');
+        return;
     }
 
     Swal.fire({
-      title: 'Are you sure?',
-      text: 'Do you want to submit this booking?',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonText: 'Yes, submit it',
-      cancelButtonText: 'No, cancel',
-      confirmButtonColor: '#2980b9',
-      cancelButtonColor: '#d33',
+        title: 'Are you sure?',
+        text: 'Do you want to submit this booking?',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Yes, submit it',
+        cancelButtonText: 'No, cancel',
+        confirmButtonColor: '#2980b9',
+        cancelButtonColor: '#d33',
     }).then((result) => {
-      if (result.isConfirmed) {
-        this.submitBooking(selectedServices, bookingDate, bookingTime);
-      }
+        if (result.isConfirmed) {
+            this.submitBooking();
+        }
     });
-  }
+}
 
-  submitBooking(services: any[], bookDate: string, bookTime: string) {
+
+  submitBooking() {
     const token = localStorage.getItem('authToken');
 
     const bookingData = {
       provider_id: this.provider.provider_id,
-      services: services.map(service => service.service_id), // ✅ Send array of service IDs
-      book_date: bookDate,
-      book_time: bookTime,
+      services: this.availableServices.filter(s => s.isSelected).map(s => s.service_id),
+      book_date: this.bookingDate,
+      book_time: this.bookingTime,
     };
 
-    console.log('Booking Data:', bookingData); // ✅ Debugging
+    console.log('Booking Data:', bookingData);
 
     this.http.post('http://127.0.0.1:8000/api/bookings', bookingData, {
       headers: { Authorization: `Bearer ${token}` },
     }).subscribe(
       () => {
         this.showSuccessAlert();
-        this.clearBookingForm(); // ✅ Clear form after success
+        this.clearBookingForm();
       },
       (error) => {
         console.error('Booking failed:', error);
@@ -144,15 +165,13 @@ export class BookServiceComponent implements OnInit {
     );
   }
 
-  // ✅ Clear Booking Form After Submission
   clearBookingForm() {
-    this.availableServices.forEach(service => service.isSelected = false); // ✅ Deselect services
-    (document.getElementById('booking-date') as HTMLInputElement).value = ''; // ✅ Clear date
-    (document.getElementById('booking-time') as HTMLSelectElement).value = ''; // ✅ Clear time
+    this.availableServices.forEach(service => service.isSelected = false);
+    this.bookingDate = '';
+    this.bookingTime = '';
+    this.agreedToTnC = false;
   }
 
-
-  // ✅ Show Success Alert
   showSuccessAlert() {
     Swal.fire({
       title: 'Booking Submitted!',

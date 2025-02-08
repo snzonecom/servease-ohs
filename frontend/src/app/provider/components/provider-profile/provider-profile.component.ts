@@ -241,6 +241,7 @@ export class ProviderProfileComponent implements OnInit {
       city: this.provider.city || '',
       province: this.provider.province || '',
       contact_person: this.provider.contact_person || '',
+      description: this.provider.description || '',
       password: this.provider.new_password ? this.provider.new_password : null
     };
   

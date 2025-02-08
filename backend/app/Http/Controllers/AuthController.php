@@ -83,6 +83,7 @@ class AuthController extends Controller
         // ✅ Validate All Required Fields First
         $validator = Validator::make($request->all(), [
             'fullName' => 'required|string|max:255',
+            'description' => 'required',
             'email' => 'required|email|unique:users',
             'password' => 'required|string|min:8',
             'contactNumber' => 'required',
@@ -128,6 +129,7 @@ class AuthController extends Controller
             // ✅ Insert Provider Info Only If User Was Successfully Created
             DB::table('tbl_provider_info')->insert([
                 'user_id' => $userId,
+                'description' => $request->description,
                 'profile_pic' => $businessLogoPath ? 'storage/' . $businessLogoPath : null,
                 'provider_name' => $request->fullName,
                 'contact_no' => $request->contactNumber,

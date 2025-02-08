@@ -169,6 +169,7 @@ export class ProviderRegisterComponent implements OnInit {
     password: '',
     password_confirmation: '',
     fullName: '',           // ✅ Renamed from provider_name
+    description: '',
     contactNumber: '',      // ✅ Renamed from contact_no
     houseAdd: '',           // ✅ Renamed from office_add
     brgy: '',
@@ -268,6 +269,7 @@ export class ProviderRegisterComponent implements OnInit {
       password: '',
       password_confirmation: '',
       fullName: '',
+      description: '',
       contactNumber: '',
       houseAdd: '',
       brgy: '',

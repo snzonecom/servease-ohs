@@ -149,6 +149,7 @@ input:enabled {
 
 textarea:enabled {
     background-color: #d0e4ef;
+    color: black;
     font-weight: 400;
 }
 

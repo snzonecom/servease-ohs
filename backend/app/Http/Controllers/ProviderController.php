@@ -36,11 +36,11 @@ class ProviderController extends Controller
     {
         $provider = Provider::where('user_id', Auth::id())->first();
         $user = User::find(Auth::id());
-
+    
         if (!$provider || !$user) {
             return response()->json(['message' => 'Provider not found'], 404);
         }
-
+    
         // ✅ Validate Input
         $request->validate([
             'email' => 'email|unique:users,email,' . Auth::id(),
@@ -50,10 +50,11 @@ class ProviderController extends Controller
             'city' => 'nullable|string',
             'province' => 'nullable|string',
             'contact_person' => 'nullable|string',
+            'description' => 'nullable|string|max:1000', // ✅ Allow description with a max length of 1000
             'password' => 'nullable|string|min:6',
             'profile_pic' => 'nullable|image|mimes:jpeg,png,jpg|max:2048'
         ]);
-
+    
         // ✅ Prevent Null Values from Overwriting Existing Data
         $provider->update([
             'contact_no' => $request->input('contact_no') ?? $provider->contact_no,
@@ -62,20 +63,21 @@ class ProviderController extends Controller
             'city' => $request->input('city') ?? $provider->city,
             'province' => $request->input('province') ?? $provider->province,
             'contact_person' => $request->input('contact_person') ?? $provider->contact_person,
+            'description' => $request->input('description') ?? $provider->description, // ✅ Add description update
         ]);
-
+    
         // ✅ Update Email in Users Table
         if ($request->has('email')) {
             $user->email = $request->input('email');
             $user->save();
         }
-
+    
         // ✅ Update Password if provided
         if ($request->filled('password')) {
             $user->password = Hash::make($request->input('password'));
             $user->save();
         }
-
+    
         // ✅ Handle Profile Picture Upload
         if ($request->hasFile('profile_pic')) {
             if ($provider->profile_pic) {
@@ -85,12 +87,13 @@ class ProviderController extends Controller
             $provider->profile_pic = 'storage/' . $path;
             $provider->save();
         }
-
+    
         return response()->json([
             'message' => 'Profile updated successfully!',
             'provider' => $provider
         ]);
     }
+    
 
     public function uploadProfilePicture(Request $request)
     {
@@ -289,10 +292,10 @@ class ProviderController extends Controller
         return response()->json([
             'provider_id' => $provider->provider_id,
             'provider_name' => $provider->provider_name,
+            'description' => $provider->description,
             'profile_pic' => $provider->profile_pic ? asset($provider->profile_pic) : null,
             'email' => $provider->user->email,
             'location' => "{$provider->city}, {$provider->province}",
-            'description' => $provider->brn,
             'services' => $provider->services, // Assuming related services are fetched
             'feedbacks' => [] // Add feedback logic here if available
         ]);
@@ -328,6 +331,7 @@ class ProviderController extends Controller
                 return [
                     'provider_id' => $provider->provider_id,
                     'name' => $provider->provider_name,
+                    'description' => $provider->description,
                     'serviceCategory' => $provider->serviceCategory ? $provider->serviceCategory->category_name : 'N/A', // ✅ Ensure category is included
                     'acquiredBookings' => $bookingsCount, // ✅ Ensure booking count is included
                     'logo' => $provider->profile_pic ? asset($provider->profile_pic) : 'https://placehold.co/600x600',
