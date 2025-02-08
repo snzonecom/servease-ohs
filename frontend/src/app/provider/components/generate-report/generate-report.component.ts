@@ -131,27 +131,35 @@ export class GenerateReportComponent implements OnInit {
       });
       return;
     }
-
+  
     const pdf = new jsPDF();
-    pdf.setFontSize(16);
-    pdf.text('Service Provider Transaction Report', 10, 10);
-
+  
+    // ✅ Title Formatting
+    pdf.setFontSize(14);
+    pdf.setFont('helvetica', 'bold');
+    pdf.text('Service Provider Transaction Report', 105, 15, { align: 'center' });
+  
+    // ✅ Date Range Subheading
+    pdf.setFontSize(11);
+    pdf.setFont('helvetica', 'normal');
+    pdf.text(`Report Duration: ${this.startDate} to ${this.endDate}`, 105, 22, { align: 'center' });
+  
     const filteredData = this.filteredTransactions.filter(transaction => {
       const bookingDate = new Date(transaction.book_date);
       return new Date(this.startDate) <= bookingDate && bookingDate <= new Date(this.endDate);
     });
-
+  
     const tableData = filteredData.map((transaction, index) => {
       // ✅ Handle services as array or JSON string
       const serviceIds = typeof transaction.services === 'string'
         ? JSON.parse(transaction.services)
         : transaction.services;
-
+  
       // ✅ Map service IDs to names using servicesMap
       const serviceNames = Array.isArray(serviceIds)
         ? serviceIds.map((id: number) => this.servicesMap[id] || `Service ID: ${id}`).join(', ')
         : 'N/A';
-
+  
       return [
         index + 1,
         transaction.book_date,
@@ -162,24 +170,52 @@ export class GenerateReportComponent implements OnInit {
           : '₱0.00'
       ];
     });
-
+  
+    // ✅ Improved Table Styling
     autoTable(pdf, {
-      startY: 20,
+      startY: 30,
       head: [['#', 'Booking Date', 'Customer Name', 'Availed Services', 'Price']],
       body: tableData,
-      styles: { halign: 'center' },
-      headStyles: { fillColor: [41, 128, 185], textColor: 255 },
-      bodyStyles: { textColor: 50 },
+      styles: {
+        fontSize: 10, // ✅ Smaller, readable font
+        halign: 'center',
+        cellPadding: 2
+      },
+      headStyles: {
+        fillColor: [104, 184, 225],
+        textColor: 255,
+        fontStyle: 'bold'
+      },
+      bodyStyles: {
+        textColor: 50
+      },
+      columnStyles: {
+        0: { cellWidth: 10 },  // # (Index)
+        1: { cellWidth: 30 },  // Booking Date
+        2: { cellWidth: 50 },  // Customer Name
+        3: { cellWidth: 50 },  // Availed Services
+        4: { cellWidth: 30 }   // Price
+      }
     });
-
+  
+    const finalY = pdf.lastAutoTable.finalY || 40; // Get last Y position of the table
+  
+    // ✅ Summary Section
     const totalBookings = filteredData.length;
     const totalPrice = filteredData.reduce((sum, transaction) => sum + (parseFloat(transaction.price) || 0), 0);
-
-    pdf.text(`Total Bookings: ${totalBookings}`, 10, (pdf.lastAutoTable?.finalY || 30) + 10);
-    pdf.text(`Total Price: ${totalPrice.toLocaleString('en-PH', { minimumFractionDigits: 2 })}`, 10, (pdf.lastAutoTable?.finalY || 30) + 20);
-
+  
+    pdf.setFontSize(12);
+    pdf.setFont('helvetica', 'bold');
+    pdf.text(`Summary`, 14, finalY + 10);
+  
+    pdf.setFontSize(11);
+    pdf.setFont('helvetica', 'normal');
+    pdf.text(`Total Bookings: ${totalBookings}`, 14, finalY + 18);
+    pdf.text(`Total Price: ${totalPrice.toLocaleString('en-PH', { minimumFractionDigits: 2 })}`, 14, finalY + 26);
+  
     pdf.save(`Transaction_Report_${this.startDate}_to_${this.endDate}.pdf`);
   }
+  
 
 
 

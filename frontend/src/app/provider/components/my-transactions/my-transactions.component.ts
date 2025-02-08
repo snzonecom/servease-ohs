@@ -11,6 +11,14 @@ export class MyTransactionsComponent implements OnInit {
   ongoingBookings: any[] = [];
   completedBookings: any[] = [];
 
+  filteredPendingBookings: any[] = [];
+  filteredOngoingBookings: any[] = [];
+  filteredCompletedBookings: any[] = [];
+
+  searchQuery: string = '';
+  startDate: string = '';
+  endDate: string = '';
+
   pendingDialogVisible: boolean = false;
   ongoingDialogVisible: boolean = false;
   completedDialogVisible: boolean = false;
@@ -45,23 +53,20 @@ export class MyTransactionsComponent implements OnInit {
       headers: { Authorization: `Bearer ${token}` }
     }).subscribe(
       (response) => {
-        // console.log('Fetched Provider Bookings:', response);
-
-        // ✅ Parse services immediately after fetching
         this.pendingBookings = response.pending.map((booking: any) => ({
           ...booking,
           services: this.parseServices(booking.services)
         }));
-
         this.ongoingBookings = response.ongoing.map((booking: any) => ({
           ...booking,
           services: this.parseServices(booking.services)
         }));
-
         this.completedBookings = response.completed.map((booking: any) => ({
           ...booking,
           services: this.parseServices(booking.services)
         }));
+
+        this.initializeFilteredBookings();
       },
       (error) => {
         console.error('Error fetching provider bookings:', error);
@@ -69,11 +74,51 @@ export class MyTransactionsComponent implements OnInit {
     );
   }
 
+  // ✅ Initialize filtered lists
+  initializeFilteredBookings() {
+    this.filteredPendingBookings = [...this.pendingBookings];
+    this.filteredOngoingBookings = [...this.ongoingBookings];
+    this.filteredCompletedBookings = [...this.completedBookings];
+  }
+
+  filterBookings() {
+    const searchLower = this.searchQuery.trim().toLowerCase();
+
+    const matchesCriteria = (booking: any) => {
+      // Ensure all values exist before searching
+      const customerName = booking.customer?.customer_name?.toLowerCase() || '';
+      const serviceNames = booking.services.map((serviceId: number) => this.getServiceName(serviceId).toLowerCase()).join(', ');
+      const bookingDate = booking.book_date || ''; // Keep date as string
+      const bookingTime = booking.book_time || ''; // Keep time as string
+      const status = booking.book_status?.toLowerCase() || ''; // Ensure lowercase
+
+      // ✅ Match Search Query (Customer Name, Service Name, Booking Date, Booking Time, or Status)
+      const matchesSearch =
+        searchLower === '' ||
+        customerName.includes(searchLower) ||
+        serviceNames.includes(searchLower) ||
+        bookingDate.includes(searchLower) ||
+        bookingTime.includes(searchLower) ||
+        status.includes(searchLower);
+
+      // ✅ Match Date Range
+      const matchesStartDate = !this.startDate || new Date(booking.book_date) >= new Date(this.startDate);
+      const matchesEndDate = !this.endDate || new Date(booking.book_date) <= new Date(this.endDate);
+
+      return matchesSearch && matchesStartDate && matchesEndDate;
+    };
+
+    this.filteredPendingBookings = this.pendingBookings.filter(matchesCriteria);
+    this.filteredOngoingBookings = this.ongoingBookings.filter(matchesCriteria);
+    this.filteredCompletedBookings = this.completedBookings.filter(matchesCriteria);
+  }
+
+
 
   // ✅ Show Booking Details
   showPendingBookingDetails(booking: any) {
-    this.selectedBooking = { ...booking }; // ✅ Assign booking object
-    this.pendingDialogVisible = true;      // ✅ Show the dialog
+    this.selectedBooking = { ...booking };
+    this.pendingDialogVisible = true;
   }
 
   showOngoingBookingDetails(booking: any) {
@@ -104,8 +149,7 @@ export class MyTransactionsComponent implements OnInit {
       alert('❌ Please set a price before completing the booking.');
       return;
     }
-
-    this.savePriceAndComplete();  // ✅ Save the price first, then mark as completed
+    this.savePriceAndComplete();
   }
 
   savePriceAndComplete() {
@@ -117,7 +161,7 @@ export class MyTransactionsComponent implements OnInit {
     ).subscribe(
       () => {
         console.log('Price saved successfully.');
-        this.updateBookingStatus('Completed');  // ✅ Mark as completed after price is saved
+        this.updateBookingStatus('Completed');
       },
       (error) => {
         console.error('Error saving price:', error);
@@ -202,14 +246,12 @@ export class MyTransactionsComponent implements OnInit {
     this.reportDialogVisible = false;
   }
 
-  /**
- * ✅ Fetch All Services (for mapping service IDs to names)
- */
+  // ✅ Fetch Services
   fetchServices() {
     this.http.get<any[]>(`http://127.0.0.1:8000/api/services`).subscribe(
       (services) => {
         services.forEach(service => {
-          this.servicesMap[service.service_id] = service.service_name; // ✅ Corrected key
+          this.servicesMap[service.service_id] = service.service_name;
         });
       },
       (error) => {
@@ -218,25 +260,13 @@ export class MyTransactionsComponent implements OnInit {
     );
   }
 
-  /**
-   * ✅ Parse services if it's a JSON string
-   */
+  // ✅ Parse services
   parseServices(services: any): any[] {
-    if (typeof services === 'string') {
-      try {
-        return JSON.parse(services); // ✅ Convert JSON string to an array
-      } catch (error) {
-        console.error('Error parsing services:', error);
-        return [];
-      }
-    }
-    return Array.isArray(services) ? services : [];
+    return typeof services === 'string' ? JSON.parse(services) : Array.isArray(services) ? services : [];
   }
 
-  /**
-   * ✅ Get Service Name by ID
-   */
+  // ✅ Get Service Name by ID
   getServiceName(serviceId: number): string {
-    return this.servicesMap[serviceId] || `Service ID: ${serviceId}`; // ✅ Fallback if service name not found
+    return this.servicesMap[serviceId] || `Service ID: ${serviceId}`;
   }
 }

@@ -5,24 +5,40 @@
             <div class="dashboard-header">
                 <h1 class="dashboard-title">Pending Bookings</h1>
                 <p class="dashboard-description">
-                    Stay on top of your upcoming appointments! Easily view and manage all the bookings that are yet to be confirmed or processed.
+                    Stay on top of your upcoming appointments! Easily view and manage all the bookings that are yet to
+                    be confirmed or processed.
                 </p>
             </div>
 
-            <div class="pending-bookings-content" *ngIf="pendingBookings.length > 0; else noPending">
+            <!-- Search Bar and Filters -->
+            <div class="filters-container">
+                <input pInputText [(ngModel)]="searchQuery" (input)="filterBookings()"
+                    placeholder="Search by Customer Name, Service Type, or Date..." class="search-bar" />
+                <input type="date" [(ngModel)]="startDate" (change)="filterBookings()" class="date-filter">
+                <input type="date" [(ngModel)]="endDate" (change)="filterBookings()" class="date-filter">
+            </div>
+
+            <div class="pending-bookings-content" *ngIf="filteredPendingBookings.length > 0; else noPending">
                 <div class="columns-container">
-                    <div *ngFor="let booking of pendingBookings" class="card">
+                    <div *ngFor="let booking of filteredPendingBookings" class="card">
                         <div class="card-content">
                             <h3>{{ getServiceName(booking.services[0]) }}</h3>
-                            <div class="info"><i class="pi pi-user"></i><p>{{ booking.customer.customer_name }}</p></div>
-                            <div class="info"><i class="pi pi-calendar"></i><p>{{ booking.book_date }}</p></div>
-                            <div class="info"><i class="pi pi-clock"></i><p>{{ booking.book_time }}</p></div>
-                            <div class="info"><i class="pi pi-map-marker"></i><p>{{ booking.customer.brgy}}, {{ booking.customer.city }}</p></div>
-                            <button class="see-booking-btn" (click)="showPendingBookingDetails(booking)">See Booking</button>
+                            <div class="info"><i class="pi pi-user"></i>
+                                <p>{{ booking.customer.customer_name }}</p>
+                            </div>
+                            <div class="info"><i class="pi pi-calendar"></i>
+                                <p>{{ booking.book_date }}</p>
+                            </div>
+                            <div class="info"><i class="pi pi-clock"></i>
+                                <p>{{ booking.book_time }}</p>
+                            </div>
+                            <button class="see-booking-btn" (click)="showPendingBookingDetails(booking)">See
+                                Booking</button>
                         </div>
                     </div>
                 </div>
             </div>
+
             <ng-template #noPending>
                 <p class="no-bookings-found">No pending bookings found.</p>
             </ng-template>
@@ -35,15 +51,31 @@
                 <p class="dashboard-description">Keep track of your upcoming appointments effortlessly!</p>
             </div>
 
-            <div class="pending-bookings-content" *ngIf="ongoingBookings.length > 0; else noOngoing">
+            <!-- Search Bar and Filters -->
+            <div class="filters-container">
+                <input pInputText [(ngModel)]="searchQuery" (input)="filterBookings()"
+                    placeholder="Search by Customer Name, Service Type, or Date..." class="search-bar" />
+                <input type="date" [(ngModel)]="startDate" (change)="filterBookings()" class="date-filter">
+                <input type="date" [(ngModel)]="endDate" (change)="filterBookings()" class="date-filter">
+            </div>
+
+            <div class="pending-bookings-content" *ngIf="filteredOngoingBookings.length > 0; else noOngoing">
                 <div class="columns-container">
-                    <div *ngFor="let booking of ongoingBookings" class="card">
+                    <div *ngFor="let booking of filteredOngoingBookings" class="card">
                         <div class="card-content">
                             <h3>{{ getServiceName(booking.services[0]) }}</h3>
-                            <div class="info"><i class="pi pi-user"></i><p>{{ booking.customer.customer_name }}</p></div>
-                            <div class="info"><i class="pi pi-calendar"></i><p>{{ booking.book_date }}</p></div>
-                            <div class="info"><i class="pi pi-clock"></i><p>{{ booking.book_time }}</p></div>
-                            <button class="see-booking-btn" (click)="showOngoingBookingDetails(booking)">View Booking Transaction</button>
+                            <div class="info"><i class="pi pi-user"></i>
+                                <p>{{ booking.customer.customer_name }}</p>
+                            </div>
+                            <div class="info"><i class="pi pi-calendar"></i>
+                                <p>{{ booking.book_date }}</p>
+                            </div>
+                            <div class="info"><i class="pi pi-clock"></i>
+                                <p>{{ booking.book_time }}</p>
+                            </div>
+                            <button class="see-booking-btn" (click)="showOngoingBookingDetails(booking)">
+                                View Booking Transaction
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -51,6 +83,7 @@
             <ng-template #noOngoing>
                 <p class="no-bookings-found">No ongoing bookings found.</p>
             </ng-template>
+
         </p-tabPanel>
 
         <!-- Completed Bookings Tab -->
@@ -60,14 +93,31 @@
                 <p class="dashboard-description">You've completed these bookings! Stay on top of everything.</p>
             </div>
 
-            <div class="pending-bookings-content" *ngIf="completedBookings.length > 0; else noCompleted">
+            <!-- Search Bar and Filters -->
+            <div class="filters-container">
+                <input pInputText [(ngModel)]="searchQuery" (input)="filterBookings()"
+                    placeholder="Search by Customer Name, Service Type, or Date..." class="search-bar" />
+                <input type="date" [(ngModel)]="startDate" (change)="filterBookings()" class="date-filter">
+                <input type="date" [(ngModel)]="endDate" (change)="filterBookings()" class="date-filter">
+            </div>
+
+            <div class="pending-bookings-content" *ngIf="filteredCompletedBookings.length > 0; else noCompleted">
                 <div class="columns-container">
-                    <div *ngFor="let booking of completedBookings" class="card">
+                    <div *ngFor="let booking of filteredCompletedBookings" class="card">
                         <div class="card-content">
                             <h3>{{ booking.customer.customer_name }}</h3>
-                            <div class="info"><i class="pi pi-calendar"></i><p>{{ booking.book_date }}</p></div>
-                            <div class="info"><i class="pi pi-clock"></i><p>{{ booking.book_time }}</p></div>
-                            <button class="see-booking-btn" (click)="showCompletedBookingDetails(booking)">View Details</button>
+                            <div class="info"><i class="pi pi-wrench"></i>
+                                <p>{{ getServiceName(booking.services[0]) }}</p>
+                            </div>
+                            <div class="info"><i class="pi pi-calendar"></i>
+                                <p>{{ booking.book_date }}</p>
+                            </div>
+                            <div class="info"><i class="pi pi-clock"></i>
+                                <p>{{ booking.book_time }}</p>
+                            </div>
+                            <button class="see-booking-btn" (click)="showCompletedBookingDetails(booking)">
+                                View Details
+                            </button>
                         </div>
                     </div>
                 </div>
