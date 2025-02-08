@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Booking;
+use App\Models\Provider;
+use App\Models\User;
+
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
@@ -191,5 +194,34 @@ class BookingController extends Controller
             'accumulatedBookings' => $accumulatedBookings
         ]);
     }
+
+    public function getPendingBookings()
+    {
+        $user = Auth::user();
+    
+        // Ensure the authenticated user is a provider
+        if (!$user || !$user->provider) {
+            return response()->json(['error' => 'Provider not found'], 404);
+        }
+    
+        $providerId = $user->provider->provider_id;
+    
+        // ✅ Fetch the latest 7 pending bookings
+        $pendingBookings = Booking::where('provider_id', $providerId)
+            ->where('book_status', 'Pending')
+            ->orderBy('created_at', 'desc') // Show newest bookings first
+            ->limit(7)
+            ->get()
+            ->map(function ($booking) {
+                return [
+                    'customer_name' => $booking->user->email ?? 'Anonymous', // Fetch customer email
+                    'submitted_time' => Carbon::parse($booking->created_at)->diffForHumans(), // Convert timestamp to 'X minutes ago'
+                ];
+            });
+    
+        return response()->json($pendingBookings);
+    }
+    
+
 
 }

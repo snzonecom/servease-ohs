@@ -8,13 +8,15 @@
 <div class="dashboard">
     <div class="dashboard-container">
         <div class="column">
-            <div class="card">
-                <div class="card-icon">
-                    <i class="pi pi-hourglass"></i>
+            <a routerLink="/provider/provider-transactions" style="text-decoration: none;">
+                <div class="card">
+                    <div class="card-icon">
+                        <i class="pi pi-hourglass"></i>
+                    </div>
+                    <h3>{{ pendingCount }}</h3>
+                    <p>Pending Bookings</p>
                 </div>
-                <h3>{{ pendingCount }}</h3>
-                <p>Pending Bookings</p>
-            </div>
+            </a>
         </div>
         <div class="column">
             <div class="card">

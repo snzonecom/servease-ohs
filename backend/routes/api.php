@@ -148,5 +148,3 @@ Route::get('/system-info', [SystemInfoController::class, 'index']);
 
 // Update system information
 Route::post('/system-info/update', [SystemInfoController::class, 'update']);
-
-

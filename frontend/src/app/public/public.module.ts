@@ -13,7 +13,7 @@ import { UserRegisterComponent } from './components/user-register/user-register.
 import { ProviderRegisterComponent } from './components/provider-register/provider-register.component';
 import { DialogModule } from 'primeng/dialog';
 import { ImageModule } from 'primeng/image';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { FileUploadModule } from 'primeng/fileupload';
 import { CalendarModule } from 'primeng/calendar';
 import { CarouselModule } from 'primeng/carousel';
@@ -21,7 +21,6 @@ import { TagModule } from 'primeng/tag';
 import { AccordionModule } from 'primeng/accordion';
 import { PublicNavComponent } from './components/public-nav/public-nav.component';
 import { ForgotPasswordComponent } from './components/forgot-password/forgot-password.component';
-
 
 @NgModule({
   declarations: [
@@ -47,7 +46,8 @@ import { ForgotPasswordComponent } from './components/forgot-password/forgot-pas
     CalendarModule,
     CarouselModule,
     TagModule,
-    AccordionModule
+    AccordionModule,
+    ReactiveFormsModule
   ],
 })
 export class PublicModule { }
