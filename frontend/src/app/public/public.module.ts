@@ -8,7 +8,6 @@ import { ButtonModule } from 'primeng/button';
 import { PasswordModule } from 'primeng/password';
 import { CardModule } from 'primeng/card';
 import { HomeComponent } from './components/home/home.component';
-import { ProvidersListComponent } from './components/providers-list/providers-list.component';
 import { UserRegisterComponent } from './components/user-register/user-register.component';
 import { ProviderRegisterComponent } from './components/provider-register/provider-register.component';
 import { DialogModule } from 'primeng/dialog';
@@ -28,7 +27,6 @@ import { ResetPasswordComponent } from './components/reset-password/reset-passwo
     LoginComponent,
     PublicLayoutComponent,
     HomeComponent,
-    ProvidersListComponent,
     UserRegisterComponent,
     ProviderRegisterComponent,
     PublicNavComponent,
