@@ -24,8 +24,8 @@
     <!-- FAQs Section -->
     <div class="card">
         <h2>Frequently Asked Questions</h2>
-        <div class="faq-card new-faq-card" *ngIf="showNewFaq">
-            <div class="faq-fields">
+        <div class="add-new-card new-faq-card" *ngIf="showNewFaq">
+            <div class="faq-add">
                 <input type="text" placeholder="New Question" [(ngModel)]="newFaq.question" class="faq-input">
                 <input type="text" placeholder="New Answer" [(ngModel)]="newFaq.answer" class="faq-input">
             </div>
@@ -45,8 +45,10 @@
                 </div>
             </div>
             <div class="faq-actions">
-                <button class="save-button" (click)="editFAQ(i)">{{ faq.isEditing ? 'Save' : 'Edit' }}</button>
-                <button class="delete-button" (click)="deleteFAQ(i)">Delete</button>
+                <button class="save-button" (click)="editFAQ(i)"
+                    [innerHTML]="faq.isEditing ? '<i class=\'pi pi-save\'></i> Save' : '<i class=\'pi pi-pen-to-square\'></i> Edit'">
+                </button>
+                <button class="delete-button" (click)="deleteFAQ(i)"><i class="pi pi-trash"></i> Delete</button>
             </div>
         </div>
     </div>
@@ -74,9 +76,11 @@
             <span *ngIf="!contact.isEditing">{{ contact.value }}</span>
 
             <div class="contact-buttons">
-                <button class="save-button" (click)="editContact(i)">
-                    {{ contact.isEditing ? 'Save' : 'Edit' }}
+                <button class="save-button" (click)="editContact(i)"
+                    [innerHTML]="contact.isEditing ? '<i class=\'pi pi-save\'></i> Save' : '<i class=\'pi pi-pen-to-square\'></i> Edit'">
                 </button>
+
+
                 <button class="delete-button" (click)="deleteContact(i)">Delete</button>
             </div>
         </div>
