@@ -244,21 +244,6 @@ export class UserTransactionsComponent implements OnInit {
     );
   }
 
-
-  /**
-   * Opens the Report Dialog
-   */
-  openReportDialog() {
-    this.reportDialogVisible = true;
-  }
-
-  /**
-   * Closes the Report Dialog
-   */
-  closeReportDialog() {
-    this.reportDialogVisible = false;
-  }
-
   /**
    * Opens the Rating Dialog
    */

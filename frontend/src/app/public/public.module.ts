@@ -21,6 +21,7 @@ import { TagModule } from 'primeng/tag';
 import { AccordionModule } from 'primeng/accordion';
 import { PublicNavComponent } from './components/public-nav/public-nav.component';
 import { ForgotPasswordComponent } from './components/forgot-password/forgot-password.component';
+import { ResetPasswordComponent } from './components/reset-password/reset-password.component';
 
 @NgModule({
   declarations: [
@@ -31,7 +32,8 @@ import { ForgotPasswordComponent } from './components/forgot-password/forgot-pas
     UserRegisterComponent,
     ProviderRegisterComponent,
     PublicNavComponent,
-    ForgotPasswordComponent
+    ForgotPasswordComponent,
+    ResetPasswordComponent
   ],
   imports: [
     CommonModule,

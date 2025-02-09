@@ -34,18 +34,18 @@
   <!-- Dialog displaying the details of the application -->
   <div class="card flex justify-content-center">
     <p-dialog header="Application Details" [modal]="true" [(visible)]="visible" [style]="{ width: '40rem'}">
-      <span class="p-text-secondary block mb-5">
+      <span class="p-text-secondary">
         Please review the service provider details carefully before approval or rejection.
       </span>
+      <div class="mb-1"></div>
 
       <!-- Business Logo -->
       <div class="flex flex-column align-items-start gap-3 mb-3">
         <label class="font-semibold">
           <i class="pi pi-image" style="margin-right: 10px;"></i> Business Logo
         </label>
-        <img *ngIf="selectedApplicant?.profile_pic"
-          [src]="selectedApplicant?.profile_pic"
-          class="business-logo" alt="Business Logo" />
+        <img *ngIf="selectedApplicant?.profile_pic" [src]="selectedApplicant?.profile_pic" class="business-logo"
+          alt="Business Logo" />
       </div>
 
       <!-- Business Name -->
@@ -103,9 +103,8 @@
         <label class="font-semibold">
           <i class="pi pi-id-card" style="margin-right: 10px;"></i> Contact Person ID
         </label>
-        <img *ngIf="selectedApplicant?.attachment"
-          [src]="selectedApplicant?.attachment"
-          class="id-full" alt="Contact Person ID" />
+        <img *ngIf="selectedApplicant?.attachment" [src]="selectedApplicant?.attachment" class="id-full"
+          alt="Contact Person ID" />
       </div>
 
       <!-- Service Type -->
@@ -113,9 +112,7 @@
         <label class="font-semibold">
           <i class="pi pi-cog" style="margin-right: 10px;"></i> Service Type
         </label>
-        <input pInputText
-          [value]="selectedApplicant?.service_category?.category_name"
-          [disabled]="true"
+        <input pInputText [value]="selectedApplicant?.service_category?.category_name" [disabled]="true"
           class="w-full" />
       </div>
 
@@ -126,8 +123,9 @@
       <!-- Buttons to approve or reject the application -->
       <div class="mb-3"></div>
       <div class="flex justify-content-end gap-2">
-        <button p-button class="reject-button" (click)="rejectApplication(selectedApplicant.provider_id)">
-          Reject Application
+        <button p-button class="reject-button" (click)="rejectApplication(selectedApplicant.provider_id)"
+          [disabled]="isRejecting">
+          {{ isRejecting ? 'Processing...' : 'Reject Application' }}
         </button>
         <button p-button class="approve-button" (click)="approveApplication(selectedApplicant.provider_id)">
           Approve Application

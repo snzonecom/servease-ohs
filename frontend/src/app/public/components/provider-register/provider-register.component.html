@@ -59,13 +59,13 @@
           <input id="officeAdd" type="text" [(ngModel)]="providerData.houseAdd" placeholder="123 House Building 45" />
         </div>
 
-        <!-- Barangay Dropdown -->
+        <!-- Province Dropdown -->
         <div class="info-row">
-          <label for="brgy">Barangay:</label>
-          <select id="brgy" [(ngModel)]="providerData.brgy" [disabled]="!barangays.length" class="custom-dropdown"
-            required>
-            <option value="" disabled selected>Select your City/Municipality First</option>
-            <option *ngFor="let brgy of barangays" [value]="brgy">{{ brgy }}</option>
+          <label for="province">Province:</label>
+          <select id="province" [(ngModel)]="providerData.province" (change)="onProvinceChange()"
+            class="custom-dropdown" required>
+            <option value="" disabled selected>Select Province</option>
+            <option *ngFor="let province of provinces" [value]="province.province">{{ province.province }}</option>
           </select>
         </div>
 
@@ -79,13 +79,13 @@
           </select>
         </div>
 
-        <!-- Province Dropdown -->
+        <!-- Barangay Dropdown -->
         <div class="info-row">
-          <label for="province">Province:</label>
-          <select id="province" [(ngModel)]="providerData.province" (change)="onProvinceChange()"
-            class="custom-dropdown" required>
-            <option value="" disabled selected>Select Province</option>
-            <option *ngFor="let province of provinces" [value]="province.province">{{ province.province }}</option>
+          <label for="brgy">Barangay:</label>
+          <select id="brgy" [(ngModel)]="providerData.brgy" [disabled]="!barangays.length" class="custom-dropdown"
+            required>
+            <option value="" disabled selected>Select your City/Municipality First</option>
+            <option *ngFor="let brgy of barangays" [value]="brgy">{{ brgy }}</option>
           </select>
         </div>
 

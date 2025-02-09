@@ -13,6 +13,9 @@ export class PendingApplicationsComponent implements OnInit {
   selectedApplicant: any = null;
   applicants: any[] = [];
 
+  isLoading: boolean = false;
+  isRejecting: boolean = false;
+
   private apiUrl = 'http://127.0.0.1:8000/api/pending-providers';
   private approveUrl = 'http://127.0.0.1:8000/api/providers';
   private rejectUrl = 'http://127.0.0.1:8000/api/providers';
@@ -37,14 +40,31 @@ export class PendingApplicationsComponent implements OnInit {
 
   // ✅ Approve Application
   approveApplication(providerId: number): void {
+    // ✅ Show loading spinner
+    this.isLoading = true;
+
+    Swal.fire({
+      title: 'Approving...',
+      text: 'Please wait while we process the approval.',
+      allowOutsideClick: false,
+      didOpen: () => {
+        Swal.showLoading(); // ✅ Show SweetAlert2 loading
+      }
+    });
+
     this.http.post(`${this.approveUrl}/${providerId}/approve`, {}).subscribe(
       () => {
+        // ✅ Success: Hide loading, show success message
         Swal.fire('Success!', 'Application approved.', 'success');
-        this.fetchPendingProviders();
+        this.fetchPendingProviders(); // Refresh the list
         this.visible = false;
       },
       (error) => {
+        // ✅ Error: Hide loading, show error message
         Swal.fire('Error!', 'Failed to approve the application.', 'error');
+      },
+      () => {
+        this.isLoading = false; // ✅ Reset loading state
       }
     );
   }
@@ -53,7 +73,7 @@ export class PendingApplicationsComponent implements OnInit {
   rejectApplication(providerId: number): void {
     Swal.fire({
       title: 'Are you sure?',
-      text: 'Do you want to reject this application? This action can be undone.',
+      text: 'This will reject the application and send an email notification.',
       icon: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#d33',
@@ -61,19 +81,37 @@ export class PendingApplicationsComponent implements OnInit {
       confirmButtonText: 'Yes, Reject'
     }).then((result) => {
       if (result.isConfirmed) {
-        this.http.delete(`http://localhost:8000/api/providers/${providerId}`).subscribe(
+        this.isRejecting = true; // ✅ Start loading state
+  
+        Swal.fire({
+          title: 'Rejecting...',
+          text: 'Please wait while we process the rejection.',
+          allowOutsideClick: false,
+          didOpen: () => {
+            Swal.showLoading(); // ✅ Show SweetAlert2 loading
+          }
+        });
+  
+        // ✅ Use POST instead of DELETE
+        this.http.post(`${this.rejectUrl}/${providerId}/reject`, {}).subscribe(
           () => {
-            Swal.fire('Success!', 'Application rejected (soft deleted).', 'success');
+            Swal.fire('Success!', 'Application rejected, soft deleted, and email sent.', 'success');
             this.fetchPendingProviders(); // Refresh list
             this.visible = false;
           },
           (error) => {
-            Swal.fire('Error!', 'Failed to reject the application.', 'error');
+            console.error('Rejection failed', error);
+            Swal.fire('Error!', error?.error?.message || 'Failed to reject the application.', 'error');
+          },
+          () => {
+            this.isRejecting = false; // ✅ Reset loading state
           }
         );
       }
     });
   }
+  
+  
 
   // ✅ Open Application Details Dialog
   showDialog(applicant: any): void {

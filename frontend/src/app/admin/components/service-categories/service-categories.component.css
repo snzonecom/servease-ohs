@@ -38,6 +38,12 @@ body {
 .number-container h2 {
   font-size: 1.5rem;
   margin: 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: normal;
 }
 
 .icon-container i {
@@ -50,13 +56,11 @@ body {
   text-align: left;
   padding-right: 2rem;
   display: -webkit-box;
-  -webkit-line-clamp: 3;
-  /* Limit to 3 lines */
+  -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: normal;
-  /* Allow wrapping within the lines */
 }
 
 

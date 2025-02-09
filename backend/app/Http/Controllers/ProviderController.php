@@ -14,6 +14,8 @@ use App\Models\Service;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Str;
 
 class ProviderController extends Controller
 {
@@ -148,27 +150,30 @@ class ProviderController extends Controller
     }
     
 
-    /**
-     * ✅ Restore a Soft-Deleted Provider
-     */
-    public function restoreProvider($id)
-    {
-        $provider = Provider::onlyTrashed()->find($id);
-        if (!$provider) {
-            return response()->json(['message' => 'Provider not found or not deleted'], 404);
-        }
-    
-        // ✅ Restore the Provider
-        $provider->restore();
-    
-        // ✅ Restore the Associated User
-        $user = User::onlyTrashed()->find($provider->user_id);
-        if ($user) {
-            $user->restore();
-        }
-    
-        return response()->json(['message' => 'Provider and account restored successfully']);
+/**
+ * ✅ Restore a Soft-Deleted Provider and Update Status
+ */
+public function restoreProvider(Request $request)
+{
+    $id = $request->input('id'); // ✅ Get provider_id from request
+    $provider = Provider::onlyTrashed()->where('provider_id', $id)->first();
+
+    if (!$provider) {
+        return response()->json(['message' => 'Provider not found or not deleted'], 404);
     }
+
+    DB::transaction(function () use ($provider) {
+        // ✅ Restore the provider (removes `deleted_at`)
+        $provider->restore();
+
+        // ✅ Ensure account status is set to "pending"
+        DB::table('tbl_provider_info')->where('provider_id', $provider->provider_id)->update(['account_status' => 'pending']);
+    });
+
+    return response()->json(['message' => 'Provider restored and set to pending.']);
+}
+
+
     
 
     /**
@@ -194,24 +199,127 @@ class ProviderController extends Controller
     }
     
 
-    // ✅ Approve provider application
     public function approve($id)
     {
         $provider = Provider::findOrFail($id);
+    
+        // ✅ Fetch Email from Users Table if Not in Providers Table
+        $user = \App\Models\User::where('id', $provider->user_id)->first();
+        $email = $user ? $user->email : null;
+    
+        if (!$email) {
+            return response()->json(['error' => 'Provider does not have an email address.'], 400);
+        }
+    
         $provider->account_status = 'approved';
         $provider->save();
-
-        return response()->json(['message' => 'Provider application approved.']);
+    
+        // ✅ Email Subject & Content
+        $subject = "Your Service Provider Application is Approved";
+        $frontendUrl = env('FRONTEND_URL', 'http://localhost:4200');
+        $dashboardUrl = "{$frontendUrl}/login";
+    
+        $emailBody = "
+            <html>
+            <head>
+                <style>
+                    body { font-family: 'Poppins', Arial, sans-serif; background-color: #f4f4f4; margin: 0; padding: 0; }
+                    .container { max-width: 600px; margin: 20px auto; background-color: #ffffff; padding: 20px;
+                        border-radius: 8px; box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1); text-align: center; }
+                    h2 { color: #333; font-weight: 600; }
+                    p { color: #555; font-size: 16px; font-weight: 400; }
+                    .btn { display: inline-block; background-color: #428eba; color: white !important; padding: 12px 20px;
+                        text-decoration: none !important; border-radius: 5px; font-size: 16px; font-weight: 600; margin-top: 15px; }
+                    .btn:hover { background-color: #356a8a; }
+                    .footer { margin-top: 20px; font-size: 14px; color: #777; font-weight: 300; }
+                    .footer a { color: #428eba; text-decoration: none; font-weight: 400; }
+                    .footer a:hover { text-decoration: underline; }
+                </style>
+            </head>
+            <body>
+                <div class='container'>
+                    <h2>Congratulations!</h2>
+                    <p>Your service provider application has been approved.</p>
+                    <p>You can now log in and start managing your services.</p>
+                    
+                    <a href='{$dashboardUrl}' class='btn'>Go to Login</a>
+    
+                    <p>Thank you for joining us!</p>
+    
+                    <div class='footer'>
+                        <p>Need help? Contact us at <a href='mailto:snzone.webdev@gmail.com'>snzone.webdev@gmail.com</a></p>
+                        <p>&copy; " . date('Y') . " SERVEASE. All rights reserved.</p>
+                    </div>
+                </div>
+            </body>
+            </html>
+        ";
+    
+        // ✅ Send Email
+        Mail::html($emailBody, function ($message) use ($email, $subject) {
+            $message->to($email)
+                    ->subject($subject);
+        });
+    
+        return response()->json(['message' => 'Provider application approved and email sent.']);
     }
 
-    // ✅ Reject provider application
     public function reject($id)
     {
         $provider = Provider::findOrFail($id);
-        $provider->account_status = 'rejected';
-        $provider->save();
-
-        return response()->json(['message' => 'Provider application rejected.']);
+    
+        // ✅ Fetch Email from Users Table if Not in Providers Table
+        $user = \App\Models\User::where('id', $provider->user_id)->first();
+        $email = $user ? $user->email : null;
+    
+        DB::transaction(function () use ($provider) {
+            // ✅ Update account status to "rejected"
+            $provider->account_status = 'rejected';
+            $provider->save();
+    
+            // ✅ Soft delete (sets deleted_at)
+            $provider->delete();
+        });
+    
+        // ✅ Send Rejection Email (If Email Exists)
+        if ($email) {
+            $subject = "Your Service Provider Application was Rejected";
+            $emailBody = "
+                <html>
+                <head>
+                    <style>
+                        body { font-family: 'Poppins', Arial, sans-serif; background-color: #f4f4f4; margin: 0; padding: 0; }
+                        .container { max-width: 600px; margin: 20px auto; background-color: #ffffff; padding: 20px;
+                            border-radius: 8px; box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1); text-align: center; }
+                        h2 { color: #d9534f; font-weight: 600; }
+                        p { color: #555; font-size: 16px; font-weight: 400; }
+                        .footer { margin-top: 20px; font-size: 14px; color: #777; font-weight: 300; }
+                        .footer a { color: #d9534f; text-decoration: none; font-weight: 400; }
+                        .footer a:hover { text-decoration: underline; }
+                    </style>
+                </head>
+                <body>
+                    <div class='container'>
+                        <h2>Application Rejected</h2>
+                        <p>Dear {$provider->provider_name},</p>
+                        <p>We regret to inform you that your service provider application has been rejected.</p>
+                        <p>If you have any questions, feel free to contact support.</p>
+    
+                        <div class='footer'>
+                            <p>Need help? Contact us at <a href='mailto:support@yourwebsite.com'>support@yourwebsite.com</a></p>
+                            <p>&copy; " . date('Y') . " Your Company. All rights reserved.</p>
+                        </div>
+                    </div>
+                </body>
+                </html>
+            ";
+    
+            Mail::html($emailBody, function ($message) use ($email, $subject) {
+                $message->to($email)->subject($subject);
+            });
+        }
+    
+        return response()->json(['message' => 'Provider application rejected, soft deleted, and email sent if available.']);
     }
 
     // ✅ Count approved service providers

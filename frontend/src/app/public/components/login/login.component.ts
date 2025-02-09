@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 import { AuthService } from '../../../services/auth.service';
 import { Router } from '@angular/router';
 
@@ -7,14 +8,32 @@ import { Router } from '@angular/router';
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css']
 })
-export class LoginComponent {
+export class LoginComponent implements OnInit {
   email: string = '';
   password: string = '';
   registerDialogVisible: boolean = false;
   tncDialogVisible: boolean = false;
   errorMessage: string = '';
 
-  constructor(private authService: AuthService, private router: Router) { }
+  logoUrl: string = 'assets/img/servease-logo.png'; // Default logo
+
+  private apiUrl = 'http://localhost:8000/api/system-info';
+
+  constructor(private authService: AuthService, private router: Router, private http: HttpClient) { }
+
+  ngOnInit(): void {
+    this.loadSystemLogo();
+  }
+
+  // Function to fetch the logo from the API
+  loadSystemLogo() {
+    this.http.get<any>(this.apiUrl).subscribe((data) => {
+      this.logoUrl = data.logo ?? 'assets/img/servease-logo.png'; // Use API logo or fallback
+    }, error => {
+      console.error('Error loading system logo:', error);
+      this.logoUrl = 'assets/img/servease-logo.png'; // Use default if API fails
+    });
+  }
 
   showTncDialog() {
     this.tncDialogVisible = true;

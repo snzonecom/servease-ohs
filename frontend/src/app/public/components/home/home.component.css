@@ -95,17 +95,21 @@
     color: white;
 }
 
-
 .banner-content {
-    max-width: 800px;
+    max-width: 90%;
+    width: 800px;
     padding: 20px;
+    position: relative;
+    z-index: 1;
 }
 
 .banner-title {
-    font-size: 3rem;
+    font-size: clamp(2rem, 5vw, 3rem); /* Responsive text */
     font-weight: bold;
     color: #2c3e50;
     margin-bottom: 20px;
+    max-width: 90%;
+    line-height: 1.2; /* Prevents excessive spacing */
 }
 
 .banner-description {
@@ -440,7 +444,13 @@
     font-weight: 600;
     margin-bottom: 15px;
     color: #2c3e50;
+    display: block; /* Ensure it stays on one line */
+    white-space: nowrap; /* Prevent line break */
+    overflow: hidden; /* Hide overflowing text */
+    text-overflow: ellipsis; /* Add "..." when text overflows */
+    max-width: 100%; /* Ensure it doesn't stretch beyond */
 }
+
 
 .service-description {
     font-size: 1rem;
@@ -581,14 +591,14 @@
 }
 
 .about-description h2 {
-    font-size: 2.5rem;
+    font-size: 2.3rem;
     font-weight: bold;
     color: #2c3e50;
     margin-bottom: 20px;
 }
 
 .description {
-    font-size: 1.2rem;
+    font-size: 18px;
     color: #7f8c8d;
     line-height: 1.6;
     margin-bottom: 20px;

@@ -10,7 +10,7 @@ import Swal from 'sweetalert2';
 })
 export class ForgotPasswordComponent {
   forgotPasswordForm: FormGroup;
-  isLoading = false; // For showing loading state
+  isLoading = false;
 
   constructor(private fb: FormBuilder, private http: HttpClient) {
     this.forgotPasswordForm = this.fb.group({
@@ -26,13 +26,13 @@ export class ForgotPasswordComponent {
 
     this.isLoading = true;
 
-    this.http.post('http://your-backend-url.com/api/forgot-password', this.forgotPasswordForm.value).subscribe({
-      next: (res: any) => {
-        Swal.fire('Success', 'Password reset link has been sent to your email', 'success');
+    this.http.post('http://127.0.0.1:8000/api/forgot-password', this.forgotPasswordForm.value).subscribe({
+      next: () => {
+        Swal.fire('Success', 'A password reset link has been sent to your email.', 'success');
         this.forgotPasswordForm.reset();
       },
-      error: (err) => {
-        Swal.fire('Error', 'Failed to send reset link. Please try again later.', 'error');
+      error: () => {
+        Swal.fire('Error', 'Email not found or server error. Try again later.', 'error');
       },
       complete: () => {
         this.isLoading = false;

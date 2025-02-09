@@ -11,6 +11,8 @@ use App\Models\User;
 use DB;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Str;
 
 
 class AuthController extends Controller
@@ -214,34 +216,139 @@ class AuthController extends Controller
 
     public function forgotPassword(Request $request)
     {
-        $request->validate(['email' => 'required|email']);
+        $request->validate(['email' => 'required|email|exists:users,email']);
+    
+        // ✅ Generate a Reset Token
+        $token = Str::random(60);
+    
+        // ✅ Store Token in `password_reset_tokens` Table
+        DB::table('password_reset_tokens')->updateOrInsert(
+            ['email' => $request->email],
+            ['token' => $token, 'created_at' => now()]
+        );
+    
+        // ✅ Construct the Angular Reset Password URL
+        $frontendUrl = env('FRONTEND_URL', 'http://localhost:4200');
+        $resetLink = "{$frontendUrl}/reset-password?token={$token}&email={$request->email}";
+    
+        // ✅ Email Subject & HTML Content
+        $subject = "Reset Your Password";
+        $emailBody = "
+    <html>
+    <head>
+        <link href='https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap' rel='stylesheet'>
+        <style>
+            body { 
+                font-family: 'Poppins', Arial, sans-serif; 
+                background-color: #f4f4f4; 
+                margin: 0; 
+                padding: 0; 
+            }
+            .container { 
+                max-width: 600px; 
+                margin: 20px auto; 
+                background-color: #ffffff; 
+                padding: 20px;
+                border-radius: 8px; 
+                box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1); 
+                text-align: center; 
+            }
+            h2 { 
+                color: #333; 
+                font-weight: 600;
+            }
+            p { 
+                color: #555; 
+                font-size: 16px; 
+                font-weight: 400;
+            }
+            .btn { 
+                display: inline-block; 
+                background-color: #428eba; 
+                color: white !important; 
+                text-decoration: none !important;
+                padding: 12px 20px;
+                border-radius: 5px; 
+                font-size: 16px; 
+                font-weight: 600;
+                margin-top: 15px; 
+            }
+            .btn:hover { 
+                background-color: #356a8a; 
+            }
+            .footer { 
+                margin-top: 20px; 
+                font-size: 14px; 
+                color: #777; 
+                font-weight: 300;
+            }
+            .footer a { 
+                color: #428eba; 
+                text-decoration: none; 
+                font-weight: 400;
+            }
+            .footer a:hover { 
+                text-decoration: underline; 
+            }
+        </style>
+    </head>
+    <body>
+        <div class='container'>
+            <h2>Password Reset Request</h2>
+            <p>Hello,</p>
+            <p>You recently requested to reset your password. Click the button below to proceed:</p>
+            
+            <a href='{$resetLink}' class='btn' style='color: white !important; text-decoration: none !important;'>Reset Password</a>
 
-        Password::sendResetLink($request->only('email'));
+            <p>If you did not request a password reset, please ignore this email.</p>
 
-        return response()->json(['message' => 'Password reset link sent']);
+            <div class='footer'>
+                <p>Need help? Contact us at <a href='mailto:snzone.webdev@gmail.com'>snzone.webdev@gmail.com</a></p>
+                <p>&copy; " . date('Y') . " SERVEASE. All rights reserved.</p>
+            </div>
+        </div>
+    </body>
+    </html>
+";
+
+    
+        // ✅ Send Email Using `html()`
+        Mail::html($emailBody, function ($message) use ($request, $subject) {
+            $message->to($request->email)
+                    ->subject($subject);
+        });
+    
+        return response()->json(['message' => 'Password reset link has been sent to your email.']);
     }
 
     public function resetPassword(Request $request)
     {
         $request->validate([
-            'email' => 'required|email',
+            'email' => 'required|email|exists:users,email',
             'password' => 'required|string|min:8|confirmed',
-            'token' => 'required',
+            'token' => 'required'
         ]);
-
-        $status = Password::reset(
-            $request->only('email', 'password', 'password_confirmation', 'token'),
-            function ($user, $password) {
-                $user->forceFill(['password' => Hash::make($password)])->save();
-            }
-        );
-
-        if ($status == Password::PASSWORD_RESET) {
-            return response()->json(['message' => 'Password reset successfully']);
+    
+        // ✅ Check if the Token Exists
+        $tokenData = DB::table('password_reset_tokens')
+                        ->where('email', $request->email)
+                        ->where('token', $request->token)
+                        ->first();
+    
+        if (!$tokenData) {
+            return response()->json(['error' => 'Invalid or expired reset token.'], 400);
         }
-
-        return response()->json(['message' => 'Password reset failed'], 400);
+    
+        // ✅ Update the User Password
+        $user = User::where('email', $request->email)->first();
+        $user->update(['password' => Hash::make($request->password)]);
+    
+        // ✅ Delete the Reset Token after Successful Reset
+        DB::table('password_reset_tokens')->where('email', $request->email)->delete();
+    
+        return response()->json(['message' => 'Password reset successful. You can now login.']);
     }
+    
 
     public function verifyEmail(Request $request)
     {

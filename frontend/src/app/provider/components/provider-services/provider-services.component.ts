@@ -82,6 +82,7 @@ export class ProviderServicesComponent implements OnInit {
     const providerId = localStorage.getItem('provider_id');
 
     if (!providerId) {
+      this.dialogVisible = false;
       Swal.fire('Error!', 'Provider ID not found.', 'error');
       return;
     }
@@ -92,12 +93,13 @@ export class ProviderServicesComponent implements OnInit {
       // ✅ Updated API endpoint for updating a service
       this.http.put(`${this.apiUrl}/${providerId}/services/${this.selectedService.service_id}`, this.selectedService, { headers }).subscribe(
         () => {
+          this.dialogVisible = false;
           Swal.fire('Success!', 'Service updated successfully!', 'success');
           this.fetchServices();
-          this.dialogVisible = false;
         },
         (error) => {
           console.error(error);
+          this.dialogVisible = false;
           Swal.fire('Error!', 'Failed to update service.', 'error');
         }
       );
@@ -105,12 +107,13 @@ export class ProviderServicesComponent implements OnInit {
       // ✅ API for adding remains the same
       this.http.post(`${this.apiUrl}/${providerId}/services`, this.selectedService, { headers }).subscribe(
         () => {
+          this.dialogVisible = false;
           Swal.fire('Success!', 'Service added successfully!', 'success');
           this.fetchServices();
-          this.dialogVisible = false;
         },
         (error) => {
           console.error(error);
+          this.dialogVisible = false;
           Swal.fire('Error!', 'Failed to add service.', 'error');
         }
       );
@@ -120,7 +123,7 @@ export class ProviderServicesComponent implements OnInit {
   // ✅ Delete Service (with providerId in the URL)
   deleteService(serviceId: number) {
     const providerId = localStorage.getItem('provider_id');
-  
+
     Swal.fire({
       title: 'Are you sure?',
       text: 'This service will be deleted permanently!',
@@ -133,7 +136,7 @@ export class ProviderServicesComponent implements OnInit {
         this.http.delete(`${this.apiUrl}/${providerId}/services/${serviceId}`, { headers: this.getAuthHeaders() }).subscribe(
           () => {
             Swal.fire('Deleted!', 'Service has been deleted.', 'success');
-  
+
             // ✅ Refetch services after deletion (even if 0 remain)
             this.fetchServices();
           },
@@ -145,7 +148,7 @@ export class ProviderServicesComponent implements OnInit {
       }
     });
   }
-  
+
 
 
 }

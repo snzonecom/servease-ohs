@@ -39,10 +39,10 @@ export const locations = [
         barangays: [
           'Atlu-Bola', 'Bical', 'Bundagul', 'Cacutud', 'Calumpang',
           'Camachiles', 'Dapdap', 'Dau', 'Dolores', 'Duquit',
-          'Lakandula', 'Mabiga', 'Macapagal Village', 'Mamatitang', 
-          'Mangalit', 'Marcos Village', 'Mawaque', 'Paralayunan', 
-          'Poblacion', 'San Francisco', 'San Joaquin', 'Santa Ines', 
-          'Santa Maria', 'Santo Rosario', 'Sapang Balen', 
+          'Lakandula', 'Mabiga', 'Macapagal Village', 'Mamatitang',
+          'Mangalit', 'Marcos Village', 'Mawaque', 'Paralayunan',
+          'Poblacion', 'San Francisco', 'San Joaquin', 'Santa Ines',
+          'Santa Maria', 'Santo Rosario', 'Sapang Balen',
           'Sapang Biabas', 'Tabun'
         ]
       },
@@ -59,12 +59,12 @@ export const locations = [
         barangays: [
           'Arenas', 'Baliti', 'Batasan', 'Buensuceso', 'Candating',
           'Gatiawin', 'Guemasan', 'La Paz (Turu)', 'Lacmit', 'Lacquios',
-          'Mangga-Cacutud', 'Mapalad', 'Palinlang', 'Paralaya', 
-          'Plazang Luma', 'Poblacion', 'San Agustin Norte', 
-          'San Agustin Sur', 'San Antonio', 'San Jose Mesulo', 
-          'San Juan Bano', 'San Mateo', 'San Nicolas', 
-          'San Roque Bitas', 'Cupang (Santa Lucia)', 
-          'Matamo (Santa Lucia)', 'Santo Niño Tabuan', 
+          'Mangga-Cacutud', 'Mapalad', 'Palinlang', 'Paralaya',
+          'Plazang Luma', 'Poblacion', 'San Agustin Norte',
+          'San Agustin Sur', 'San Antonio', 'San Jose Mesulo',
+          'San Juan Bano', 'San Mateo', 'San Nicolas',
+          'San Roque Bitas', 'Cupang (Santa Lucia)',
+          'Matamo (Santa Lucia)', 'Santo Niño Tabuan',
           'Suclayin', 'Telapayong', 'Kaledian (Camba)'
         ]
       },
@@ -86,8 +86,8 @@ export const locations = [
           'Lourdes', 'Magumbali', 'Mandasig', 'Mandili', 'Mangga',
           'Mapaniqui', 'Paligui', 'Pangclara', 'Pansinao', 'Paralaya (Poblacion)',
           'Pasig', 'Pescadores (Poblacion)', 'Pulong Gubat', 'Pulong Palazan',
-          'Salapungan', 'San Agustin (Poblacion)', 'Santo Rosario', 
-          'Tagulod', 'Talang', 'Tenejero', 'Vizal San Pablo', 
+          'Salapungan', 'San Agustin (Poblacion)', 'Santo Rosario',
+          'Tagulod', 'Talang', 'Tenejero', 'Vizal San Pablo',
           'Vizal Santo Cristo', 'Vizal Santo Niño'
         ]
       },
@@ -98,22 +98,22 @@ export const locations = [
           'Cabangcalan', 'Calantas', 'Carmencita', 'Consuelo', 'Dampe',
           'Del Carmen', 'Fortuna', 'Gutad', 'Mabical', 'Malabo',
           'Maligaya', 'Nabuclod', 'Pabanlag', 'Paguiruan', 'Palmayo',
-          'Pandaguirig', 'Población', 'San Antonio', 'San Isidro', 
-          'San Jose', 'San Nicolas', 'San Pedro', 'San Ramon', 
+          'Pandaguirig', 'Población', 'San Antonio', 'San Isidro',
+          'San Jose', 'San Nicolas', 'San Pedro', 'San Ramon',
           'San Roque', 'Santa Monica', 'Solib', 'Valdez', 'Mawacat'
         ]
       },
       {
         name: 'Guagua',
         barangays: [
-          'Bancal', 'Plaza Burgos', 'San Nicolas 1st', 'San Pedro', 
+          'Bancal', 'Plaza Burgos', 'San Nicolas 1st', 'San Pedro',
           'San Rafael', 'San Roque', 'Santa Filomena', 'Santo Cristo',
           'Santo Niño', 'San Vicente (Ebus)', 'Lambac', 'Magsaysay',
           'Maquiapo', 'Natividad', 'Pulungmasle', 'Rizal', 'Ascomo',
           'Jose Abad Santos (Siran)', 'San Pablo', 'San Juan 1st',
           'San Jose', 'San Matias', 'San Isidro', 'San Antonio',
           'San Agustin', 'San Juan Bautista', 'San Juan Nepomuceno',
-          'San Miguel', 'San Nicolas 2nd', 'Santa Ines', 
+          'San Miguel', 'San Nicolas 2nd', 'Santa Ines',
           'Santa Ursula'
         ]
       },
@@ -122,24 +122,130 @@ export const locations = [
         barangays: [
           'San Isidro', 'Santiago', 'Santo Niño (Prado Saba)',
           'San Roque Arbol', 'Baruya (San Rafael)', 'Lourdes (Lauc Pau)',
-          'Prado Siongco', 'San Jose Gumi', 'Balantacan', 
-          'Santa Teresa 2nd', 'Bancal Sinubli', 'Bancal Pugad', 
-          'Calangain', 'San Pedro Palcarangan', 'San Pedro Saug', 
+          'Prado Siongco', 'San Jose Gumi', 'Balantacan',
+          'Santa Teresa 2nd', 'Bancal Sinubli', 'Bancal Pugad',
+          'Calangain', 'San Pedro Palcarangan', 'San Pedro Saug',
           'San Pablo 1st', 'San Pablo 2nd', 'De La Paz', 'Santa Cruz'
         ]
       },
       {
         name: 'Macabebe',
         barangays: [
-          'Batasan', 'Caduang Tete', 'Candelaria', 'Castuli', 
-          'Consuelo', 'Dalayap', 'Mataguiti', 'San Esteban', 
-          'San Francisco', 'San Gabriel (Poblacion)', 
-          'San Isidro (Poblacion)', 'San Jose', 'San Juan', 
-          'San Rafael', 'San Roque (Poblacion)', 'San Vicente', 
-          'Santa Cruz (Poblacion)', 'Santa Lutgarda', 
-          'Santa Maria', 'Santa Rita (Poblacion)', 'Santo Niño', 
-          'Santo Rosario (Poblacion)', 'Saplad David', 
+          'Batasan', 'Caduang Tete', 'Candelaria', 'Castuli',
+          'Consuelo', 'Dalayap', 'Mataguiti', 'San Esteban',
+          'San Francisco', 'San Gabriel (Poblacion)',
+          'San Isidro (Poblacion)', 'San Jose', 'San Juan',
+          'San Rafael', 'San Roque (Poblacion)', 'San Vicente',
+          'Santa Cruz (Poblacion)', 'Santa Lutgarda',
+          'Santa Maria', 'Santa Rita (Poblacion)', 'Santo Niño',
+          'Santo Rosario (Poblacion)', 'Saplad David',
           'Tacasan', 'Telacsan'
+        ]
+      },
+      {
+        name: "Magalang",
+        barangays: [
+          "Ayala", "Bucanan", "Camias", "Dolores", "Escaler", "La Paz", "Navaling",
+          "San Agustin", "San Antonio", "San Francisco", "San Ildefonso",
+          "San Isidro", "San Jose", "San Miguel", "San Nicolas 1st",
+          "San Nicolas 2nd", "San Pablo", "San Pedro I", "San Pedro II",
+          "San Roque", "San Vicente", "Santa Cruz", "Santa Lucia", "Santa Maria",
+          "Santo Niño", "Santo Rosario", "Turu"
+        ]
+      },
+      {
+        name: "Masantol",
+        barangays: [
+          "Alauli", "Bagang", "Balibago", "Bebe Anac", "Bebe Matua", "Bulacus",
+          "Cambasi", "Malauli", "Nigui", "Palimpe", "Puti", "Sagrada",
+          "San Agustin", "San Isidro Anac", "San Isidro Matua", "San Nicolas",
+          "San Pedro", "Santa Cruz", "Santa Lucia Anac", "Santa Lucia Matua",
+          "Santa Lucia Paguiba", "Santa Lucia Wakas", "Santa Monica",
+          "Santo Niño", "Sapang Kawayan", "Sua"
+        ]
+      },
+      {
+        name: "Mexico",
+        barangays: [
+          "Acli", "Anao", "Balas", "Buenavista", "Camuning", "Cawayan",
+          "Concepcion", "Culubasa", "Divisoria", "Dolores", "Eden", "Gandus",
+          "Lagundi", "Laput", "Laug", "Masamat", "Masangsang", "Nueva Victoria",
+          "Pandacaqui", "Pangatlan", "Panipuan", "Parian", "Sabanilla",
+          "San Antonio", "San Carlos", "San Jose Malino", "San Jose Matulid",
+          "San Juan", "San Lorenzo", "San Miguel", "San Nicolas", "San Pablo",
+          "San Patricio", "San Rafael", "San Roque", "San Vicente", "Santa Cruz",
+          "Santa Maria", "Santo Domingo", "Santo Rosario", "Sapang Maisac",
+          "Suclaban", "Tangle"
+        ]
+      },
+      {
+        name: "Minalin",
+        barangays: [
+          "Bulac", "Dawe", "Lourdes", "Maniango", "San Francisco 1st",
+          "San Francisco 2nd", "San Isidro", "San Nicolas", "San Pedro",
+          "Santa Catalina", "Santa Maria", "Santa Rita", "Santo Domingo",
+          "Santo Rosario", "Saplad"
+        ]
+      },
+      {
+        name: "Porac",
+        barangays: [
+          "Babo Pangulo", "Babo Sacan", "Balubad", "Calzadang Bayu", "Camias",
+          "Cangatba", "Diaz", "Dolores", "Inararo", "Jalung", "Mancatian",
+          "Manibaug Libutad", "Manibaug Paralaya", "Manibaug Pasig",
+          "Manuali", "Mitla Proper", "Palat", "Pias", "Pio", "Planas",
+          "Poblacion", "Pulong Santol", "Salu", "San Jose Mitla",
+          "Santa Cruz", "Sapang Uwak", "Sepung Bulaun", "Sinura", "Villa Maria"
+        ]
+      },
+      {
+        name: "San Luis",
+        barangays: [
+          "San Agustin", "San Carlos", "San Isidro", "San Jose", "San Juan",
+          "San Nicolas", "San Roque", "San Sebastian", "Santa Catalina",
+          "Santa Cruz Pambilog", "Santa Cruz Poblacion", "Santa Lucia",
+          "Santa Monica", "Santa Rita", "Santo Niño", "Santo Rosario",
+          "Santo Tomas"
+        ]
+      },
+      {
+        name: "San Simon",
+        barangays: [
+          "Concepcion", "De La Paz", "San Agustin", "San Isidro", "San Jose",
+          "San Juan", "San Miguel", "San Nicolas", "San Pablo Libutad",
+          "San Pablo Proper", "San Pedro", "Santa Cruz", "Santa Monica",
+          "Santo Niño"
+        ]
+      },
+      {
+        name: "Santa Ana",
+        barangays: [
+          "Concepcion", "De La Paz", "San Agustin", "San Isidro", "San Jose",
+          "San Juan", "San Miguel", "San Nicolas", "San Pablo Libutad",
+          "San Pablo Proper", "San Pedro", "Santa Cruz", "Santa Monica",
+          "Santo Niño"
+        ]
+      },
+      {
+        name: "Santa Rita",
+        barangays: [
+          "Becuran", "Dila-dila", "San Agustin", "San Basilio", "San Isidro",
+          "San Jose", "San Juan", "San Matias", "San Vicente", "Santa Monica"
+        ]
+      },
+      {
+        name: "Santo Tomas",
+        barangays: [
+          "Moras de La Paz", "Poblacion", "San Bartolome", "San Matias",
+          "San Vicente", "Santo Rosario", "Sapa"
+        ]
+      },
+      {
+        name: "Sasmuan",
+        barangays: [
+          "Batang 1st", "Batang 2nd", "Mabuanbuan", "Malusac", "Sabitanan",
+          "San Antonio", "San Nicolas", "San Pedro", "Santa Lucia",
+          "Santa Monica", "Santo Tomas"
         ]
       }
     ]

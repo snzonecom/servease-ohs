@@ -13,8 +13,6 @@ import { PendingApplicationsComponent } from './components/pending-applications/
 import { DropdownModule } from 'primeng/dropdown';
 import { FloatLabelModule } from "primeng/floatlabel";
 import { FormsModule } from '@angular/forms';
-import { ReportsListComponent } from './components/reports-list/reports-list.component';
-import { SuspendedAccountsComponent } from './components/suspended-accounts/suspended-accounts.component';
 import { DialogModule } from 'primeng/dialog';
 import { InputTextModule } from 'primeng/inputtext';
 import { ServiceCategoriesComponent } from './components/service-categories/service-categories.component';
@@ -29,8 +27,6 @@ import { SystemDetailsComponent } from './components/system-details/system-detai
     AdminDashboardComponent,
     AdminNavbarComponent,
     PendingApplicationsComponent,
-    ReportsListComponent,
-    SuspendedAccountsComponent,
     ServiceCategoriesComponent,
     ListProvidersComponent,
     DeletedCategoriesComponent,

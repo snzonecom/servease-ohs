@@ -441,6 +441,11 @@
     font-weight: 600;
     margin-bottom: 15px;
     color: #2c3e50;
+    display: block; /* Ensure it stays on one line */
+    white-space: nowrap; /* Prevent line break */
+    overflow: hidden; /* Hide overflowing text */
+    text-overflow: ellipsis; /* Add "..." when text overflows */
+    max-width: 100%; /* Ensure it doesn't stretch beyond */
 }
 
 .service-description {

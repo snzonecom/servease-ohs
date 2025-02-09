@@ -50,9 +50,11 @@
                 </div>
 
                 <div class="info-row">
-                    <label for="brgy">Barangay:</label>
-                    <select id="brgy" [(ngModel)]="provider.brgy" [disabled]="!isEditing" class="custom-dropdown">
-                        <option *ngFor="let barangay of barangays" [value]="barangay">{{ barangay }}</option>
+                    <label for="province">Province:</label>
+                    <select id="province" [(ngModel)]="provider.province" (change)="onProvinceChange(provider.province)"
+                        [disabled]="!isEditing" class="custom-dropdown">
+                        <option *ngFor="let province of provinces" [value]="province.province">{{ province.province }}
+                        </option>
                     </select>
                 </div>
 
@@ -65,14 +67,12 @@
                 </div>
 
                 <div class="info-row">
-                    <label for="province">Province:</label>
-                    <select id="province" [(ngModel)]="provider.province" (change)="onProvinceChange(provider.province)"
-                        [disabled]="!isEditing" class="custom-dropdown">
-                        <option *ngFor="let province of provinces" [value]="province.province">{{ province.province }}
-                        </option>
+                    <label for="brgy">Barangay:</label>
+                    <select id="brgy" [(ngModel)]="provider.brgy" [disabled]="!isEditing" class="custom-dropdown">
+                        <option *ngFor="let barangay of barangays" [value]="barangay">{{ barangay }}</option>
                     </select>
                 </div>
-
+                
                 <div class="info-row">
                     <label for="brn">Business Registration Number (BRN):</label>
                     <input id="brn" type="text" [(ngModel)]="provider.brn" disabled />

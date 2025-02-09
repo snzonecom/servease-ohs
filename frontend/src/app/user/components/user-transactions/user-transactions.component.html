@@ -309,7 +309,7 @@
         </label>
     </div>
 
-    <!-- Action Buttons for Report and Rate Provider -->
+    <!-- Action Buttons for Rate Provider -->
     <div class="flex-right">
         <button pButton label="Rate Provider" class="rate-button" (click)="openRatingDialog()"></button>
     </div>
@@ -365,54 +365,5 @@
 
     <div class="flex-right">
         <button pButton label="Submit Rating" class="approve-button" (click)="submitRating()"></button>
-    </div>
-</p-dialog>
-
-<!-- Report Service Provider Dialog -->
-<p-dialog header="Report Service Provider" [modal]="true" [(visible)]="reportDialogVisible" [style]="{ width: '40rem'}">
-    <span class="review-text">
-        If you encountered issues with this service provider, please provide details and attach proof if necessary.
-    </span>
-
-    <!-- Report Title -->
-    <div class="flex flex-column gap-3 mb-3">
-        <label class="field-label">
-            <span class="label-text">
-                <i class="pi pi-book"></i> Report Title
-            </span>
-            <input pInputText [(ngModel)]="reportTitle" placeholder="Enter report title" class="field-input" />
-        </label>
-    </div>
-
-    <!-- Report Description -->
-    <div class="flex flex-column gap-3 mb-3">
-        <label class="field-label">
-            <span class="label-text">
-                <i class="pi pi-comment"></i> Description of Report
-            </span>
-            <textarea pInputTextarea [(ngModel)]="reportDescription" class="field-input" rows="4"
-                placeholder="Describe the issue..."></textarea>
-        </label>
-    </div>
-
-    <!-- Proof Attachments -->
-    <div class="flex flex-column gap-3 mb-3">
-        <label class="field-label">
-            <span class="label-text">
-                <i class="pi pi-paperclip"></i> Attach Proof (Images)
-            </span>
-            <input type="file" multiple (change)="handleFileUpload($event)" class="file-input" />
-        </label>
-        <div class="preview-container">
-            <div *ngFor="let file of attachedProofs; let i = index" class="image-preview">
-                <img [src]="file.preview" alt="Proof Image" class="preview-image">
-                <button class="remove-image" (click)="removeAttachment(i)">×</button>
-            </div>
-        </div>
-    </div>
-
-    <div class="flex-right">
-        <button pButton label="Submit Report" class="approve-button" (click)="submitReport()"></button>
-        <button pButton label="Cancel" class="reject-button" (click)="closeReportDialog()"></button>
     </div>
 </p-dialog>

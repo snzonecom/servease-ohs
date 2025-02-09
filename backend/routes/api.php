@@ -50,8 +50,8 @@ Route::prefix('providers')->group(function () {
 Route::get('/provider/{id}', [ProviderController::class, 'getProviderDetails']); // get details of a specific service provider
 Route::prefix('providers')->group(function () {
     Route::get('/deleted', [ProviderController::class, 'getDeletedProviders']);  // ✅ Get Soft-Deleted Providers
-    Route::post('/{id}/restore', [ProviderController::class, 'restoreProvider']);  // ✅ Restore Provider
-    Route::delete('/{id}/force-delete', [ProviderController::class, 'forceDeleteProvider']); // ✅ Permanently Delete Provider
+    Route::post('/restore', [ProviderController::class, 'restoreProvider']);  // ✅ Restore Provider
+    Route::delete('/force-delete', [ProviderController::class, 'forceDeleteProvider']); // ✅ Permanently Delete Provider
 });
 
 

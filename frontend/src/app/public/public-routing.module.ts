@@ -10,6 +10,7 @@ import { ProvidersListComponent } from './components/providers-list/providers-li
 import { UserRegisterComponent } from './components/user-register/user-register.component';
 import { ProviderRegisterComponent } from './components/provider-register/provider-register.component';
 import { ForgotPasswordComponent } from './components/forgot-password/forgot-password.component';
+import { ResetPasswordComponent } from './components/reset-password/reset-password.component';
 
 const routes: Routes = [
   {
@@ -22,6 +23,7 @@ const routes: Routes = [
       { path: 'providers-list', component: ProvidersListComponent },
       { path: 'user-register', component: UserRegisterComponent },
       { path: 'provider-register', component: ProviderRegisterComponent },
+      { path: 'reset-password', component: ResetPasswordComponent },
     ]
   }
 ];

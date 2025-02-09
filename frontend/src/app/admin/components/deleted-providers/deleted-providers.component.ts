@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-deleted-providers',
@@ -48,15 +49,16 @@ export class DeletedProvidersComponent implements OnInit {
 
   // ✅ Restore Soft-Deleted Provider
   restoreProvider(providerId: number) {
-    this.http.post(`${this.apiUrl}/${providerId}/restore`, {}).subscribe(
+    this.http.post(`http://127.0.0.1:8000/api/providers/restore`, { id: providerId }).subscribe(
       () => {
         this.deletedProviders = this.deletedProviders.filter(p => p.provider_id !== providerId);
         this.visible = false;
-        alert('Provider restored successfully!');
+        Swal.fire('Success!', 'Provider restored and set to pending.', 'success');
       },
       (error) => {
-        console.error('❌ Error restoring provider:', error);
+        Swal.fire('Error!', error?.error?.message || 'Failed to restore the provider.', 'error');
       }
     );
   }
+  
 }

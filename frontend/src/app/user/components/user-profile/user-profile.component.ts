@@ -140,6 +140,112 @@ export const locations = [
           'Santo Rosario (Poblacion)', 'Saplad David',
           'Tacasan', 'Telacsan'
         ]
+      },
+      {
+        name: "Magalang",
+        barangays: [
+          "Ayala", "Bucanan", "Camias", "Dolores", "Escaler", "La Paz", "Navaling",
+          "San Agustin", "San Antonio", "San Francisco", "San Ildefonso",
+          "San Isidro", "San Jose", "San Miguel", "San Nicolas 1st",
+          "San Nicolas 2nd", "San Pablo", "San Pedro I", "San Pedro II",
+          "San Roque", "San Vicente", "Santa Cruz", "Santa Lucia", "Santa Maria",
+          "Santo Niño", "Santo Rosario", "Turu"
+        ]
+      },
+      {
+        name: "Masantol",
+        barangays: [
+          "Alauli", "Bagang", "Balibago", "Bebe Anac", "Bebe Matua", "Bulacus",
+          "Cambasi", "Malauli", "Nigui", "Palimpe", "Puti", "Sagrada",
+          "San Agustin", "San Isidro Anac", "San Isidro Matua", "San Nicolas",
+          "San Pedro", "Santa Cruz", "Santa Lucia Anac", "Santa Lucia Matua",
+          "Santa Lucia Paguiba", "Santa Lucia Wakas", "Santa Monica",
+          "Santo Niño", "Sapang Kawayan", "Sua"
+        ]
+      },
+      {
+        name: "Mexico",
+        barangays: [
+          "Acli", "Anao", "Balas", "Buenavista", "Camuning", "Cawayan",
+          "Concepcion", "Culubasa", "Divisoria", "Dolores", "Eden", "Gandus",
+          "Lagundi", "Laput", "Laug", "Masamat", "Masangsang", "Nueva Victoria",
+          "Pandacaqui", "Pangatlan", "Panipuan", "Parian", "Sabanilla",
+          "San Antonio", "San Carlos", "San Jose Malino", "San Jose Matulid",
+          "San Juan", "San Lorenzo", "San Miguel", "San Nicolas", "San Pablo",
+          "San Patricio", "San Rafael", "San Roque", "San Vicente", "Santa Cruz",
+          "Santa Maria", "Santo Domingo", "Santo Rosario", "Sapang Maisac",
+          "Suclaban", "Tangle"
+        ]
+      },
+      {
+        name: "Minalin",
+        barangays: [
+          "Bulac", "Dawe", "Lourdes", "Maniango", "San Francisco 1st",
+          "San Francisco 2nd", "San Isidro", "San Nicolas", "San Pedro",
+          "Santa Catalina", "Santa Maria", "Santa Rita", "Santo Domingo",
+          "Santo Rosario", "Saplad"
+        ]
+      },
+      {
+        name: "Porac",
+        barangays: [
+          "Babo Pangulo", "Babo Sacan", "Balubad", "Calzadang Bayu", "Camias",
+          "Cangatba", "Diaz", "Dolores", "Inararo", "Jalung", "Mancatian",
+          "Manibaug Libutad", "Manibaug Paralaya", "Manibaug Pasig",
+          "Manuali", "Mitla Proper", "Palat", "Pias", "Pio", "Planas",
+          "Poblacion", "Pulong Santol", "Salu", "San Jose Mitla",
+          "Santa Cruz", "Sapang Uwak", "Sepung Bulaun", "Sinura", "Villa Maria"
+        ]
+      },
+      {
+        name: "San Luis",
+        barangays: [
+          "San Agustin", "San Carlos", "San Isidro", "San Jose", "San Juan",
+          "San Nicolas", "San Roque", "San Sebastian", "Santa Catalina",
+          "Santa Cruz Pambilog", "Santa Cruz Poblacion", "Santa Lucia",
+          "Santa Monica", "Santa Rita", "Santo Niño", "Santo Rosario",
+          "Santo Tomas"
+        ]
+      },
+      {
+        name: "San Simon",
+        barangays: [
+          "Concepcion", "De La Paz", "San Agustin", "San Isidro", "San Jose",
+          "San Juan", "San Miguel", "San Nicolas", "San Pablo Libutad",
+          "San Pablo Proper", "San Pedro", "Santa Cruz", "Santa Monica",
+          "Santo Niño"
+        ]
+      },
+      {
+        name: "Santa Ana",
+        barangays: [
+          "Concepcion", "De La Paz", "San Agustin", "San Isidro", "San Jose",
+          "San Juan", "San Miguel", "San Nicolas", "San Pablo Libutad",
+          "San Pablo Proper", "San Pedro", "Santa Cruz", "Santa Monica",
+          "Santo Niño"
+        ]
+      },
+      {
+        name: "Santa Rita",
+        barangays: [
+          "Becuran", "Dila-dila", "San Agustin", "San Basilio", "San Isidro",
+          "San Jose", "San Juan", "San Matias", "San Vicente", "Santa Monica"
+        ]
+      },
+      {
+        name: "Santo Tomas",
+        barangays: [
+          "Moras de La Paz", "Poblacion", "San Bartolome", "San Matias",
+          "San Vicente", "Santo Rosario", "Sapa"
+        ]
+      },
+      {
+        name: "Sasmuan",
+        barangays: [
+          "Batang 1st", "Batang 2nd", "Mabuanbuan", "Malusac", "Sabitanan",
+          "San Antonio", "San Nicolas", "San Pedro", "Santa Lucia",
+          "Santa Monica", "Santo Tomas"
+        ]
       }
     ]
   }
@@ -212,7 +318,7 @@ export class UserProfileComponent implements OnInit {
   // ✅ Save Profile Changes
   saveProfile() {
     const token = localStorage.getItem('authToken');
-  
+
     // ✅ Send user profile details as JSON (excluding profile photo)
     const userData = {
       customer_name: this.user.customer_name,
@@ -224,9 +330,9 @@ export class UserProfileComponent implements OnInit {
       province: this.user.province,
       password: this.user.password ? this.user.password.trim() : null
     };
-  
+
     console.log('Submitting User Data:', userData); // ✅ Debug JSON data
-  
+
     this.http.put('http://127.0.0.1:8000/api/user/update-profile', userData, {
       headers: {
         Authorization: `Bearer ${token}`,
@@ -235,7 +341,7 @@ export class UserProfileComponent implements OnInit {
     }).subscribe(
       (response) => {
         console.log('Profile updated successfully:', response);
-  
+
         // ✅ If a profile photo is selected, upload it separately
         if (this.selectedProfilePhoto) {
           this.uploadProfilePhoto();
@@ -255,11 +361,11 @@ export class UserProfileComponent implements OnInit {
   uploadProfilePhoto() {
     const token = localStorage.getItem('authToken');
     const formData = new FormData();
-  
+
     formData.append('profile_photo', this.selectedProfilePhoto!);
-  
+
     console.log('Uploading Profile Photo:', this.selectedProfilePhoto); // ✅ Debug Image Upload
-  
+
     this.http.post('http://127.0.0.1:8000/api/user/upload-profile-photo', formData, {
       headers: { Authorization: `Bearer ${token}` }
     }).subscribe(
@@ -275,16 +381,16 @@ export class UserProfileComponent implements OnInit {
       }
     );
   }
-  
-  
+
+
 
 
   onFileSelected(event: any) {
     const file: File = event.target.files[0];
-  
+
     if (file) {
       this.selectedProfilePhoto = file;
-  
+
       // Preview the image
       const reader = new FileReader();
       reader.onload = (e: any) => {
@@ -293,7 +399,7 @@ export class UserProfileComponent implements OnInit {
       reader.readAsDataURL(file);
     }
   }
-  
+
 
   // ✅ Province Change
   onProvinceChange(provinceName: string) {
