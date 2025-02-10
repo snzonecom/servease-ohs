@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
 
 // Locations Array
@@ -270,7 +271,11 @@ export class ProviderRegisterComponent implements OnInit {
   cities: any[] = [];
   barangays: string[] = [];
 
+  validationErrors: { [key: string]: string } = {}; // Store validation errors
+
   providerData = {
+    businessLogo: '',
+    personID: '',
     email: '',
     password: '',
     password_confirmation: '',
@@ -292,7 +297,7 @@ export class ProviderRegisterComponent implements OnInit {
   private apiUrl = 'http://127.0.0.1:8000/api/register-provider';
   private categoriesApiUrl = 'http://127.0.0.1:8000/api/service-categories';
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private router: Router) { }
 
   // Handle Province Selection
   onProvinceChange(): void {
@@ -322,21 +327,103 @@ export class ProviderRegisterComponent implements OnInit {
   }
 
   registerProvider(): void {
+    this.validationErrors = {}; // Clear old errors
+
+    let missingFields: string[] = [];
+
+    // Check required fields
+    if (!this.providerData.businessLogo) {
+      this.validationErrors['businessLogo'] = "Business Logo is required.";
+      missingFields.push("Business Logo");
+    }
+
+    if (!this.providerData.personID) {
+      this.validationErrors['personID'] = "Contact Person ID is required.";
+      missingFields.push("Contact Person ID");
+    }
+
+    if (!this.providerData.fullName) {
+      this.validationErrors['fullName'] = "Business Name is required.";
+      missingFields.push("Business Name");
+    }
+
+    if (!this.providerData.description) {
+      this.validationErrors['description'] = "Please describe your business.";
+      missingFields.push("Business Description");
+    }
+
+    if (!this.providerData.email) {
+      this.validationErrors['email'] = "Email is required.";
+      missingFields.push("Email Address");
+    }
+
+    if (!this.providerData.contactNumber) {
+      this.validationErrors['contactNumber'] = "Contact Number is required.";
+      missingFields.push("Contact Number");
+    }
+
+    if (!this.providerData.houseAdd) {
+      this.validationErrors['houseAdd'] = "Office Address is required.";
+      missingFields.push("Office Address");
+    }
+
+    if (!this.providerData.province) {
+      this.validationErrors['province'] = "Please select a province.";
+      missingFields.push("Province");
+    }
+
+    if (!this.providerData.city) {
+      this.validationErrors['city'] = "Please select a city.";
+      missingFields.push("City/Municipality");
+    }
+
+    if (!this.providerData.brgy) {
+      this.validationErrors['brgy'] = "Please select a barangay.";
+      missingFields.push("Barangay");
+    }
+
+    if (!this.providerData.brn) {
+      this.validationErrors['brn'] = "Business Registration Number is required.";
+      missingFields.push("BRN");
+    }
+
+    if (!this.providerData.contactPerson) {
+      this.validationErrors['contactPerson'] = "Contact Person is required.";
+      missingFields.push("Contact Person");
+    }
+
     if (!this.providerData.serviceType) {
-      Swal.fire('Warning!', 'Please select a Service Type.', 'warning');
-      return;
+      this.validationErrors['serviceType'] = "Please select a Service Type.";
+      missingFields.push("Service Type");
+    }
+
+    if (!this.providerData.password || !this.providerData.password_confirmation) {
+      this.validationErrors['password'] = "Password and confirmation are required.";
+      missingFields.push("Password");
+    } else if (this.providerData.password.length < 8) {
+      this.validationErrors['password'] = "Password must be at least 8 characters.";
+      missingFields.push("Password (Minimum 8 characters)");
+    } else if (this.providerData.password !== this.providerData.password_confirmation) {
+      this.validationErrors['password'] = "Passwords do not match.";
+      missingFields.push("Passwords do not match!");
     }
 
     if (!this.providerData.acceptTerms || !this.providerData.acceptVerification) {
-      Swal.fire('Warning!', 'You must agree to the Terms & Conditions and Verification Process.', 'warning');
+      missingFields.push("Terms & Conditions");
+    }
+
+    // Show Swal alert if any fields are missing
+    if (missingFields.length > 0) {
+      Swal.fire({
+        title: "Validation Error!",
+        html: `<strong>The following fields are required:</strong><br> ${missingFields.join("<br>")}`,
+        icon: "error",
+        confirmButtonColor: "#428eba",
+      });
       return;
     }
 
-    if (this.providerData.password !== this.providerData.password_confirmation) {
-      Swal.fire('Error!', 'Passwords do not match.', 'error');
-      return;
-    }
-
+    // If all validations pass, proceed with form submission
     const formData = new FormData();
     Object.entries(this.providerData).forEach(([key, value]) => {
       if (value !== null) {
@@ -344,26 +431,41 @@ export class ProviderRegisterComponent implements OnInit {
       }
     });
 
-    if (this.profilePicFile) formData.append('businessLogo', this.profilePicFile);   // ✅ Updated
-    if (this.attachmentFile) formData.append('personID', this.attachmentFile);       // ✅ Updated
+    if (this.profilePicFile) formData.append("businessLogo", this.profilePicFile);
+    if (this.attachmentFile) formData.append("personID", this.attachmentFile);
 
     this.isLoading = true;
 
     this.http.post(this.apiUrl, formData).subscribe(
       () => {
         this.isLoading = false;
-        Swal.fire('Success!', 'Your registration was successful.', 'success');
+        Swal.fire({
+          title: "Registration Successful!",
+          text: "Your registration was successful! Your account will now be processed for verification. You will receive an email notification once the verification is complete.",
+          icon: "success",
+          confirmButtonColor: "#428eba",
+        });
         this.resetForm();
+        this.router.navigate(['/login']);
       },
       (error) => {
         this.isLoading = false;
-        console.error('Registration Error:', error);
+        console.error("Registration Error:", error);
 
         if (error.status === 422 && error.error.errors) {
-          const validationErrors = Object.values(error.error.errors).flat();
-          Swal.fire('Validation Error!', validationErrors.join('<br>'), 'error');
-        } else {
-          Swal.fire('Error!', 'There was an error with your registration.', 'error');
+          this.validationErrors = {};
+          Object.entries(error.error.errors).forEach(([key, value]) => {
+            this.validationErrors[key] = (value as string[])[0]; // Display first error message per field
+          });
+          // Check if email is already taken
+          if (error.error.errors.email && error.error.errors.email.includes("The email has already been taken.")) {
+            Swal.fire({
+              title: "Registration Failed!",
+              text: "The email has already been taken. Please use a different email.",
+              icon: "error",
+              confirmButtonColor: "#428eba", // Red color for alert
+            });
+          }
         }
       }
     );
@@ -371,6 +473,8 @@ export class ProviderRegisterComponent implements OnInit {
 
   resetForm(): void {
     this.providerData = {
+      businessLogo: '',
+      personID: '',
       email: '',
       password: '',
       password_confirmation: '',

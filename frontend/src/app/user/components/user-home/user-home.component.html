@@ -94,7 +94,6 @@
 <div class="faq-section" id="faq">
     <h2>Frequently Asked Questions</h2>
     <div class="accordion">
-        <!-- Accordion Item 1 -->
         <div *ngFor="let faq of faqs; let i = index" class="accordion-item" [class.active]="faq.isOpen"
             (click)="toggleAccordion(i)">
             <div class="accordion-header">
@@ -105,7 +104,6 @@
                 <p>{{ faq.answer }}</p>
             </div>
         </div>
-
     </div>
 </div>
 

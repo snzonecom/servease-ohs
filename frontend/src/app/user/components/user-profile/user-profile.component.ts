@@ -319,6 +319,17 @@ export class UserProfileComponent implements OnInit {
   saveProfile() {
     const token = localStorage.getItem('authToken');
 
+    if (this.user.new_password && this.user.new_password.length < 8) {
+      Swal.fire({
+        title: 'Warning!',
+        text: 'Password must be at least 8 characters long.',
+        icon: 'warning',
+        confirmButtonColor: '#428eba',
+        confirmButtonText: 'OK'
+      });
+      return; // Stop execution if validation fails
+    }
+
     // ✅ Send user profile details as JSON (excluding profile photo)
     const userData = {
       customer_name: this.user.customer_name,

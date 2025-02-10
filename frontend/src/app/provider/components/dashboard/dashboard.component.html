@@ -41,52 +41,56 @@
     <!-- Booking Schedule Section -->
     <div class="booking-schedule">
         <h2>Today's Bookings</h2>
+        <ng-container
+            *ngIf="morningBookings.length > 0 || afternoonBookings.length > 0 || eveningBookings.length > 0; else noBookings">
 
-        <!-- Morning Section (9 AM - 12 PM) -->
-        <div class="schedule-section" *ngIf="morningBookings.length > 0">
-            <h3>🌅 Morning (9 AM - 12 PM)</h3>
-            <div *ngFor="let booking of morningBookings" class="schedule-item">
-                <p><strong>Service:</strong>
-                    <span *ngFor="let service of booking.services; let i = index">
-                        {{ service.service_name }}<span *ngIf="i < booking.services.length - 1">, </span>
-                    </span>
-                </p>
-                <p><strong>Customer:</strong> {{ booking.customer?.name || 'Anonymous' }}</p>
-                <p><strong>Address:</strong> {{ booking.customer?.address || 'N/A' }}</p>
+            <!-- Morning Section (9 AM - 12 PM) -->
+            <div class="schedule-section" *ngIf="morningBookings.length > 0">
+                <h3>🌅 Morning (9 AM - 12 PM)</h3>
+                <div *ngFor="let booking of morningBookings" class="schedule-item">
+                    <p><strong>Service:</strong>
+                        <span *ngFor="let service of booking.services; let i = index">
+                            {{ service.service_name }}<span *ngIf="i < booking.services.length - 1">, </span>
+                        </span>
+                    </p>
+                    <p><strong>Customer:</strong> {{ booking.customer?.name || 'Anonymous' }}</p>
+                    <p><strong>Address:</strong> {{ booking.customer?.address || 'N/A' }}</p>
+                </div>
             </div>
-        </div>
 
-        <!-- Afternoon Section (1 PM - 4 PM) -->
-        <div class="schedule-section" *ngIf="afternoonBookings.length > 0">
-            <h3>🌤️ Afternoon (1 PM - 4 PM)</h3>
-            <div *ngFor="let booking of afternoonBookings" class="schedule-item">
-                <p><strong>Service:</strong>
-                    <span *ngFor="let service of booking.services; let i = index">
-                        {{ service.service_name }}<span *ngIf="i < booking.services.length - 1">, </span>
-                    </span>
-                </p>
-                <p><strong>Customer:</strong> {{ booking.customer?.name || 'Anonymous' }}</p>
-                <p><strong>Address:</strong> {{ booking.customer?.address || 'N/A' }}</p>
+            <!-- Afternoon Section (1 PM - 4 PM) -->
+            <div class="schedule-section" *ngIf="afternoonBookings.length > 0">
+                <h3>🌤️ Afternoon (1 PM - 4 PM)</h3>
+                <div *ngFor="let booking of afternoonBookings" class="schedule-item">
+                    <p><strong>Service:</strong>
+                        <span *ngFor="let service of booking.services; let i = index">
+                            {{ service.service_name }}<span *ngIf="i < booking.services.length - 1">, </span>
+                        </span>
+                    </p>
+                    <p><strong>Customer:</strong> {{ booking.customer?.name || 'Anonymous' }}</p>
+                    <p><strong>Address:</strong> {{ booking.customer?.address || 'N/A' }}</p>
+                </div>
             </div>
-        </div>
 
-        <!-- Evening Section (5 PM - 8 PM) -->
-        <div class="schedule-section" *ngIf="eveningBookings.length > 0">
-            <h3>🌙 Evening (5 PM - 8 PM)</h3>
-            <div *ngFor="let booking of eveningBookings" class="schedule-item">
-                <p><strong>Service:</strong>
-                    <span *ngFor="let service of booking.services; let i = index">
-                        {{ service.service_name }}<span *ngIf="i < booking.services.length - 1">, </span>
-                    </span>
-                </p>
-                <p><strong>Customer:</strong> {{ booking.customer?.name || 'Anonymous' }}</p>
-                <p><strong>Address:</strong> {{ booking.customer?.address || 'N/A' }}</p>
+            <!-- Evening Section (5 PM - 8 PM) -->
+            <div class="schedule-section" *ngIf="eveningBookings.length > 0">
+                <h3>🌙 Evening (5 PM - 8 PM)</h3>
+                <div *ngFor="let booking of eveningBookings" class="schedule-item">
+                    <p><strong>Service:</strong>
+                        <span *ngFor="let service of booking.services; let i = index">
+                            {{ service.service_name }}<span *ngIf="i < booking.services.length - 1">, </span>
+                        </span>
+                    </p>
+                    <p><strong>Customer:</strong> {{ booking.customer?.name || 'Anonymous' }}</p>
+                    <p><strong>Address:</strong> {{ booking.customer?.address || 'N/A' }}</p>
+                </div>
             </div>
-        </div>
+
+        </ng-container>
 
         <!-- No Bookings Placeholder -->
         <ng-template #noBookings>
-            <p>No bookings for today.</p>
+            <p class="no-bookings-found">No bookings for today.</p>
         </ng-template>
     </div>
 

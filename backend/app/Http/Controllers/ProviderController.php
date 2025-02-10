@@ -7,6 +7,7 @@ use Illuminate\Http\Response;
 use App\Models\Provider;
 use App\Models\User;
 use App\Models\Booking;
+use App\Models\ServiceCategory;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Carbon\Carbon;
@@ -247,7 +248,7 @@ public function restoreProvider(Request $request)
                     <p>Thank you for joining us!</p>
     
                     <div class='footer'>
-                        <p>Need help? Contact us at <a href='mailto:snzone.webdev@gmail.com'>snzone.webdev@gmail.com</a></p>
+                        <p>Need help? Contact us at <a href='mailto:phservease@gmail.com'>phservease@gmail.com</a></p>
                         <p>&copy; " . date('Y') . " SERVEASE. All rights reserved.</p>
                     </div>
                 </div>
@@ -306,7 +307,7 @@ public function restoreProvider(Request $request)
                         <p>If you have any questions, feel free to contact support.</p>
     
                         <div class='footer'>
-                            <p>Need help? Contact us at <a href='mailto:support@yourwebsite.com'>support@yourwebsite.com</a></p>
+                            <p>Need help? Contact us at <a href='mailto:phservease@gmail.com'>phservease@gmail.com</a></p>
                             <p>&copy; " . date('Y') . " Your Company. All rights reserved.</p>
                         </div>
                     </div>
@@ -362,10 +363,16 @@ public function restoreProvider(Request $request)
 
         return response()->json($approvedProviders);
     }
-
-    // For showing providers under a certain category
     public function getProvidersByCategory($categoryId)
     {
+        // ✅ Fetch category details
+        $category = DB::table('tbl_categories')->where('category_id', $categoryId)->first();
+    
+        if (!$category) {
+            return response()->json(['message' => 'Category not found'], 404);
+        }
+    
+        // ✅ Fetch providers under the category
         $providers = Provider::with('bookings')  // Include bookings for ratings
             ->where('account_status', 'approved')
             ->where('service_type', $categoryId)
@@ -373,7 +380,7 @@ public function restoreProvider(Request $request)
             ->map(function ($provider) {
                 // ✅ Dynamically calculate the average rating
                 $averageRating = $provider->bookings()->avg('provider_rate');
-
+    
                 return [
                     'provider_id' => $provider->provider_id,
                     'businessName' => $provider->provider_name,
@@ -382,9 +389,14 @@ public function restoreProvider(Request $request)
                     'location' => $provider->city . ', ' . $provider->province
                 ];
             });
-
-        return response()->json($providers);
+    
+        return response()->json([
+            'category_name' => $category->category_name,
+            'category_description' => $category->category_description,
+            'providers' => $providers
+        ]);
     }
+    
 
     //For showing details of selected service provider
     public function getProviderDetails($id)
@@ -506,7 +518,7 @@ public function restoreProvider(Request $request)
     public function getProviderFeedbacks($providerId)
     {
         $feedbacks = Booking::where('provider_id', $providerId)
-            ->whereNotNull('provider_feedback') // ✅ Only get bookings with feedback
+            ->whereNotNull('provider_rate') // ✅ Only get bookings with feedback
             ->with('customer')                 // ✅ Fetch customer info using hasOne
             ->get()
             ->map(function ($booking) {

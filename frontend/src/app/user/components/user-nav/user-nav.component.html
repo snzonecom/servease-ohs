@@ -23,8 +23,7 @@
 
         <!-- Dropdown for My Transactions -->
         <div class="dropdown">
-            <input type="checkbox" id="dropdown-active" class="dropdown-checkbox" [checked]="dropdownOpen">
-            <label for="dropdown-active" class="dropdown-toggle">
+            <label class="dropdown-toggle" (click)="toggleDropdown()">
                 Hello, {{ customerName }}!
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" viewBox="0 0 24 24" fill="none" stroke="white"
                     stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -32,9 +31,9 @@
                 </svg>
             </label>
             <div class="dropdown-menu" [ngClass]="{'show': dropdownOpen}">
-                <a (click)="closeDropdown()" [routerLink]="['/user/user-transactions']">My Transactions</a>
-                <a (click)="closeDropdown()" [routerLink]="['/user/user-profile']">My Profile</a>
-                <a (click)="logout()" [routerLink]="['/']">Logout</a>
+                <a [routerLink]="['/user/user-transactions']">My Transactions</a>
+                <a [routerLink]="['/user/user-profile']">My Profile</a>
+                <a (click)="logout()">Logout</a>
             </div>
         </div>
 

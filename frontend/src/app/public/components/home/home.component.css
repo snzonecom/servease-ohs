@@ -74,7 +74,8 @@
     background-position: center;
     height: 60vh;
     padding: 20px;
-    position: relative; /* Allows layering for opacity effect */
+    position: relative;
+    cursor: default;
 }
 
 /* Add an overlay for opacity effect */
@@ -181,6 +182,7 @@
 .carousel-div {
     padding: 0.5rem;
     margin: 2rem 1rem;
+    cursor: default;
 }
 
 .carousel-item {
@@ -581,7 +583,7 @@
 
 .about-columns {
     display: grid;
-    grid-template-columns: 2fr 1fr;
+    grid-template-columns: 3fr 2fr;
     gap: 20px;
     align-items: center;
 }
@@ -743,7 +745,7 @@
 }
 
 .accordion-item.active .accordion-icon {
-    transform: rotate(45deg);
+    transform: rotate(180deg);
 }
 
 /* Responsive Design */

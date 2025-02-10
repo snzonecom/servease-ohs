@@ -32,6 +32,11 @@
     margin-top: 10px;
 }
 
+.error-message {
+    color: red;
+    font-size: 0.85rem;
+}
+
 /* Title Section */
 .dashboard-header {
     text-align: center;
@@ -202,6 +207,7 @@
     line-height: 1.5;
     color: #555;
     font-weight: 500;
+    cursor: pointer;
 }
 
 .terms-condi {

@@ -41,7 +41,7 @@
 
                 <div class="info-row">
                     <label for="contactNumber">Contact Number:</label>
-                    <input id="contactNumber" type="tel" [(ngModel)]="provider.contact_no" [disabled]="!isEditing" />
+                    <input id="contactNumber" type="tel" [(ngModel)]="provider.contact_no" [disabled]="!isEditing" pattern="[0-9]*" inputmode="numeric" oninput="this.value = this.value.replace(/[^0-9]/g, '')"/>
                 </div>
 
                 <div class="info-row">
@@ -88,7 +88,7 @@
                     <label for="serviceType">Service Type:</label>
                     <select id="serviceType" [(ngModel)]="provider.service_type" disabled class="custom-dropdown">
                         <option *ngFor="let category of serviceCategories" [value]="category.category_id">
-                            {{ category.category_name }}
+                            {{ provider?.service_category.category_name }}
                         </option>
                     </select>
                 </div>

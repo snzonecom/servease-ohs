@@ -4,6 +4,7 @@ import { animate, keyframes, style, transition, trigger } from '@angular/animati
 import { Router, NavigationEnd } from '@angular/router';
 import { AuthService } from '../../../services/auth.service';
 import { HttpClient } from '@angular/common/http';
+import Swal from 'sweetalert2';
 
 interface SideNavToggle {
   screenWidth: number;
@@ -82,14 +83,38 @@ export class AdminNavbarComponent implements OnInit {
   }
 
   logout(): void {
-    this.authService.logout().subscribe({
-      next: () => {
-        this.router.navigate(['/login']);  // ✅ Redirect to login after logout
-      },
-      error: (err) => {
-        console.error('Logout failed:', err);
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You will be logged out from your account.",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#d33",  // Red color for confirmation
+      cancelButtonColor: "#428eba",  // Blue color for cancel
+      confirmButtonText: "Yes, logout!",
+      cancelButtonText: "Cancel"
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.authService.logout().subscribe({
+          next: () => {
+            this.router.navigate(['/login']);
+            Swal.fire({
+              title: "Logged Out",
+              text: "You have successfully logged out.",
+              icon: "success",
+              confirmButtonColor: "#428eba",
+            });
+          },
+          error: (err) => {
+            console.error("Logout failed:", err);
+            Swal.fire({
+              title: "Logout Failed!",
+              text: "Something went wrong. Please try again.",
+              icon: "error",
+              confirmButtonColor: "#e74c3c",
+            });
+          }
+        });
       }
     });
   }
-
 }

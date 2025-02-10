@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-my-transactions',
@@ -178,10 +179,16 @@ export class MyTransactionsComponent implements OnInit {
       { headers: { Authorization: `Bearer ${token}` } }
     ).subscribe(
       () => {
-        console.log(`Booking marked as ${book_status} successfully.`);
-        alert(`✅ Booking marked as ${book_status}`);
         this.closeAllDialogs();
-        this.fetchProviderBookings();
+        Swal.fire({
+          title: 'Success!',
+          text: `Booking marked as ${book_status}!`,
+          icon: 'success',
+          confirmButtonColor: '#428eba',
+          confirmButtonText: 'OK'
+        }).then(() => {
+          this.fetchProviderBookings();
+        });
       },
       (error) => {
         console.error(`Error updating booking status to ${book_status}:`, error);

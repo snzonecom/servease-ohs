@@ -19,15 +19,16 @@
     display: flex;
     gap: 5px;
     cursor: pointer; /* Makes it clear they are clickable */
+    margin-bottom: 15px;
 }
 
-.pi-star {
+.pi-star-fill {
     font-size: 24px; /* Adjust size as needed */
     color: gray;     /* Default unselected color */
     transition: color 0.3s ease;
 }
 
-.pi-star.selected {
+.pi-star-fill.selected {
     color: gold;     /* Selected star color */
 }
 

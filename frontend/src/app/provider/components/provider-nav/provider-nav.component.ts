@@ -1,15 +1,17 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, HostListener } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../../../services/auth.service';
 import { HttpClient } from '@angular/common/http';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-provider-nav',
   templateUrl: './provider-nav.component.html',
-  styleUrl: './provider-nav.component.css'
+  styleUrls: ['./provider-nav.component.css']
 })
 export class ProviderNavComponent implements OnInit {
   providerName: string = 'Loading...'; // Default text
+  dropdownOpen = false; // Tracks dropdown state
 
   constructor(private authService: AuthService, private router: Router, private http: HttpClient) { }
 
@@ -40,14 +42,55 @@ export class ProviderNavComponent implements OnInit {
     );
   }
 
-  // ✅ Logout Function
+  // ✅ Toggle Dropdown on Click
+  toggleDropdown(): void {
+    this.dropdownOpen = !this.dropdownOpen;
+  }
+
+  // ✅ Close Dropdown When Clicking Outside
+  @HostListener('document:click', ['$event'])
+  closeDropdownOnOutsideClick(event: Event): void {
+    const dropdown = document.querySelector('.dropdown-menu');
+    const dropdownToggle = document.querySelector('.dropdown-toggle');
+
+    if (dropdown && dropdownToggle && !dropdownToggle.contains(event.target as Node)) {
+      this.dropdownOpen = false;
+    }
+  }
+
+  // ✅ Logout Function with Swal Confirmation
   logout(): void {
-    this.authService.logout().subscribe({
-      next: () => {
-        this.router.navigate(['/login']); // ✅ Redirect to login after logout
-      },
-      error: (err) => {
-        console.error('Logout failed:', err);
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You will be logged out from your account.",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#428eba",
+      confirmButtonText: "Yes, logout!",
+      cancelButtonText: "Cancel"
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.authService.logout().subscribe({
+          next: () => {
+            this.router.navigate(['/login']);
+            Swal.fire({
+              title: "Logged Out",
+              text: "You have successfully logged out.",
+              icon: "success",
+              confirmButtonColor: "#428eba",
+            });
+          },
+          error: (err) => {
+            console.error("Logout failed:", err);
+            Swal.fire({
+              title: "Logout Failed!",
+              text: "Something went wrong. Please try again.",
+              icon: "error",
+              confirmButtonColor: "#e74c3c",
+            });
+          }
+        });
       }
     });
   }

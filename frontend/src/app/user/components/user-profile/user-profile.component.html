@@ -39,7 +39,8 @@
                 <!-- Contact Number -->
                 <div class="info-row">
                     <label for="contactNumber">Contact Number:</label>
-                    <input id="contactNumber" type="tel" [(ngModel)]="user.contact_no" [disabled]="!isEditing" />
+                    <input id="contactNumber" type="tel" [(ngModel)]="user.contact_no" [disabled]="!isEditing"
+                        pattern="[0-9]*" inputmode="numeric" oninput="this.value = this.value.replace(/[^0-9]/g, '')" />
                 </div>
 
                 <!-- House Address -->

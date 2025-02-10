@@ -267,7 +267,10 @@ export class UserRegisterComponent {
   cities: any[] = [];
   barangays: string[] = [];
 
+  validationErrors: { [key: string]: string } = {}; // Store validation errors
+
   formData: any = {
+    profile: '',
     fullName: '',
     email: '',
     contactNumber: '',
@@ -318,16 +321,79 @@ export class UserRegisterComponent {
   }
 
   registerUser(): void {
-    if (this.formData.password !== this.formData.confirmPassword) {
-      Swal.fire('Error!', 'Passwords do not match.', 'error');
-      return;
+    // Clear previous validation errors
+    this.validationErrors = {};
+    let missingFields: string[] = [];
+
+    if (!this.selectedFile) {
+      this.validationErrors['profile'] = "Profile photo is required.";
+      missingFields.push("Profile Photo");
     }
 
+    if (!this.formData.fullName) {
+      this.validationErrors['fullName'] = "Full Name is required.";
+      missingFields.push("Full Name");
+    }
+
+    if (!this.formData.email) {
+      this.validationErrors['email'] = "Email Address is required.";
+      missingFields.push("Email Address");
+    }
+
+    if (!this.formData.contactNumber) {
+      this.validationErrors['contactNumber'] = "Contact Number is required.";
+      missingFields.push("Contact Number");
+    }
+
+    if (!this.formData.houseAdd) {
+      this.validationErrors['houseAdd'] = "House and Street Address is required.";
+      missingFields.push("House Address");
+    }
+
+    if (!this.formData.province) {
+      this.validationErrors['province'] = "Please select a Province.";
+      missingFields.push("Province");
+    }
+
+    if (!this.formData.city) {
+      this.validationErrors['city'] = "Please select a City.";
+      missingFields.push("City/Municipality");
+    }
+
+    if (!this.formData.brgy) {
+      this.validationErrors['brgy'] = "Please select a Barangay.";
+      missingFields.push("Barangay");
+    }
+
+    // Password Validation
+    if (!this.formData.password || !this.formData.confirmPassword) {
+      this.validationErrors['password'] = "Password and confirmation are required.";
+      missingFields.push("Password");
+    } else if (this.formData.password.length < 8) {
+      this.validationErrors['password'] = "Password must be at least 8 characters long.";
+      missingFields.push("Password (Minimum 8 characters)");
+    } else if (this.formData.password !== this.formData.confirmPassword) {
+      this.validationErrors['password'] = "Passwords do not match.";
+      missingFields.push("Matching Passwords");
+    }
+
+    // Terms & Conditions
     if (!this.formData.acceptTerms) {
-      Swal.fire('Warning!', 'You must accept the Terms and Conditions.', 'warning');
+      missingFields.push("Terms & Conditions");
+    }
+
+    // Show SweetAlert2 for missing fields
+    if (missingFields.length > 0) {
+      Swal.fire({
+        title: "Validation Error!",
+        html: `<strong>The following fields are required:</strong><br> ${missingFields.join("<br>")}`,
+        icon: "error",
+        confirmButtonColor: "#428eba",
+      });
       return;
     }
 
+    // Prepare form data
     const registrationData = new FormData();
     registrationData.append('email', this.formData.email);
     registrationData.append('password', this.formData.password);
@@ -342,25 +408,50 @@ export class UserRegisterComponent {
       registrationData.append('profile_photo', this.selectedFile);
     }
 
+    // API Call
     this.authService.register(registrationData).subscribe({
-      next: (response) => {
-        Swal.fire('Success!', 'Registration successful!', 'success').then(() => {
-          this.resetForm(); // ✅ Reset the form after successful registration
+      next: () => {
+        Swal.fire({
+          title: "Registration Successful!",
+          text: "Your account has been registered! You can now proceed to login.",
+          icon: "success",
+          confirmButtonColor: "#428eba",
+        }).then(() => {
+          this.resetForm(); // Reset the form after success
           this.router.navigate(['/login']);
         });
+        this.router.navigate(['/login']);
       },
       error: (err) => {
         console.error(err);
 
         if (err.status === 422 && err.error.errors) {
-          const validationErrors = Object.values(err.error.errors).flat();
-          Swal.fire('Validation Error!', validationErrors.join('<br>'), 'error');
+          this.validationErrors = {}; // Clear existing errors
+          Object.entries(err.error.errors).forEach(([key, value]) => {
+            this.validationErrors[key] = (value as string[])[0]; // Show first error per field
+          });
+
+          // Show a Swal alert if the email is already taken
+          if (err.error.errors.email && err.error.errors.email.includes("The email has already been taken.")) {
+            Swal.fire({
+              title: "Registration Failed!",
+              text: "The email has already been taken. Please use a different email.",
+              icon: "error",
+              confirmButtonColor: "#428eba",
+            });
+          }
         } else {
-          Swal.fire('Error!', `Registration failed: ${err.error.message || 'Unknown error'}`, 'error');
+          Swal.fire({
+            title: "Error!",
+            text: `Registration failed: ${err.error.message || 'Unknown error'}`,
+            icon: "error",
+            confirmButtonColor: "#428eba",
+          });
         }
       }
     });
   }
+
 
   // ✅ Reset the form fields
   resetForm(): void {

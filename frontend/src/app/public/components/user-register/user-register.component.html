@@ -21,7 +21,10 @@
             <div class="info-row-container">
                 <!-- Profile Photo -->
                 <div class="info-row">
-                    <label for="profilePhoto">Profile Photo:</label>
+                    <label for="profile">Profile Photo:</label>
+                    <div class="error-message" *ngIf="validationErrors['profile']">
+                        {{ validationErrors['profile'] }}
+                    </div>
                     <div class="upload-container">
                         <input type="file" id="profile" accept="image/*" class="file-input"
                             (change)="onProfileSelected($event)" />
@@ -35,6 +38,9 @@
                     <label for="fullName">Full Name:</label>
                     <input id="fullName" type="text" [(ngModel)]="formData.fullName" placeholder="Juan Dela Cruz"
                         required />
+                    <div class="error-message" *ngIf="validationErrors['fullName']">
+                        {{ validationErrors['fullName'] }}
+                    </div>
                 </div>
 
                 <!-- Email Address -->
@@ -42,19 +48,29 @@
                     <label for="email">Email Address:</label>
                     <input id="email" type="email" [(ngModel)]="formData.email" placeholder="sample@mail.com"
                         required />
+                    <div class="error-message" *ngIf="validationErrors['email']">
+                        {{ validationErrors['email'] }}
+                    </div>
                 </div>
 
                 <!-- Contact Number -->
                 <div class="info-row">
                     <label for="contactNumber">Contact Number:</label>
-                    <input id="contactNumber" type="tel" [(ngModel)]="formData.contactNumber" placeholder="09213456789"
-                        required />
+                    <input id="contactNumber" type="tel" [(ngModel)]="formData.contactNumber" required
+                        placeholder="(123) 456-7890" pattern="[0-9]*" inputmode="numeric"
+                        oninput="this.value = this.value.replace(/[^0-9]/g, '')" />
+                    <div class="error-message" *ngIf="validationErrors['contactNumber']">
+                        {{ validationErrors['contactNumber'] }}
+                    </div>
                 </div>
 
                 <!-- Address Fields -->
                 <div class="info-row">
                     <label for="houseAdd">House and Street Address:</label>
                     <input id="houseAdd" type="text" [(ngModel)]="formData.houseAdd" placeholder="124 House" required />
+                    <div class="error-message" *ngIf="validationErrors['houseAdd']">
+                        {{ validationErrors['houseAdd'] }}
+                    </div>
                 </div>
 
                 <div class="info-row">
@@ -65,6 +81,9 @@
                         <option *ngFor="let province of provinces" [value]="province.province">{{ province.province }}
                         </option>
                     </select>
+                    <div class="error-message" *ngIf="validationErrors['province']">
+                        {{ validationErrors['province'] }}
+                    </div>
                 </div>
 
                 <div class="info-row">
@@ -74,6 +93,9 @@
                         <option value="" disabled selected>Select Your Province First</option>
                         <option *ngFor="let city of cities" [value]="city.name">{{ city.name }}</option>
                     </select>
+                    <div class="error-message" *ngIf="validationErrors['city']">
+                        {{ validationErrors['city'] }}
+                    </div>
                 </div>
 
                 <div class="info-row">
@@ -83,6 +105,9 @@
                         <option value="" disabled selected>Select Your City/Municipality First</option>
                         <option *ngFor="let brgy of barangays" [value]="brgy">{{ brgy }}</option>
                     </select>
+                    <div class="error-message" *ngIf="validationErrors['brgy']">
+                        {{ validationErrors['brgy'] }}
+                    </div>
                 </div>
 
                 <!-- Password Fields -->

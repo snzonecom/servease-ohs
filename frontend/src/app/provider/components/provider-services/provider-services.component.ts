@@ -94,7 +94,13 @@ export class ProviderServicesComponent implements OnInit {
       this.http.put(`${this.apiUrl}/${providerId}/services/${this.selectedService.service_id}`, this.selectedService, { headers }).subscribe(
         () => {
           this.dialogVisible = false;
-          Swal.fire('Success!', 'Service updated successfully!', 'success');
+          Swal.fire({
+            title: 'Success!',
+            text: 'Service updated successfully!',
+            icon: 'success',
+            confirmButtonColor: '#428eba', // ✅ Custom blue button color
+            confirmButtonText: 'OK'
+          });
           this.fetchServices();
         },
         (error) => {
@@ -108,13 +114,27 @@ export class ProviderServicesComponent implements OnInit {
       this.http.post(`${this.apiUrl}/${providerId}/services`, this.selectedService, { headers }).subscribe(
         () => {
           this.dialogVisible = false;
-          Swal.fire('Success!', 'Service added successfully!', 'success');
+          Swal.fire({
+            title: 'Success!',
+            text: 'Service added successfully!',
+            icon: 'success',
+            confirmButtonColor: '#428eba', // ✅ Custom blue button color
+            confirmButtonText: 'OK'
+          });
+
           this.fetchServices();
         },
         (error) => {
           console.error(error);
           this.dialogVisible = false;
-          Swal.fire('Error!', 'Failed to add service.', 'error');
+          Swal.fire({
+            title: 'Error!',
+            text: 'Failed to add service.',
+            icon: 'error',
+            confirmButtonColor: '#428eba', // ✅ Custom blue button color
+            confirmButtonText: 'OK'
+          });
+
         }
       );
     }
@@ -130,12 +150,19 @@ export class ProviderServicesComponent implements OnInit {
       icon: 'warning',
       showCancelButton: true,
       confirmButtonText: 'Yes, delete it!',
-      cancelButtonText: 'Cancel'
+      cancelButtonText: 'Cancel',
+      confirmButtonColor: '#428eba',
     }).then((result) => {
       if (result.isConfirmed) {
         this.http.delete(`${this.apiUrl}/${providerId}/services/${serviceId}`, { headers: this.getAuthHeaders() }).subscribe(
           () => {
-            Swal.fire('Deleted!', 'Service has been deleted.', 'success');
+            Swal.fire({
+              title: 'Deleted!',
+              text: 'Service has been deleted.',
+              icon: 'success',
+              confirmButtonColor: '#428eba', // ✅ Custom blue button color
+              confirmButtonText: 'OK'
+            });
 
             // ✅ Refetch services after deletion (even if 0 remain)
             this.fetchServices();

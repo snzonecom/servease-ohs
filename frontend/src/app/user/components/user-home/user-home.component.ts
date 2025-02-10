@@ -9,8 +9,6 @@ import { HttpClient } from '@angular/common/http';
   styleUrl: './user-home.component.css'
 })
 export class UserHomeComponent implements AfterViewInit, OnInit {
-
-  activeAccordion: number | null = null;
   services: any[] = []; // Dynamic services from the API
 
   logoUrl: string = '';
@@ -61,8 +59,10 @@ export class UserHomeComponent implements AfterViewInit, OnInit {
     });
   }
 
-  toggleAccordion(index: number): void {
-    this.activeAccordion = this.activeAccordion === index ? null : index;
+  activeAccordion: number | null = null;
+
+  toggleAccordion(index: number) {
+    this.faqs[index].isOpen = !this.faqs[index].isOpen;
   }
 
   fetchRecommendedProviders(): void {

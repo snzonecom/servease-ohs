@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-deleted-categories',
@@ -35,16 +36,39 @@ export class DeletedCategoriesComponent implements OnInit {
    * ✅ Restore a Soft-Deleted Category
    */
   restoreCategory(categoryId: number) {
-    this.http.post(`http://127.0.0.1:8000/api/service-category/${categoryId}/restore`, {}).subscribe(
-      () => {
-        console.log(`✅ Category ${categoryId} restored successfully`);
-        this.fetchDeletedCategories(); // Refresh list after restore
-      },
-      (error) => {
-        console.error('❌ Error restoring category:', error);
+    Swal.fire({
+      title: 'Are you sure?',
+      text: 'Do you want to restore this category?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#428eba',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, restore it!',
+      cancelButtonText: 'No, cancel'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.http.post(`http://127.0.0.1:8000/api/service-category/${categoryId}/restore`, {}).subscribe(
+          () => {
+            console.log(`✅ Category ${categoryId} restored successfully`);
+            Swal.fire({
+              title: 'Restored!',
+              text: 'The category has been restored successfully.',
+              icon: 'success',
+              confirmButtonColor: '#428eba',
+              confirmButtonText: 'OK'
+            }).then(() => {
+              this.fetchDeletedCategories(); // ✅ Refresh list after restore
+            });
+          },
+          (error) => {
+            console.error('❌ Error restoring category:', error);
+            Swal.fire('Error', 'Failed to restore category.', 'error');
+          }
+        );
       }
-    );
+    });
   }
+  
 
   /**
    * ✅ Permanently Delete a Category

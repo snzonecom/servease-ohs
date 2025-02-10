@@ -348,7 +348,7 @@
             <span class="label-text">Rate Service</span>
         </label>
         <div class="stars">
-            <i class="pi pi-star" *ngFor="let star of [1, 2, 3, 4, 5]" [ngClass]="{ 'selected': rating >= star }"
+            <i class="pi pi-star-fill" *ngFor="let star of [1, 2, 3, 4, 5]" [ngClass]="{ 'selected': rating >= star }"
                 (click)="setRating(star)">
             </i>
         </div>

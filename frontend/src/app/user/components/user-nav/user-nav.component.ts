@@ -1,4 +1,4 @@
-import { Component, AfterViewInit, OnInit } from '@angular/core';
+import { Component, AfterViewInit, OnInit, HostListener } from '@angular/core';
 import { ActivatedRoute, Router, NavigationEnd } from '@angular/router';
 import { filter } from 'rxjs/operators';
 import { AuthService } from '../../../services/auth.service';
@@ -60,14 +60,19 @@ export class UserNavComponent implements AfterViewInit, OnInit {
     );
   }
 
+  // ✅ Toggle Dropdown on Click
+  toggleDropdown(): void {
+    this.dropdownOpen = !this.dropdownOpen;
+  }
 
-  // Close the dropdown when a link is clicked
-  closeDropdown(): void {
-    this.dropdownOpen = false; // Set the flag to close the dropdown
-    // Optionally, also uncheck the checkbox to reflect the change
-    const checkbox = document.getElementById('dropdown-active') as HTMLInputElement;
-    if (checkbox) {
-      checkbox.checked = false;
+  // ✅ Close Dropdown When Clicking Outside
+  @HostListener('document:click', ['$event'])
+  closeDropdownOnOutsideClick(event: Event): void {
+    const dropdown = document.querySelector('.dropdown-menu');
+    const dropdownToggle = document.querySelector('.dropdown-toggle');
+
+    if (dropdown && dropdownToggle && !dropdownToggle.contains(event.target as Node)) {
+      this.dropdownOpen = false;
     }
   }
 

@@ -577,7 +577,7 @@
 
 .about-columns {
     display: grid;
-    grid-template-columns: 2fr 1fr;
+    grid-template-columns: 3fr 2fr;
     gap: 20px;
     align-items: center;
 }
@@ -739,7 +739,7 @@
 }
 
 .accordion-item.active .accordion-icon {
-    transform: rotate(45deg);
+    transform: rotate(180deg);
 }
 
 /* Responsive Design */

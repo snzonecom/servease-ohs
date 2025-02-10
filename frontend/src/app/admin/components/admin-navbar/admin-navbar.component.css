@@ -64,6 +64,10 @@
     }
 }
 
+.logout-style {
+    cursor: pointer;
+}
+
 .sidenav-collapsed {
     width: 19rem;
 }

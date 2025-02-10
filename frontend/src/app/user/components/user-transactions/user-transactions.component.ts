@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-user-transactions',
@@ -125,23 +126,43 @@ export class UserTransactionsComponent implements OnInit {
   cancelBooking(bookingId: number) {
     const token = localStorage.getItem('authToken');
 
-    if (confirm('Are you sure you want to cancel this booking?')) {
-      this.http.post(`http://127.0.0.1:8000/api/bookings/${bookingId}/cancel`, {}, {
-        headers: { Authorization: `Bearer ${token}` }
-      }).subscribe(
-        (response: any) => {
-          console.log('Booking cancelled successfully:', response);
-          alert('Booking cancelled successfully!');
-          this.fetchBookings(); // ✅ Refresh the bookings list
-          this.pendingDialogVisible = false; // ✅ Close the dialog
-        },
-        (error) => {
-          console.error('Error cancelling booking:', error);
-          alert('Failed to cancel booking.');
-        }
-      );
-    }
+    this.pendingDialogVisible = false;
+    Swal.fire({
+      title: 'Are you sure?',
+      text: 'Do you really want to cancel this booking?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#3085d6',
+      confirmButtonText: 'Yes, cancel it!',
+      cancelButtonText: 'No, keep it'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.http.post(`http://127.0.0.1:8000/api/bookings/${bookingId}/cancel`, {}, {
+          headers: { Authorization: `Bearer ${token}` }
+        }).subscribe(
+          (response: any) => {
+            console.log('Booking cancelled successfully:', response);
+            Swal.fire({
+              title: 'Cancelled!',
+              text: 'Booking has been cancelled successfully.',
+              icon: 'success',
+              confirmButtonColor: '#428eba',
+              confirmButtonText: 'OK'
+            }).then(() => {
+              this.fetchBookings(); // ✅ Refresh the bookings list
+              this.pendingDialogVisible = false; // ✅ Close the dialog
+            });
+          },
+          (error) => {
+            console.error('Error cancelling booking:', error);
+            Swal.fire('Error', 'Failed to cancel booking.', 'error');
+          }
+        );
+      }
+    });
   }
+
 
 
   /**
@@ -216,6 +237,7 @@ export class UserTransactionsComponent implements OnInit {
 
     if (!this.selectedBooking.booking_id) {
       console.error('Booking ID is missing.');
+      Swal.fire('Error!', 'Booking ID is missing.', 'error');
       return;
     }
 
@@ -229,20 +251,26 @@ export class UserTransactionsComponent implements OnInit {
     }).subscribe(
       (response) => {
         console.log('⭐ Rating Submitted:', response);
-        alert('Rating submitted successfully!');
-
-        // ✅ Reset inputs after successful submission
-        this.rating = 0;
-        this.ratingFeedback = '';
-
-        // ✅ Close the rating dialog
         this.ratingDialogVisible = false;
+        Swal.fire({
+          title: 'Success!',
+          text: 'Your rating has been submitted successfully.',
+          icon: 'success',
+          confirmButtonColor: '#428eba',
+          confirmButtonText: 'OK'
+        }).then(() => {
+          // ✅ Reset inputs after successful submission
+          this.rating = 0;
+          this.ratingFeedback = '';
+        });
       },
       (error) => {
         console.error('Error submitting rating:', error);
+        Swal.fire('Error', 'Failed to submit rating. Please try again later.', 'error');
       }
     );
   }
+
 
   /**
    * Opens the Rating Dialog

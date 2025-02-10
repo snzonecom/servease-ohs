@@ -303,7 +303,7 @@ class AuthController extends Controller
             <p>If you did not request a password reset, please ignore this email.</p>
 
             <div class='footer'>
-                <p>Need help? Contact us at <a href='mailto:snzone.webdev@gmail.com'>snzone.webdev@gmail.com</a></p>
+                <p>Need help? Contact us at <a href='mailto:phservease@gmail.com'>phservease@gmail.com</a></p>
                 <p>&copy; " . date('Y') . " SERVEASE. All rights reserved.</p>
             </div>
         </div>

@@ -45,7 +45,7 @@ export class BookServiceComponent implements OnInit {
       (feedbacks) => {
         this.feedbacks = feedbacks.map(feedback => ({
           clientName: feedback.clientName || 'Anonymous',
-          reviewText: feedback.reviewText,
+          reviewText: feedback.reviewText || '',
           rating: Math.round(feedback.rating),
         }));
         this.displayedFeedbacks = this.feedbacks.slice(0, 3);
@@ -106,37 +106,43 @@ export class BookServiceComponent implements OnInit {
 
   showConfirmation() {
     if (!this.isServiceSelected) {
-        Swal.fire('Warning!', 'Please select at least one service before proceeding.', 'warning');
-        return;
+      Swal.fire('Warning!', 'Please select at least one service before proceeding.', 'warning');
+      return;
     }
     if (!this.bookingDate) {
-        Swal.fire('Warning!', 'Please select a booking date before proceeding.', 'warning');
-        return;
+      Swal.fire('Warning!', 'Please select a booking date before proceeding.', 'warning');
+      return;
     }
     if (!this.bookingTime) {
-        Swal.fire('Warning!', 'Please select a booking time before proceeding.', 'warning');
-        return;
+      Swal.fire('Warning!', 'Please select a booking time before proceeding.', 'warning');
+      return;
     }
     if (!this.agreedToTnC) {
-        Swal.fire('Warning!', 'You must agree to the Terms and Conditions before submitting.', 'warning');
-        return;
+      Swal.fire({
+        title: 'Warning!',
+        text: 'You must agree to the Terms and Conditions before submitting.',
+        icon: 'warning',
+        confirmButtonColor: '#66b9e1',
+        confirmButtonText: 'OK'
+      });
+      return;
     }
 
     Swal.fire({
-        title: 'Are you sure?',
-        text: 'Do you want to submit this booking?',
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonText: 'Yes, submit it',
-        cancelButtonText: 'No, cancel',
-        confirmButtonColor: '#2980b9',
-        cancelButtonColor: '#d33',
+      title: 'Are you sure?',
+      text: 'Do you want to submit this booking?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, submit it',
+      cancelButtonText: 'No, cancel',
+      confirmButtonColor: '#66b9e1',
+      cancelButtonColor: '#d33',
     }).then((result) => {
-        if (result.isConfirmed) {
-            this.submitBooking();
-        }
+      if (result.isConfirmed) {
+        this.submitBooking();
+      }
     });
-}
+  }
 
 
   submitBooking() {

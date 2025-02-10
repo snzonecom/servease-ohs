@@ -19,10 +19,10 @@
             </a>
 
             <!-- ✅ Logout Button Template -->
-            <ng-template #logoutTemplate>
+            <ng-template #logoutTemplate >
                 <a class="sidenav-nav-link" (click)="logout()">
-                    <i class="sidenav-link-icon pi pi-sign-out"></i>
-                    <span class="sidenav-link-text" @fadeInOut *ngIf="collapsed">Logout</span>
+                    <i class="sidenav-link-icon logout-style pi pi-sign-out"></i>
+                    <span class="sidenav-link-text logout-style" @fadeInOut *ngIf="collapsed">Logout</span>
                 </a>
             </ng-template>
         </li>

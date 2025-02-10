@@ -1,8 +1,7 @@
 <!-- Title Section -->
 <div class="dashboard-header">
-    <h1 class="dashboard-title">List of Verified Providers</h1>
-    <p class="dashboard-description">Access the verified service providers of your chosen service category to ensure you
-        are working with trusted and reputable professionals.</p>
+    <h1 class="dashboard-title">{{categoryName}}</h1>
+    <p class="dashboard-description">{{categoryDescription}}</p>
 </div>
 
 <!-- Providers List Section -->
@@ -19,7 +18,8 @@
                         <span class="rating-number">{{ provider.rating }}/5</span>
                     </div>
                     <p class="business-location"><i class="pi pi-map-marker"></i> {{ provider.location }}</p>
-                    <button class="book-now-btn" [routerLink]="['/user/book-service', provider.provider_id]">Book Now</button>
+                    <button class="book-now-btn" [routerLink]="['/user/book-service', provider.provider_id]">Book
+                        Now</button>
                 </div>
             </div>
         </div>

@@ -169,6 +169,19 @@
         </label>
     </div>
 
+    <!-- ✅ Address -->
+    <div class="flex flex-column gap-3 mb-3">
+        <label for="address" class="field-label">
+            <span class="label-text">
+                <i class="pi pi-map-marker"></i> Address
+            </span>
+            <input pInputText id="address" [value]="(selectedBooking.customer?.house_add || 'N/A') + ', ' +
+           (selectedBooking.customer?.brgy || 'N/A') + ', ' +
+           (selectedBooking.customer?.city || 'N/A') + ', ' +
+           (selectedBooking.customer?.province || 'N/A')" [disabled]="true" class="field-input" />
+        </label>
+    </div>
+
     <!-- ✅ Email Address -->
     <div class="flex flex-column gap-3 mb-3">
         <label for="email" class="field-label">
@@ -260,6 +273,19 @@
             </span>
             <input pInputText id="contactNumber" [value]="selectedBooking.customer?.contact_no || 'N/A'"
                 [disabled]="true" class="field-input" />
+        </label>
+    </div>
+
+    <!-- ✅ Address -->
+    <div class="flex flex-column gap-3 mb-3">
+        <label for="address" class="field-label">
+            <span class="label-text">
+                <i class="pi pi-map-marker"></i> Address
+            </span>
+            <input pInputText id="address" [value]="(selectedBooking.customer?.house_add || 'N/A') + ', ' +
+               (selectedBooking.customer?.brgy || 'N/A') + ', ' +
+               (selectedBooking.customer?.city || 'N/A') + ', ' +
+               (selectedBooking.customer?.province || 'N/A')" [disabled]="true" class="field-input" />
         </label>
     </div>
 
@@ -361,6 +387,19 @@
         <label class="field-label">
             <span class="label-text"><i class="pi pi-phone"></i> Contact Number</span>
             <input pInputText [value]="selectedBooking.customer?.contact_no" [disabled]="true" class="field-input" />
+        </label>
+    </div>
+
+    <!-- ✅ Address -->
+    <div class="flex flex-column gap-3 mb-3">
+        <label for="address" class="field-label">
+            <span class="label-text">
+                <i class="pi pi-map-marker"></i> Address
+            </span>
+            <input pInputText id="address" [value]="(selectedBooking.customer?.house_add || 'N/A') + ', ' +
+               (selectedBooking.customer?.brgy || 'N/A') + ', ' +
+               (selectedBooking.customer?.city || 'N/A') + ', ' +
+               (selectedBooking.customer?.province || 'N/A')" [disabled]="true" class="field-input" />
         </label>
     </div>
 

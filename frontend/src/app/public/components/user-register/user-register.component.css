@@ -202,12 +202,18 @@
     line-height: 1.5;
     color: #555;
     font-weight: 500;
+    cursor: pointer;
 }
 
 .terms-condi {
     font-weight: bold;
     color: #555;
     text-decoration: underline;
+}
+
+.error-message {
+    color: red;
+    font-size: 0.85rem;
 }
 
 .custom-dropdown {

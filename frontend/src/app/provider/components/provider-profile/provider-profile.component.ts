@@ -328,16 +328,59 @@ export class ProviderProfileComponent implements OnInit {
     );
   }
 
-
   // ✅ Enable Edit Mode
   editProfile() {
     this.isEditing = true;
   }
 
+  // ✅ Validate Fields
+  validateProfile(): boolean {
+    let missingFields: string[] = [];
+
+    if (!this.provider.email) missingFields.push('Email Address');
+    if (!this.provider.contact_no) missingFields.push('Contact Number');
+    if (!this.provider.office_add) missingFields.push('Office Address');
+    if (!this.provider.brgy) missingFields.push('Barangay');
+    if (!this.provider.city) missingFields.push('City');
+    if (!this.provider.province) missingFields.push('Province');
+    if (!this.provider.contact_person) missingFields.push('Contact Person');
+
+    if (missingFields.length > 0) {
+      Swal.fire({
+        title: "Validation Error!",
+        html: `<strong>The following fields are required:</strong><br> ${missingFields.join("<br>")}`,
+        icon: "error",
+      });
+      return false;
+    }
+
+    if (this.provider.new_password && this.provider.new_password.length < 8) {
+      Swal.fire({
+        title: "Invalid Password",
+        text: "Password must be at least 8 characters long.",
+        icon: "error",
+      });
+      return false;
+    }
+
+    return true;
+  }
+
   // ✅ Save Profile Changes
   saveProfile() {
     const token = localStorage.getItem('authToken');
-  
+
+    if (this.provider.new_password && this.provider.new_password.length < 8) {
+      Swal.fire({
+        title: 'Warning!',
+        text: 'Password must be at least 8 characters long.',
+        icon: 'warning',
+        confirmButtonColor: '#428eba',
+        confirmButtonText: 'OK'
+      });
+      return; // Stop execution if validation fails
+    }
+
     // ✅ Send profile data as JSON
     const updatedData = {
       email: this.provider.email || '',
@@ -350,9 +393,9 @@ export class ProviderProfileComponent implements OnInit {
       description: this.provider.description || '',
       password: this.provider.new_password ? this.provider.new_password : null
     };
-  
+
     console.log('Sending JSON Data:', updatedData); // ✅ Debug JSON data
-  
+
     this.http.put('http://127.0.0.1:8000/api/provider/update-profile', updatedData, {
       headers: {
         Authorization: `Bearer ${token}`,
@@ -360,15 +403,20 @@ export class ProviderProfileComponent implements OnInit {
       }
     }).subscribe(
       (response) => {
-        console.log('Profile updated successfully:', response);
-  
         // ✅ If image is selected, upload it separately
         if (this.selectedBusinessLogo) {
           this.uploadProfilePicture();
         } else {
-          Swal.fire('Success', 'Profile updated successfully!', 'success');
-          this.isEditing = false;
-          this.fetchProviderProfile();
+          Swal.fire({
+            title: 'Success!',
+            text: 'Profile updated successfully!',
+            icon: 'success',
+            confirmButtonColor: '#428eba',
+            confirmButtonText: 'OK'
+          }).then(() => {
+            this.isEditing = false;
+            this.fetchProviderProfile();
+          });
         }
       },
       (error) => {
@@ -377,21 +425,26 @@ export class ProviderProfileComponent implements OnInit {
       }
     );
   }
-  
+
   uploadProfilePicture() {
     const token = localStorage.getItem('authToken');
     const formData = new FormData();
-  
+
     formData.append('profile_pic', this.selectedBusinessLogo!);
-  
+
     console.log('Uploading Image:', this.selectedBusinessLogo); // ✅ Debug Image Upload
-  
+
     this.http.post('http://127.0.0.1:8000/api/provider/upload-profile-picture', formData, {
       headers: { Authorization: `Bearer ${token}` }
     }).subscribe(
       (response) => {
-        console.log('Profile picture uploaded:', response);
-        Swal.fire('Success', 'Profile picture updated successfully!', 'success');
+        Swal.fire({
+          title: 'Success!',
+          text: 'Profile picture updated successfully!',
+          icon: 'success',
+          confirmButtonColor: '#428eba', // ✅ Set the button color
+          confirmButtonText: 'OK'
+        });
         this.isEditing = false;
         this.fetchProviderProfile();
       },
@@ -401,11 +454,6 @@ export class ProviderProfileComponent implements OnInit {
       }
     );
   }
-  
-  
-  
-  
-  
 
   // ✅ Handle Province Change
   onProvinceChange(provinceName: string) {

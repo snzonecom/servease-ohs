@@ -19,9 +19,12 @@
         <!-- Business Logo -->
         <div class="info-row">
           <label for="businessLogo">Business Logo:</label>
+          <div class="error-message" *ngIf="validationErrors['businessLogo']">
+            {{ validationErrors['businessLogo'] }}
+          </div>
           <div class="upload-container">
-            <input type="file" id="businessLogo" accept="image/*" class="file-input"
-              (change)="onBusinessLogoSelected($event)" />
+            <input type="file" id="businessLogo" [(ngModel)]="providerData.businessLogo" accept="image/*"
+              class="file-input" (change)="onBusinessLogoSelected($event)" required />
             <button class="upload-button" (click)="triggerBusinessLogoInput()">Upload Business Logo</button>
             <img *ngIf="businessLogoPreview" [src]="businessLogoPreview" alt="Business Logo Preview"
               class="image-preview">
@@ -32,6 +35,9 @@
         <div class="info-row">
           <label for="businessName">Business Name:</label>
           <input id="businessName" type="text" [(ngModel)]="providerData.fullName" placeholder="Your Business Name" />
+          <div class="error-message" *ngIf="validationErrors['fullName']">
+            {{ validationErrors['fullName'] }}
+          </div>
         </div>
 
         <!-- Business Description -->
@@ -39,24 +45,37 @@
           <label for="description">Tell Us about your Business:</label>
           <textarea id="description" [(ngModel)]="providerData.description" rows="4" class="w-full p-inputtext"
             placeholder="Enter description here..."></textarea>
+          <div class="error-message" *ngIf="validationErrors['houseAdd']">
+            You need to tell us about your business.
+          </div>
         </div>
 
         <!-- Email Address -->
         <div class="info-row">
           <label for="email">Email Address:</label>
           <input id="email" type="email" [(ngModel)]="providerData.email" placeholder="contact@business.com" />
+          <div class="error-message" *ngIf="validationErrors['email']">
+            {{ validationErrors['email'] }}
+          </div>
         </div>
 
         <!-- Contact Number -->
         <div class="info-row">
           <label for="contactNumber">Contact Number:</label>
-          <input id="contactNumber" type="tel" [(ngModel)]="providerData.contactNumber" placeholder="(123) 456-7890" />
+          <input id="contactNumber" type="tel" [(ngModel)]="providerData.contactNumber" placeholder="(123) 456-7890"
+            pattern="[0-9]*" inputmode="numeric" oninput="this.value = this.value.replace(/[^0-9]/g, '')" />
+          <div class="error-message" *ngIf="validationErrors['contactNumber']">
+            {{ validationErrors['contactNumber'] }}
+          </div>
         </div>
 
         <!-- Office Address -->
         <div class="info-row">
           <label for="officeAdd">Office Address:</label>
           <input id="officeAdd" type="text" [(ngModel)]="providerData.houseAdd" placeholder="123 House Building 45" />
+          <div class="error-message" *ngIf="validationErrors['houseAdd']">
+            The office address field is required.
+          </div>
         </div>
 
         <!-- Province Dropdown -->
@@ -67,6 +86,9 @@
             <option value="" disabled selected>Select Province</option>
             <option *ngFor="let province of provinces" [value]="province.province">{{ province.province }}</option>
           </select>
+          <div class="error-message" *ngIf="validationErrors['province']">
+            You should select your province.
+          </div>
         </div>
 
         <!-- City/Municipality Dropdown -->
@@ -77,6 +99,9 @@
             <option value="" disabled selected>Select Your Province First</option>
             <option *ngFor="let city of cities" [value]="city.name">{{ city.name }}</option>
           </select>
+          <div class="error-message" *ngIf="validationErrors['city']">
+            You should select your city.
+          </div>
         </div>
 
         <!-- Barangay Dropdown -->
@@ -87,26 +112,38 @@
             <option value="" disabled selected>Select your City/Municipality First</option>
             <option *ngFor="let brgy of barangays" [value]="brgy">{{ brgy }}</option>
           </select>
+          <div class="error-message" *ngIf="validationErrors['brgy']">
+            You should select your barangay.
+          </div>
         </div>
 
         <!-- Business Registration Number (BRN) -->
         <div class="info-row">
           <label for="brn">Business Registration Number (BRN):</label>
           <input id="brn" type="text" [(ngModel)]="providerData.brn" placeholder="BRN-12345" />
+          <div class="error-message" *ngIf="validationErrors['brn']">
+            The business registration number is required.
+          </div>
         </div>
 
         <!-- Contact Person -->
         <div class="info-row">
           <label for="contactPerson">Contact Person:</label>
           <input id="contactPerson" type="text" [(ngModel)]="providerData.contactPerson" placeholder="John Doe" />
+          <div class="error-message" *ngIf="validationErrors['contactPerson']">
+            You need to provide a contact person.
+          </div>
         </div>
 
         <!-- Contact Person ID -->
         <div class="info-row">
           <label for="personID">Contact Person - Identification Card (ID):</label>
+          <div class="error-message" *ngIf="validationErrors['personID']">
+            {{ validationErrors['personID'] }}
+          </div>
           <div class="upload-container">
-            <input type="file" id="personID" accept="image/*" class="file-input"
-              (change)="onPersonIDSelected($event)" />
+            <input type="file" id="personID" [(ngModel)]="providerData.personID" accept="image/*" class="file-input"
+              (change)="onPersonIDSelected($event)" required />
             <button class="upload-button" (click)="triggerPersonIDInput()">Upload ID</button>
             <img *ngIf="personIDPreview" [src]="personIDPreview" alt="ID Preview" class="image-preview">
           </div>
@@ -121,6 +158,9 @@
               {{ category.category_name }}
             </option>
           </select>
+          <div class="error-message" *ngIf="validationErrors['serviceType']">
+            You should select your main service type.
+          </div>
         </div>
 
         <!-- Password -->

@@ -51,7 +51,8 @@
 
             <div class="form-group">
                 <label><i class="pi pi-money-bill"></i> Starting Price:</label>
-                <input type="number" class="field-input" [(ngModel)]="selectedService.price_start" />
+                <input type="number" class="field-input" [(ngModel)]="selectedService.price_start" pattern="[0-9]*"
+                    inputmode="numeric" oninput="this.value = this.value.replace(/[^0-9]/g, '')" />
             </div>
 
             <div class="dialog-buttons">

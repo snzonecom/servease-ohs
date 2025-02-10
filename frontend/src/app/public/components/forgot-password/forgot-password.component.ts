@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import Swal from 'sweetalert2';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-forgot-password',
@@ -12,7 +13,7 @@ export class ForgotPasswordComponent {
   forgotPasswordForm: FormGroup;
   isLoading = false;
 
-  constructor(private fb: FormBuilder, private http: HttpClient) {
+  constructor(private fb: FormBuilder, private http: HttpClient, private router: Router) {
     this.forgotPasswordForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]]
     });
@@ -39,4 +40,9 @@ export class ForgotPasswordComponent {
       }
     });
   }
+
+  navigateToLogin() {
+    this.router.navigate(['/login']); // Adjust the route based on your app's login route
+  }
+
 }

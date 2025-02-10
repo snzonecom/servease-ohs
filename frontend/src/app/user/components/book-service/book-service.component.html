@@ -48,12 +48,12 @@
                                         <div class="rating">
                                             <!-- Filled Stars -->
                                             <ng-container *ngFor="let star of getFilledStars(feedback.rating)">
-                                                <span class="star" style="color: gold;">&#9733;</span>
+                                                <i class="pi pi-star-fill" style="color: gold; margin-inline: 1px;"></i>
                                             </ng-container>
 
                                             <!-- Empty Stars -->
                                             <ng-container *ngFor="let star of getEmptyStars(feedback.rating)">
-                                                <span class="star" style="color: gray;">&#9734;</span>
+                                                <i class="pi pi-star-fill" style="color: gray; margin-inline: 1px;"></i>
                                             </ng-container>
                                         </div>
 
