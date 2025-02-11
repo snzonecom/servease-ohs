@@ -14,7 +14,7 @@ class ServiceCategory extends Model
     protected $primaryKey = 'category_id';
     protected $fillable = ['category_name', 'category_description'];
     protected $dates = ['deleted_at'];
-    
+
     public static function getAllServiceCategory()
     {
         return DB::table('tbl_categories')->get();

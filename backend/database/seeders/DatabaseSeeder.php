@@ -16,10 +16,10 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         User::updateOrCreate(
-            ['email' => 'admin@mail.com'],  // Prevent duplicate seeding
+            ['email' => 'phservease@gmail.com'],  // Prevent duplicate seeding
             [
-                'email' => 'admin@mail.com',
-                'password' => Hash::make('admin'),  // ✅ Make sure to hash the password
+                'email' => 'phservease@gmail.com',
+                'password' => Hash::make('LETServe!402'),  // ✅ Make sure to hash the password
                 'role' => 'admin',  // ✅ Ensure your `users` table has a `role` column
             ]
         );

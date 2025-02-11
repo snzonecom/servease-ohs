@@ -148,48 +148,48 @@ class BookingController extends Controller
         $request->validate([
             'book_status' => 'required|in:Pending,Ongoing,Rejected,Cancelled,Completed',
         ]);
-    
+
         $booking = Booking::findOrFail($id);
         $previousStatus = $booking->book_status;
         $newStatus = $request->book_status;
-    
+
         // ✅ Update Booking Status
         $booking->update(['book_status' => $newStatus]);
-    
+
         // ✅ Fetch Customer Details
         $customer = DB::table('tbl_customer_info')
-                    ->join('users', 'tbl_customer_info.user_id', '=', 'users.id')
-                    ->where('tbl_customer_info.user_id', $booking->user_id)
-                    ->select('users.email', 'tbl_customer_info.customer_name')
-                    ->first();
-    
+            ->join('users', 'tbl_customer_info.user_id', '=', 'users.id')
+            ->where('tbl_customer_info.user_id', $booking->user_id)
+            ->select('users.email', 'tbl_customer_info.customer_name')
+            ->first();
+
         if (!$customer || !$customer->email) {
             return response()->json(['error' => 'Customer not found or missing email.'], 404);
         }
-    
+
         // ✅ Fetch Provider Name
         $provider = DB::table('tbl_provider_info')
-                    ->where('provider_id', $booking->provider_id)
-                    ->select('provider_name')
-                    ->first();
-    
+            ->where('provider_id', $booking->provider_id)
+            ->select('provider_name')
+            ->first();
+
         // ✅ Fetch Service Names
         $serviceNames = DB::table('tbl_services')
-                    ->whereIn('service_id', json_decode($booking->services))
-                    ->pluck('service_name')
-                    ->toArray();
-    
+            ->whereIn('service_id', json_decode($booking->services))
+            ->pluck('service_name')
+            ->toArray();
+
         if (empty($serviceNames)) {
             return response()->json(['error' => 'Invalid service selection.'], 400);
         }
-    
+
         // ✅ Prepare Email Details
         $servicesList = implode(', ', $serviceNames);
         $customerName = $customer->customer_name;
         $providerName = $provider ? $provider->provider_name : 'Service Provider';
-    
+
         $subject = "Booking Status Updated: {$newStatus}";
-    
+
         $statusMessages = [
             'Pending' => "Your booking is pending for approval by your chosen service provider.",
             'Ongoing' => "Your booking is now accepted! The provider will get in touch to you before and during your service transaction.",
@@ -197,7 +197,7 @@ class BookingController extends Controller
             'Cancelled' => "Your booking has been cancelled by your chosen service provider.",
             'Completed' => "Your booking has been successfully completed. Thank you for choosing our services!"
         ];
-    
+
         $emailBody = "
             <html>
             <head>
@@ -234,13 +234,13 @@ class BookingController extends Controller
             </body>
             </html>
         ";
-    
+
         // ✅ Send Email to Customer
         Mail::html($emailBody, function ($message) use ($customer, $subject) {
             $message->to($customer->email)
-                    ->subject($subject);
+                ->subject($subject);
         });
-    
+
         return response()->json(['message' => 'Booking status updated successfully. Notification sent to customer.'], 200);
     }
 
@@ -331,50 +331,50 @@ class BookingController extends Controller
     public function cancelBooking($bookingId)
     {
         $booking = Booking::find($bookingId);
-    
+
         if (!$booking) {
             return response()->json(['message' => 'Booking not found'], 404);
         }
-    
+
         if ($booking->book_status !== 'Pending') {
             return response()->json(['message' => 'Only pending bookings can be cancelled.'], 400);
         }
-    
+
         // ✅ Fetch Provider Details
         $provider = DB::table('tbl_provider_info')
-                    ->join('users', 'tbl_provider_info.user_id', '=', 'users.id')
-                    ->where('tbl_provider_info.provider_id', $booking->provider_id)
-                    ->select('users.email', 'tbl_provider_info.provider_name')
-                    ->first();
-    
+            ->join('users', 'tbl_provider_info.user_id', '=', 'users.id')
+            ->where('tbl_provider_info.provider_id', $booking->provider_id)
+            ->select('users.email', 'tbl_provider_info.provider_name')
+            ->first();
+
         if (!$provider || !$provider->email) {
             return response()->json(['error' => 'Provider not found or missing email.'], 404);
         }
-    
+
         // ✅ Fetch Customer Name from `tbl_customer_info`
         $customer = DB::table('tbl_customer_info')
-                    ->where('user_id', $booking->user_id)
-                    ->select('customer_name')
-                    ->first();
-    
+            ->where('user_id', $booking->user_id)
+            ->select('customer_name')
+            ->first();
+
         if (!$customer) {
             return response()->json(['error' => 'Customer information not found.'], 404);
         }
-    
+
         // ✅ Fetch Service Names
         $serviceNames = DB::table('tbl_services')
-                    ->whereIn('service_id', json_decode($booking->services))
-                    ->pluck('service_name')
-                    ->toArray();
-    
+            ->whereIn('service_id', json_decode($booking->services))
+            ->pluck('service_name')
+            ->toArray();
+
         if (empty($serviceNames)) {
             return response()->json(['error' => 'Invalid service selection.'], 400);
         }
-    
+
         // ✅ Update Booking Status
         $booking->book_status = 'Cancelled';
         $booking->save();
-    
+
         // ✅ Prepare Email Details
         $servicesList = implode(', ', $serviceNames);
         $subject = "Booking Cancelled by {$customer->customer_name}";
@@ -415,13 +415,13 @@ class BookingController extends Controller
             </body>
             </html>
         ";
-    
+
         // ✅ Send Email to Provider
         Mail::html($emailBody, function ($message) use ($provider, $subject) {
             $message->to($provider->email)
-                    ->subject($subject);
+                ->subject($subject);
         });
-    
+
         return response()->json(['message' => 'Booking cancelled successfully. Notification sent to provider.'], 200);
     }
 

@@ -217,20 +217,20 @@ class AuthController extends Controller
     public function forgotPassword(Request $request)
     {
         $request->validate(['email' => 'required|email|exists:users,email']);
-    
+
         // ✅ Generate a Reset Token
         $token = Str::random(60);
-    
+
         // ✅ Store Token in `password_reset_tokens` Table
         DB::table('password_reset_tokens')->updateOrInsert(
             ['email' => $request->email],
             ['token' => $token, 'created_at' => now()]
         );
-    
+
         // ✅ Construct the Angular Reset Password URL
         $frontendUrl = env('FRONTEND_URL', 'http://localhost:4200');
         $resetLink = "{$frontendUrl}/reset-password?token={$token}&email={$request->email}";
-    
+
         // ✅ Email Subject & HTML Content
         $subject = "Reset Your Password";
         $emailBody = "
@@ -311,13 +311,13 @@ class AuthController extends Controller
     </html>
 ";
 
-    
+
         // ✅ Send Email Using `html()`
         Mail::html($emailBody, function ($message) use ($request, $subject) {
             $message->to($request->email)
-                    ->subject($subject);
+                ->subject($subject);
         });
-    
+
         return response()->json(['message' => 'Password reset link has been sent to your email.']);
     }
 
@@ -328,27 +328,27 @@ class AuthController extends Controller
             'password' => 'required|string|min:8|confirmed',
             'token' => 'required'
         ]);
-    
+
         // ✅ Check if the Token Exists
         $tokenData = DB::table('password_reset_tokens')
-                        ->where('email', $request->email)
-                        ->where('token', $request->token)
-                        ->first();
-    
+            ->where('email', $request->email)
+            ->where('token', $request->token)
+            ->first();
+
         if (!$tokenData) {
             return response()->json(['error' => 'Invalid or expired reset token.'], 400);
         }
-    
+
         // ✅ Update the User Password
         $user = User::where('email', $request->email)->first();
         $user->update(['password' => Hash::make($request->password)]);
-    
+
         // ✅ Delete the Reset Token after Successful Reset
         DB::table('password_reset_tokens')->where('email', $request->email)->delete();
-    
+
         return response()->json(['message' => 'Password reset successful. You can now login.']);
     }
-    
+
 
     public function verifyEmail(Request $request)
     {
@@ -418,7 +418,7 @@ class AuthController extends Controller
             if (strlen($request->password) < 8) {
                 return response()->json(['message' => 'Password must be at least 8 characters long.'], 422);
             }
-            
+
             $user->password = Hash::make($request->password);
             $user->save();
             $changesDetected = true;

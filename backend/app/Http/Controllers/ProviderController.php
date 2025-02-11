@@ -39,11 +39,11 @@ class ProviderController extends Controller
     {
         $provider = Provider::where('user_id', Auth::id())->first();
         $user = User::find(Auth::id());
-    
+
         if (!$provider || !$user) {
             return response()->json(['message' => 'Provider not found'], 404);
         }
-    
+
         // ✅ Validate Input
         $request->validate([
             'email' => 'email|unique:users,email,' . Auth::id(),
@@ -57,7 +57,7 @@ class ProviderController extends Controller
             'password' => 'nullable|string|min:6',
             'profile_pic' => 'nullable|image|mimes:jpeg,png,jpg|max:2048'
         ]);
-    
+
         // ✅ Prevent Null Values from Overwriting Existing Data
         $provider->update([
             'contact_no' => $request->input('contact_no') ?? $provider->contact_no,
@@ -68,19 +68,19 @@ class ProviderController extends Controller
             'contact_person' => $request->input('contact_person') ?? $provider->contact_person,
             'description' => $request->input('description') ?? $provider->description, // ✅ Add description update
         ]);
-    
+
         // ✅ Update Email in Users Table
         if ($request->has('email')) {
             $user->email = $request->input('email');
             $user->save();
         }
-    
+
         // ✅ Update Password if provided
         if ($request->filled('password')) {
             $user->password = Hash::make($request->input('password'));
             $user->save();
         }
-    
+
         // ✅ Handle Profile Picture Upload
         if ($request->hasFile('profile_pic')) {
             if ($provider->profile_pic) {
@@ -90,13 +90,13 @@ class ProviderController extends Controller
             $provider->profile_pic = 'storage/' . $path;
             $provider->save();
         }
-    
+
         return response()->json([
             'message' => 'Profile updated successfully!',
             'provider' => $provider
         ]);
     }
-    
+
 
     public function uploadProfilePicture(Request $request)
     {
@@ -127,36 +127,36 @@ class ProviderController extends Controller
         ]);
     }
 
-/**
+    /**
      * ✅ Soft Delete a Provider (instead of permanent deletion)
      */
     public function destroy($id)
     {
         $provider = Provider::find($id);
-    
+
         if (!$provider) {
             return response()->json(['message' => 'Provider not found'], 404);
         }
-    
+
         // ✅ Fetch Provider Email
         $user = User::find($provider->user_id);
         if (!$user || !$user->email) {
             return response()->json(['error' => 'Provider email not found'], 404);
         }
-    
+
         DB::transaction(function () use ($provider, $user) {
             // ✅ Update account status to "deleted"
             DB::table('tbl_provider_info')
                 ->where('provider_id', $provider->provider_id)
                 ->update(['account_status' => 'deleted']);
-    
+
             // ✅ Soft Delete the Provider
             $provider->delete();
-    
+
             // ✅ Soft Delete the Associated User
             $user->delete();
         });
-    
+
         // ✅ Prepare Email Notification
         $subject = "Account Deactivation Notice";
         $emailBody = "
@@ -189,47 +189,47 @@ class ProviderController extends Controller
             </body>
             </html>
         ";
-    
+
         // ✅ Send Email to Provider
         Mail::html($emailBody, function ($message) use ($user, $subject) {
             $message->to($user->email)
-                    ->subject($subject);
+                ->subject($subject);
         });
-    
+
         return response()->json(['message' => 'Provider and account soft-deleted successfully, status set to deleted, email sent']);
     }
-    
-    
 
-/**
- * ✅ Restore a Soft-Deleted Provider and Update Status
- */
-public function restoreProvider(Request $request)
-{
-    $id = $request->input('id'); // ✅ Get provider_id from request
-    $provider = Provider::onlyTrashed()->where('provider_id', $id)->first();
 
-    if (!$provider) {
-        return response()->json(['message' => 'Provider not found or not deleted'], 404);
-    }
 
-    DB::transaction(function () use ($provider) {
-        // ✅ Restore the provider (removes `deleted_at`)
-        $provider->restore();
+    /**
+     * ✅ Restore a Soft-Deleted Provider and Update Status
+     */
+    public function restoreProvider(Request $request)
+    {
+        $id = $request->input('id'); // ✅ Get provider_id from request
+        $provider = Provider::onlyTrashed()->where('provider_id', $id)->first();
 
-        // ✅ Restore the associated user
-        $user = User::onlyTrashed()->where('id', $provider->user_id)->first();
-        if ($user) {
-            $user->restore();
+        if (!$provider) {
+            return response()->json(['message' => 'Provider not found or not deleted'], 404);
         }
 
-        // ✅ Ensure account status is set to "pending"
-        DB::table('tbl_provider_info')->where('provider_id', $provider->provider_id)->update(['account_status' => 'pending']);
-    });
+        DB::transaction(function () use ($provider) {
+            // ✅ Restore the provider (removes `deleted_at`)
+            $provider->restore();
 
-    return response()->json(['message' => 'Provider and user account restored, status set to pending.']);
-}
-    
+            // ✅ Restore the associated user
+            $user = User::onlyTrashed()->where('id', $provider->user_id)->first();
+            if ($user) {
+                $user->restore();
+            }
+
+            // ✅ Ensure account status is set to "pending"
+            DB::table('tbl_provider_info')->where('provider_id', $provider->provider_id)->update(['account_status' => 'pending']);
+        });
+
+        return response()->json(['message' => 'Provider and user account restored, status set to pending.']);
+    }
+
 
     /**
      * ✅ Permanently Delete a Provider (Force Delete)
@@ -240,40 +240,40 @@ public function restoreProvider(Request $request)
         if (!$provider) {
             return response()->json(['message' => 'Provider not found or not deleted'], 404);
         }
-    
+
         // ✅ Find and Permanently Delete the Associated User
         $user = User::onlyTrashed()->find($provider->user_id);
         if ($user) {
             $user->forceDelete();
         }
-    
+
         // ✅ Permanently Delete the Provider
         $provider->forceDelete();
-    
+
         return response()->json(['message' => 'Provider and account permanently deleted']);
     }
-    
+
 
     public function approve($id)
     {
         $provider = Provider::findOrFail($id);
-    
+
         // ✅ Fetch Email from Users Table if Not in Providers Table
         $user = \App\Models\User::where('id', $provider->user_id)->first();
         $email = $user ? $user->email : null;
-    
+
         if (!$email) {
             return response()->json(['error' => 'Provider does not have an email address.'], 400);
         }
-    
+
         $provider->account_status = 'approved';
         $provider->save();
-    
+
         // ✅ Email Subject & Content
         $subject = "Your Service Provider Application is Approved";
         $frontendUrl = env('FRONTEND_URL', 'http://localhost:4200');
         $dashboardUrl = "{$frontendUrl}/login";
-    
+
         $emailBody = "
             <html>
             <head>
@@ -309,33 +309,33 @@ public function restoreProvider(Request $request)
             </body>
             </html>
         ";
-    
+
         // ✅ Send Email
         Mail::html($emailBody, function ($message) use ($email, $subject) {
             $message->to($email)
-                    ->subject($subject);
+                ->subject($subject);
         });
-    
+
         return response()->json(['message' => 'Provider application approved and email sent.']);
     }
 
     public function reject($id)
     {
         $provider = Provider::findOrFail($id);
-    
+
         // ✅ Fetch Email from Users Table if Not in Providers Table
         $user = \App\Models\User::where('id', $provider->user_id)->first();
         $email = $user ? $user->email : null;
-    
+
         DB::transaction(function () use ($provider) {
             // ✅ Update account status to "rejected"
             $provider->account_status = 'rejected';
             $provider->save();
-    
+
             // ✅ Soft delete (sets deleted_at)
             $provider->delete();
         });
-    
+
         // ✅ Send Rejection Email (If Email Exists)
         if ($email) {
             $subject = "Your Service Provider Application was Rejected";
@@ -368,12 +368,12 @@ public function restoreProvider(Request $request)
                 </body>
                 </html>
             ";
-    
+
             Mail::html($emailBody, function ($message) use ($email, $subject) {
                 $message->to($email)->subject($subject);
             });
         }
-    
+
         return response()->json(['message' => 'Provider application rejected, soft deleted, and email sent if available.']);
     }
 
@@ -421,11 +421,11 @@ public function restoreProvider(Request $request)
     {
         // ✅ Fetch category details
         $category = DB::table('tbl_categories')->where('category_id', $categoryId)->first();
-    
+
         if (!$category) {
             return response()->json(['message' => 'Category not found'], 404);
         }
-    
+
         // ✅ Fetch providers under the category
         $providers = Provider::with('bookings')  // Include bookings for ratings
             ->where('account_status', 'approved')
@@ -434,7 +434,7 @@ public function restoreProvider(Request $request)
             ->map(function ($provider) {
                 // ✅ Dynamically calculate the average rating
                 $averageRating = $provider->bookings()->avg('provider_rate');
-    
+
                 return [
                     'provider_id' => $provider->provider_id,
                     'businessName' => $provider->provider_name,
@@ -443,14 +443,14 @@ public function restoreProvider(Request $request)
                     'location' => $provider->city . ', ' . $provider->province
                 ];
             });
-    
+
         return response()->json([
             'category_name' => $category->category_name,
             'category_description' => $category->category_description,
             'providers' => $providers
         ]);
     }
-    
+
 
     //For showing details of selected service provider
     public function getProviderDetails($id)
@@ -501,7 +501,7 @@ public function restoreProvider(Request $request)
             ->map(function ($provider) {
                 $bookingsCount = $provider->bookings->count();
                 $averageRating = $provider->bookings->avg('provider_rate') ?? 0;
-    
+
                 return [
                     'provider_id' => $provider->provider_id,
                     'name' => $provider->provider_name,
@@ -518,10 +518,10 @@ public function restoreProvider(Request $request)
             })
             ->take(6)  // ✅ Limit to top 6 providers
             ->values();
-    
+
         return response()->json($topProviders);
     }
-    
+
     public function getRecommendedProviders(Request $request)
     {
         $user = Auth::user(); // Get the authenticated customer
@@ -655,45 +655,45 @@ public function restoreProvider(Request $request)
         ]);
     }
 
-public function getNewApplications()
-{
-    // ✅ Fetch the most recent pending applications
-    $applications = Provider::where('account_status', 'pending')
-        ->orderBy('created_at', 'desc') // Sort by newest first
-        ->limit(7) // ✅ Get the latest 7 applications
-        ->get()
-        ->map(function ($provider) {
-            return [
-                'applicant_name' => $provider->provider_name,
-                'submitted_time' => Carbon::parse($provider->created_at)->diffForHumans() // ✅ Convert timestamp to 'X minutes ago'
-            ];
-        });
+    public function getNewApplications()
+    {
+        // ✅ Fetch the most recent pending applications
+        $applications = Provider::where('account_status', 'pending')
+            ->orderBy('created_at', 'desc') // Sort by newest first
+            ->limit(7) // ✅ Get the latest 7 applications
+            ->get()
+            ->map(function ($provider) {
+                return [
+                    'applicant_name' => $provider->provider_name,
+                    'submitted_time' => Carbon::parse($provider->created_at)->diffForHumans() // ✅ Convert timestamp to 'X minutes ago'
+                ];
+            });
 
-    return response()->json($applications);
-}
+        return response()->json($applications);
+    }
 
-public function getApprovedProvidersByCategory()
-{
-    $categories = DB::table('tbl_provider_info')
-        ->join('tbl_categories', 'tbl_provider_info.service_type', '=', 'tbl_categories.category_id')
-        ->where('tbl_provider_info.account_status', 'approved')
-        ->select('tbl_categories.category_name', DB::raw('COUNT(tbl_provider_info.provider_id) as total_providers'))
-        ->groupBy('tbl_categories.category_name')
-        ->orderByDesc('total_providers')
-        ->get();
+    public function getApprovedProvidersByCategory()
+    {
+        $categories = DB::table('tbl_provider_info')
+            ->join('tbl_categories', 'tbl_provider_info.service_type', '=', 'tbl_categories.category_id')
+            ->where('tbl_provider_info.account_status', 'approved')
+            ->select('tbl_categories.category_name', DB::raw('COUNT(tbl_provider_info.provider_id) as total_providers'))
+            ->groupBy('tbl_categories.category_name')
+            ->orderByDesc('total_providers')
+            ->get();
 
-    return response()->json($categories);
-}   
+        return response()->json($categories);
+    }
 
-/**
+    /**
      * ✅ Get Soft-Deleted Providers
      */
     public function getDeletedProviders()
     {
         $deletedProviders = Provider::onlyTrashed()->get();
-    
+
         \Log::info('Soft Deleted Providers:', ['providers' => $deletedProviders]);
-    
+
         return response()->json($deletedProviders);
     }
 

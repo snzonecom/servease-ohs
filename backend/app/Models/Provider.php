@@ -58,12 +58,12 @@ class Provider extends Model
     {
         return $this->hasMany(Booking::class, 'provider_id');
     }
-    
+
     // ✅ Get the average rating
     public function getAverageRatingAttribute()
     {
         return $this->bookings()->avg('provider_rate') ?? 0;  // Return 0 if no ratings yet
     }
-    
-    
+
+
 }

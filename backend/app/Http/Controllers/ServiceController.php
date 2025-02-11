@@ -111,13 +111,13 @@ class ServiceController extends Controller
     {
         // ✅ Fetch all bookings and decode services JSON
         $bookings = Booking::select('services')->get();
-    
+
         $serviceCount = [];
-    
+
         // ✅ Extract service IDs and count occurrences
         foreach ($bookings as $booking) {
             $serviceIds = json_decode($booking->services, true);
-    
+
             if (is_array($serviceIds)) {
                 foreach ($serviceIds as $serviceId) {
                     if (isset($serviceCount[$serviceId])) {
@@ -128,7 +128,7 @@ class ServiceController extends Controller
                 }
             }
         }
-    
+
         // ✅ Get service names for the counted service IDs
         $popularServices = Service::whereIn('service_id', array_keys($serviceCount))
             ->get(['service_id', 'service_name'])
@@ -141,9 +141,9 @@ class ServiceController extends Controller
             ->sortByDesc('total_bookings')
             ->take(5)  // ✅ Limit to top 5
             ->values();
-    
+
         return response()->json($popularServices);
     }
-    
+
 
 }

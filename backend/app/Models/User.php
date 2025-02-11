@@ -54,6 +54,6 @@ class User extends Authenticatable
     {
         return $this->hasOne(Provider::class, 'user_id', 'id')->withTrashed(); // ✅ Includes soft-deleted providers
     }
-    
-    
+
+
 }

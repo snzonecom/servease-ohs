@@ -10,10 +10,10 @@ class ServiceCategoryController extends Controller
 {
     // Get All Categories
     public function index()
-{
-    $categories = ServiceCategory::whereNull('deleted_at')->get();
-    return response()->json($categories);
-}
+    {
+        $categories = ServiceCategory::whereNull('deleted_at')->get();
+        return response()->json($categories);
+    }
 
 
     // Create New Category
@@ -45,30 +45,30 @@ class ServiceCategoryController extends Controller
         return response()->json($category);
     }
 
-// Soft Delete a Category
-public function destroy($id)
-{
-    $category = ServiceCategory::find($id);
+    // Soft Delete a Category
+    public function destroy($id)
+    {
+        $category = ServiceCategory::find($id);
 
-    if (!$category) {
-        return response()->json(['message' => 'Category not found'], 404);
+        if (!$category) {
+            return response()->json(['message' => 'Category not found'], 404);
+        }
+
+        $category->delete(); // ✅ Soft Delete Instead of Permanent Deletion
+        return response()->json(['message' => 'Category soft deleted successfully']);
     }
 
-    $category->delete(); // ✅ Soft Delete Instead of Permanent Deletion
-    return response()->json(['message' => 'Category soft deleted successfully']);
-}
+    public function restore($id)
+    {
+        $category = ServiceCategory::withTrashed()->find($id);
 
-public function restore($id)
-{
-    $category = ServiceCategory::withTrashed()->find($id);
+        if (!$category) {
+            return response()->json(['message' => 'Category not found'], 404);
+        }
 
-    if (!$category) {
-        return response()->json(['message' => 'Category not found'], 404);
+        $category->restore();
+        return response()->json(['message' => 'Category restored successfully']);
     }
-
-    $category->restore();
-    return response()->json(['message' => 'Category restored successfully']);
-}
 
 
 
@@ -86,8 +86,8 @@ public function restore($id)
     }
 
     public function getDeletedCategories()
-{
-    $deletedCategories = ServiceCategory::onlyTrashed()->get();
-    return response()->json($deletedCategories);
-}
+    {
+        $deletedCategories = ServiceCategory::onlyTrashed()->get();
+        return response()->json($deletedCategories);
+    }
 }

@@ -16,14 +16,14 @@ class DeletedProviderController extends Controller
     public function index()
     {
         $deletedProviders = Provider::onlyTrashed()->with(['user', 'serviceCategory'])->get(); // ✅ Ensure 'serviceCategory' relationship is loaded
-    
+
         // 🔍 Debugging Log
         Log::info('Fetching Soft Deleted Providers', ['count' => $deletedProviders->count()]);
-    
+
         if ($deletedProviders->isEmpty()) {
             return response()->json([], 200); // ✅ Return an empty array instead of 404
         }
-    
+
         // 🔹 Append Full URL to `profile_pic` and `attachment`, and include user & service category details
         $deletedProviders->transform(function ($provider) {
             if ($provider->profile_pic) {
@@ -32,10 +32,10 @@ class DeletedProviderController extends Controller
             if ($provider->attachment) {
                 $provider->attachment = asset($provider->attachment); // Convert to full URL
             }
-    
+
             // ✅ Ensure user relationship is properly loaded
             $user = $provider->user()->withTrashed()->first(); // Fetch even soft-deleted users
-    
+
             return [
                 'provider_id' => $provider->provider_id,
                 'user_id' => $provider->user_id,
@@ -54,14 +54,14 @@ class DeletedProviderController extends Controller
                 'created_at' => $provider->created_at,
                 'updated_at' => $provider->updated_at,
                 'deleted_at' => $provider->deleted_at,
-    
+
                 // 🔹 Include user data (ensure it's not null)
                 'user' => $user ? [
                     'id' => $user->id,
                     'email' => $user->email,
                     'role' => $user->role,
                 ] : null,
-    
+
                 // ✅ Include service category name
                 'service_category' => $provider->serviceCategory ? [
                     'category_id' => $provider->serviceCategory->category_id,
@@ -69,14 +69,14 @@ class DeletedProviderController extends Controller
                 ] : null,
             ];
         });
-    
+
         return response()->json($deletedProviders);
     }
-    
-    
-    
-    
-    
+
+
+
+
+
 
     /**
      * ✅ Restore a Soft-Deleted Provider

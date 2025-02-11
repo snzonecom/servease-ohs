@@ -27,14 +27,14 @@ class Booking extends Model
     public function getServiceDetailsAttribute()
     {
         $services = is_array($this->services) ? $this->services : json_decode($this->services, true);
-    
+
         if (is_array($services)) {
             return Service::whereIn('service_id', $services)->get();
         }
-    
+
         return collect();  // Return an empty collection if decoding fails
     }
-    
+
 
 
     // Relationships
@@ -54,9 +54,9 @@ class Booking extends Model
     }
 
     public function services()
-{
-    return $this->belongsToMany(Service::class, 'tbl_services', 'service_id');
-}
+    {
+        return $this->belongsToMany(Service::class, 'tbl_services', 'service_id');
+    }
 
-    
+
 }
