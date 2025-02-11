@@ -162,8 +162,8 @@
     </div>
 
     <div class="flex-right">
-        <button pButton label="Cancel Booking" class="reject-button"
-            (click)="cancelBooking(selectedBooking.booking_id)">
+        <button pButton label="{{ isCancelling ? 'Cancelling...' : 'Cancel Booking' }}" class="reject-button"
+            (click)="cancelBooking(selectedBooking.booking_id)" [disabled]="isCancelling">
         </button>
     </div>
 </p-dialog>
@@ -295,8 +295,7 @@
     <div class="flex flex-column gap-3 mb-3">
         <label for="price" class="field-label">
             <span class="label-text"><i class="pi pi-calendar"></i> Price Paid</span>
-            <input pInputText id="price" [(ngModel)]="selectedBooking.price" [disabled]="true"
-                class="field-input" />
+            <input pInputText id="price" [(ngModel)]="selectedBooking.price" [disabled]="true" class="field-input" />
         </label>
     </div>
 

@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { ChangeDetectorRef } from '@angular/core';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-list-providers',
@@ -81,19 +82,61 @@ export class ListProvidersComponent implements OnInit {
     this.cdr.detectChanges();
   }
 
+  isDeleting: boolean = false;
+
   deleteProvider(providerId: number) {
-    if (confirm('Are you sure you want to delete this provider?')) {
-      this.http.delete(`http://127.0.0.1:8000/api/providers/${providerId}`).subscribe(
-        () => {
-          this.approvedProviders = this.approvedProviders.filter(p => p.provider_id !== providerId);
-          this.visible = false;  // ✅ Close modal after deletion
-          alert('Provider deleted successfully!');
-        },
-        (error) => {
-          console.error('❌ Error deleting provider:', error);
-        }
-      );
-    }
+    Swal.fire({
+      title: 'Are you sure?',
+      text: 'This action will deactivate the provider account.',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#428eba', // ✅ Fixed color
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, delete it!',
+      cancelButtonText: 'No, cancel'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.isDeleting = true; // ✅ Start loader
+
+        Swal.fire({
+          title: 'Deleting Provider...',
+          text: 'Please wait while we process the deletion.',
+          allowOutsideClick: false,
+          confirmButtonColor: '#428eba', // ✅ Fixed color
+          didOpen: () => {
+            Swal.showLoading(); // ✅ Show SweetAlert2 loader
+          }
+        });
+
+        this.http.delete(`http://127.0.0.1:8000/api/providers/${providerId}`).subscribe(
+          () => {
+            this.isDeleting = false; // ✅ Stop loader
+            this.approvedProviders = this.approvedProviders.filter(p => p.provider_id !== providerId);
+            this.visible = false; // ✅ Close modal
+
+            Swal.fire({
+              title: 'Deleted!',
+              text: 'The provider account has been deactivated successfully.',
+              icon: 'success',
+              confirmButtonColor: '#428eba', // ✅ Fixed color
+              confirmButtonText: 'OK'
+            });
+          },
+          (error) => {
+            this.isDeleting = false; // ✅ Stop loader
+            console.error('❌ Error deleting provider:', error);
+
+            Swal.fire({
+              title: 'Error',
+              text: 'Failed to delete provider. Please try again.',
+              icon: 'error',
+              confirmButtonColor: '#428eba' // ✅ Fixed color
+            });
+          }
+        );
+      }
+    });
   }
-  
+
+
 }

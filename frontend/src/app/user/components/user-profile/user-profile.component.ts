@@ -364,7 +364,19 @@ export class UserProfileComponent implements OnInit {
       },
       (error) => {
         console.error('Validation Error:', error);
-        Swal.fire('Error', 'Failed to update profile.', 'error');
+
+        if (error.status === 422 && error.error && error.error.message) {
+          Swal.fire({
+            title: 'Warning!',
+            text: error.error.message,
+            icon: 'warning',
+            confirmButtonText: 'OK',
+            confirmButtonColor: '#428eba',
+          });
+
+        } else {
+          Swal.fire('Error', 'Failed to update profile.', 'error');
+        }
       }
     );
   }

@@ -414,6 +414,11 @@ class AuthController extends Controller
 
         // ✅ Update Password if Provided
         if ($request->filled('password')) {
+
+            if (strlen($request->password) < 8) {
+                return response()->json(['message' => 'Password must be at least 8 characters long.'], 422);
+            }
+            
             $user->password = Hash::make($request->password);
             $user->save();
             $changesDetected = true;

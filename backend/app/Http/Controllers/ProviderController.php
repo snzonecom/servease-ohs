@@ -138,17 +138,67 @@ class ProviderController extends Controller
             return response()->json(['message' => 'Provider not found'], 404);
         }
     
-        // ✅ Soft Delete the Provider
-        $provider->delete();
-    
-        // ✅ Soft Delete the Associated User
+        // ✅ Fetch Provider Email
         $user = User::find($provider->user_id);
-        if ($user) {
-            $user->delete();
+        if (!$user || !$user->email) {
+            return response()->json(['error' => 'Provider email not found'], 404);
         }
     
-        return response()->json(['message' => 'Provider and account soft-deleted successfully']);
+        DB::transaction(function () use ($provider, $user) {
+            // ✅ Update account status to "deleted"
+            DB::table('tbl_provider_info')
+                ->where('provider_id', $provider->provider_id)
+                ->update(['account_status' => 'deleted']);
+    
+            // ✅ Soft Delete the Provider
+            $provider->delete();
+    
+            // ✅ Soft Delete the Associated User
+            $user->delete();
+        });
+    
+        // ✅ Prepare Email Notification
+        $subject = "Account Deactivation Notice";
+        $emailBody = "
+            <html>
+            <head>
+                <style>
+                    body { font-family: 'Poppins', Arial, sans-serif; background-color: #f4f4f4; margin: 0; padding: 0; }
+                    .container { max-width: 600px; margin: 20px auto; background-color: #ffffff; padding: 20px;
+                        border-radius: 8px; box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1); text-align: center; }
+                    h2 { color: #d9534f; font-weight: 600; }
+                    p { color: #555; font-size: 16px; font-weight: 400; }
+                    .footer { margin-top: 20px; font-size: 14px; color: #777; font-weight: 300; }
+                    .footer a { color: #d9534f; text-decoration: none; font-weight: 400; }
+                    .footer a:hover { text-decoration: underline; }
+                </style>
+            </head>
+            <body>
+                <div class='container'>
+                    <h2>Account Deactivation</h2>
+                    <p>Dear {$provider->provider_name},</p>
+                    <p>We regret to inform you that your service provider account has been deactivated.</p>
+                    
+                    <p>If you believe this was a mistake or wish to appeal, please contact our support team.</p>
+    
+                    <div class='footer'>
+                        <p>Need help? Contact us at <a href='mailto:phservease@gmail.com'>phservease@gmail.com</a></p>
+                        <p>&copy; " . date('Y') . " SERVEASE. All rights reserved.</p>
+                    </div>
+                </div>
+            </body>
+            </html>
+        ";
+    
+        // ✅ Send Email to Provider
+        Mail::html($emailBody, function ($message) use ($user, $subject) {
+            $message->to($user->email)
+                    ->subject($subject);
+        });
+    
+        return response()->json(['message' => 'Provider and account soft-deleted successfully, status set to deleted, email sent']);
     }
+    
     
 
 /**
@@ -167,14 +217,18 @@ public function restoreProvider(Request $request)
         // ✅ Restore the provider (removes `deleted_at`)
         $provider->restore();
 
+        // ✅ Restore the associated user
+        $user = User::onlyTrashed()->where('id', $provider->user_id)->first();
+        if ($user) {
+            $user->restore();
+        }
+
         // ✅ Ensure account status is set to "pending"
         DB::table('tbl_provider_info')->where('provider_id', $provider->provider_id)->update(['account_status' => 'pending']);
     });
 
-    return response()->json(['message' => 'Provider restored and set to pending.']);
+    return response()->json(['message' => 'Provider and user account restored, status set to pending.']);
 }
-
-
     
 
     /**
@@ -308,7 +362,7 @@ public function restoreProvider(Request $request)
     
                         <div class='footer'>
                             <p>Need help? Contact us at <a href='mailto:phservease@gmail.com'>phservease@gmail.com</a></p>
-                            <p>&copy; " . date('Y') . " Your Company. All rights reserved.</p>
+                            <p>&copy; " . date('Y') . " SERVEASE. All rights reserved.</p>
                         </div>
                     </div>
                 </body>

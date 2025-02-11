@@ -144,7 +144,6 @@ export class BookServiceComponent implements OnInit {
     });
   }
 
-
   submitBooking() {
     const token = localStorage.getItem('authToken');
 
@@ -156,6 +155,17 @@ export class BookServiceComponent implements OnInit {
     };
 
     console.log('Booking Data:', bookingData);
+
+    // ✅ Show Loading Indicator
+    Swal.fire({
+      title: 'Submitting Booking...',
+      text: 'Please wait while we process your booking.',
+      allowOutsideClick: false,
+      didOpen: () => {
+        Swal.showLoading();
+      }
+    });
+
 
     this.http.post('http://127.0.0.1:8000/api/bookings', bookingData, {
       headers: { Authorization: `Bearer ${token}` },

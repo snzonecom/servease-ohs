@@ -123,45 +123,49 @@ export class UserTransactionsComponent implements OnInit {
     this.completedDialogVisible = true;
   }
 
+  isCancelling = false; // ✅ Define loader state
+
   cancelBooking(bookingId: number) {
     const token = localStorage.getItem('authToken');
-
-    this.pendingDialogVisible = false;
+  
+    this.pendingDialogVisible = false; // Close the dialog before processing
+    this.isCancelling = true; // ✅ Start loader
+  
     Swal.fire({
-      title: 'Are you sure?',
-      text: 'Do you really want to cancel this booking?',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#d33',
-      cancelButtonColor: '#3085d6',
-      confirmButtonText: 'Yes, cancel it!',
-      cancelButtonText: 'No, keep it'
-    }).then((result) => {
-      if (result.isConfirmed) {
-        this.http.post(`http://127.0.0.1:8000/api/bookings/${bookingId}/cancel`, {}, {
-          headers: { Authorization: `Bearer ${token}` }
-        }).subscribe(
-          (response: any) => {
-            console.log('Booking cancelled successfully:', response);
-            Swal.fire({
-              title: 'Cancelled!',
-              text: 'Booking has been cancelled successfully.',
-              icon: 'success',
-              confirmButtonColor: '#428eba',
-              confirmButtonText: 'OK'
-            }).then(() => {
-              this.fetchBookings(); // ✅ Refresh the bookings list
-              this.pendingDialogVisible = false; // ✅ Close the dialog
-            });
-          },
-          (error) => {
-            console.error('Error cancelling booking:', error);
-            Swal.fire('Error', 'Failed to cancel booking.', 'error');
-          }
-        );
+      title: 'Cancelling Booking...',
+      text: 'Please wait while we process your request.',
+      allowOutsideClick: false,
+      didOpen: () => {
+        Swal.showLoading(); // ✅ Show loading indicator
       }
     });
+  
+    this.http.post(`http://127.0.0.1:8000/api/bookings/${bookingId}/cancel`, {}, {
+      headers: { Authorization: `Bearer ${token}` }
+    }).subscribe(
+      (response: any) => {
+        console.log('Booking cancelled successfully:', response);
+  
+        Swal.fire({
+          title: 'Cancelled!',
+          text: 'Booking has been cancelled successfully.',
+          icon: 'success',
+          confirmButtonColor: '#428eba',
+          confirmButtonText: 'OK'
+        }).then(() => {
+          this.fetchBookings(); // ✅ Refresh the bookings list
+          this.pendingDialogVisible = false; // ✅ Close the dialog
+          this.isCancelling = false; // ✅ Reset loader
+        });
+      },
+      (error) => {
+        console.error('Error cancelling booking:', error);
+        Swal.fire('Error', 'Failed to cancel booking.', 'error');
+        this.isCancelling = false; // ✅ Reset loader
+      }
+    );
   }
+  
 
 
 

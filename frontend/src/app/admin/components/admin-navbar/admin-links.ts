@@ -10,25 +10,26 @@ export const adminLinks = [
         label: 'Pending Application'
     },
     {
-        routeLink: '/admin/service-categories',
-        icon: 'pi pi-tags',
-        label: 'Service Categories'
-    },
-    {
         routeLink: '/admin/providers-list',
         icon: 'pi pi-list-check',
         label: 'Service Providers'
-    },
-    {
-        routeLink: '/admin/deleted-categories',
-        icon: 'pi pi-trash',
-        label: 'Deleted Categories'
     },
     {
         routeLink: '/admin/deleted-providers',
         icon: 'pi pi-folder-open',
         label: 'Deleted Providers'
     },
+    {
+        routeLink: '/admin/service-categories',
+        icon: 'pi pi-tags',
+        label: 'Service Categories'
+    },
+    {
+        routeLink: '/admin/deleted-categories',
+        icon: 'pi pi-trash',
+        label: 'Deleted Categories'
+    },
+    
     {
         routeLink: '/admin/system-details',
         icon: 'pi pi-cog',

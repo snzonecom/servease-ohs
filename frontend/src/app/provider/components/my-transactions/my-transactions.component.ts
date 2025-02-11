@@ -171,14 +171,32 @@ export class MyTransactionsComponent implements OnInit {
     );
   }
 
+  isUpdatingStatus: boolean = false; // ✅ Declare the loader state
+
   updateBookingStatus(book_status: string) {
     const token = localStorage.getItem('authToken');
+    
+    this.pendingDialogVisible = false;
+    this.ongoingDialogVisible = false;
+    this.completedDialogVisible = false;
+
+    this.isUpdatingStatus = true;
+
+    Swal.fire({
+      title: `Updating Booking Status to ${book_status}...`,
+      text: 'Please wait while we process the update.',
+      allowOutsideClick: false,
+      didOpen: () => {
+        Swal.showLoading();
+      }
+    });
 
     this.http.put(`http://127.0.0.1:8000/api/bookings/${this.selectedBooking.booking_id}/status`,
       { book_status },
       { headers: { Authorization: `Bearer ${token}` } }
     ).subscribe(
       () => {
+        this.isUpdatingStatus = false;
         this.closeAllDialogs();
         Swal.fire({
           title: 'Success!',
