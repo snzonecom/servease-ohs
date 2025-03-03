@@ -164,15 +164,23 @@
         </div>
 
         <!-- Password -->
-        <div class="info-row">
+        <div class="info-row" style="position: relative;">
           <label for="password">Password:</label>
-          <input id="password" type="password" [(ngModel)]="providerData.password" />
+          <input id="password" [type]="isPasswordVisible ? 'text' : 'password'" [(ngModel)]="providerData.password"
+            class="input-field" />
+          <!-- Show/Hide Password Icon -->
+          <i class="toggle-password-icon" [ngClass]="isPasswordVisible ? 'pi pi-eye-slash' : 'pi pi-eye'"
+            (click)="togglePasswordVisibility()"></i>
         </div>
 
         <!-- Confirm Password -->
-        <div class="info-row">
+        <div class="info-row" style="position: relative;">
           <label for="confirm-password">Confirm Password:</label>
-          <input id="confirm-password" type="password" [(ngModel)]="providerData.password_confirmation" />
+          <input id="confirm-password" [type]="isConfirmPasswordVisible ? 'text' : 'password'"
+            [(ngModel)]="providerData.password_confirmation" class="input-field" />
+          <!-- Show/Hide Confirm Password Icon -->
+          <i class="toggle-password-icon" [ngClass]="isConfirmPasswordVisible ? 'pi pi-eye-slash' : 'pi pi-eye'"
+            (click)="toggleConfirmPasswordVisibility()"></i>
         </div>
 
         <!-- Terms and Conditions -->

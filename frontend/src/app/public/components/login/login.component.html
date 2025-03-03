@@ -14,10 +14,15 @@
       <input type="text" [(ngModel)]="email" class="input-field" placeholder="Email" autocomplete="off" required>
     </div>
 
-    <div class="input-box">
-      <input type="password" [(ngModel)]="password" class="input-field" placeholder="Password" autocomplete="off"
-        required (keydown.enter)="login()">
+    <div class="input-box" style="position: relative;">
+      <input [type]="isPasswordVisible ? 'text' : 'password'" [(ngModel)]="password" class="input-field"
+        placeholder="Password" autocomplete="off" required (keydown.enter)="login()">
+
+      <!-- Show/Hide Password Icon -->
+      <i class="toggle-password-icon" [ngClass]="isPasswordVisible ? 'pi pi-eye-slash' : 'pi pi-eye'"
+        (click)="togglePasswordVisibility()"></i>
     </div>
+
 
     <div class="forgot">
       <section>

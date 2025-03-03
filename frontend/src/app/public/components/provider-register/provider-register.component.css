@@ -9,6 +9,15 @@
     display: none;
 }
 
+.toggle-password-icon {
+    position: absolute;
+    right: 20px;
+    top: 55%;
+    cursor: pointer;
+    font-size: 18px;
+    color: #888;
+}
+
 .upload-button {
     background-color: #d0e4ef;
     color: #888;

@@ -11,14 +11,17 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\SystemInfoController;
 
 
-
 // Authentication Routes
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/register-provider', [AuthController::class, 'registerProvider']);
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/forgot-password', [AuthController::class, 'forgotPassword']);
 Route::post('/reset-password', [AuthController::class, 'resetPassword']);
-Route::get('/email/verify/{id}/{hash}', [AuthController::class, 'verifyEmail'])->name('verification.verify');
+// Route::get('/email/verify/{id}/{hash}', [AuthController::class, 'verifyEmail'])->name('verification.verify');
+
+Route::post('/email/send-verification', [AuthController::class, 'sendVerificationEmail']);
+Route::get('/verify-email', [AuthController::class, 'verifyEmail']);
+
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/user', [AuthController::class, 'user']);

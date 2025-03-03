@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { AuthService } from '../../../services/auth.service';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -12,6 +12,7 @@ export class LoginComponent implements OnInit {
   email: string = '';
   password: string = '';
   registerDialogVisible: boolean = false;
+  isPasswordVisible: boolean = false;
   tncDialogVisible: boolean = false;
   errorMessage: string = '';
 
@@ -19,7 +20,7 @@ export class LoginComponent implements OnInit {
 
   private apiUrl = 'http://localhost:8000/api/system-info';
 
-  constructor(private authService: AuthService, private router: Router, private http: HttpClient) { }
+  constructor(private authService: AuthService, private router: Router, private http: HttpClient, private route: ActivatedRoute) { }
 
   ngOnInit(): void {
     this.loadSystemLogo();
@@ -33,6 +34,10 @@ export class LoginComponent implements OnInit {
       console.error('Error loading system logo:', error);
       this.logoUrl = 'assets/img/servease-logo.png'; // Use default if API fails
     });
+  }
+
+  togglePasswordVisibility(): void {
+    this.isPasswordVisible = !this.isPasswordVisible;
   }
 
   showTncDialog() {
@@ -69,7 +74,7 @@ export class LoginComponent implements OnInit {
         }
       },
       error: (err) => {
-        this.errorMessage = 'Invalid email or password.';
+          this.errorMessage = 'Invalid email or password.';
         console.error(err);
       },
     });

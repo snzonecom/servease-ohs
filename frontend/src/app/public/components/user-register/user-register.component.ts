@@ -262,6 +262,7 @@ export class UserRegisterComponent {
   tncDialogVisible: boolean = false;
   photoPreview: string | null = null;
   selectedFile: File | null = null;
+  isLoading: boolean = false;
 
   provinces = locations;
   cities: any[] = [];
@@ -284,6 +285,17 @@ export class UserRegisterComponent {
   };
 
   constructor(private authService: AuthService, private router: Router) { }
+
+  isPasswordVisible: boolean = false;
+  isConfirmPasswordVisible: boolean = false;
+
+  togglePasswordVisibility(): void {
+    this.isPasswordVisible = !this.isPasswordVisible;
+  }
+
+  toggleConfirmPasswordVisibility(): void {
+    this.isConfirmPasswordVisible = !this.isConfirmPasswordVisible;
+  }
 
   // Handle Province Selection
   onProvinceChange(): void {
@@ -408,12 +420,23 @@ export class UserRegisterComponent {
       registrationData.append('profile_photo', this.selectedFile);
     }
 
+    this.isLoading = true;
+    Swal.fire({
+      title: "Registering...",
+      text: "Please wait while we process your registration.",
+      allowOutsideClick: false,
+      didOpen: () => {
+        Swal.showLoading();
+      }
+    });
+
     // API Call
     this.authService.register(registrationData).subscribe({
       next: () => {
+        this.isLoading = false;
         Swal.fire({
-          title: "Registration Successful!",
-          text: "Your account has been registered! You can now proceed to login.",
+          title: "Verify your Email!",
+          text: "Check your inbox in email to verify your account!",
           icon: "success",
           confirmButtonColor: "#428eba",
         }).then(() => {
@@ -423,6 +446,7 @@ export class UserRegisterComponent {
         this.router.navigate(['/login']);
       },
       error: (err) => {
+        this.isLoading = false;
         console.error(err);
 
         if (err.status === 422 && err.error.errors) {

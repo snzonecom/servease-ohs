@@ -10,6 +10,7 @@ import { UserRegisterComponent } from './components/user-register/user-register.
 import { ProviderRegisterComponent } from './components/provider-register/provider-register.component';
 import { ForgotPasswordComponent } from './components/forgot-password/forgot-password.component';
 import { ResetPasswordComponent } from './components/reset-password/reset-password.component';
+import { VerifyEmailComponent } from './components/verify-email/verify-email.component';
 
 const routes: Routes = [
   {
@@ -22,6 +23,7 @@ const routes: Routes = [
       { path: 'user-register', component: UserRegisterComponent },
       { path: 'provider-register', component: ProviderRegisterComponent },
       { path: 'reset-password', component: ResetPasswordComponent },
+      { path: 'verify-email', component: VerifyEmailComponent },
     ]
   }
 ];

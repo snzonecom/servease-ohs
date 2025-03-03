@@ -293,6 +293,9 @@ export class ProviderRegisterComponent implements OnInit {
     acceptVerification: false,
   };
 
+  isPasswordVisible: boolean = false;
+  isConfirmPasswordVisible: boolean = false;
+
   serviceCategories: { category_id: number; category_name: string }[] = [];
   private apiUrl = 'http://127.0.0.1:8000/api/register-provider';
   private categoriesApiUrl = 'http://127.0.0.1:8000/api/service-categories';
@@ -317,6 +320,14 @@ export class ProviderRegisterComponent implements OnInit {
 
   ngOnInit(): void {
     this.fetchServiceCategories();
+  }
+
+  togglePasswordVisibility(): void {
+    this.isPasswordVisible = !this.isPasswordVisible;
+  }
+
+  toggleConfirmPasswordVisibility(): void {
+    this.isConfirmPasswordVisible = !this.isConfirmPasswordVisible;
   }
 
   fetchServiceCategories(): void {
@@ -435,13 +446,21 @@ export class ProviderRegisterComponent implements OnInit {
     if (this.attachmentFile) formData.append("personID", this.attachmentFile);
 
     this.isLoading = true;
+    Swal.fire({
+      title: "Registering...",
+      text: "Please wait while we process your registration.",
+      allowOutsideClick: false,
+      didOpen: () => {
+        Swal.showLoading();
+      }
+    });
 
     this.http.post(this.apiUrl, formData).subscribe(
       () => {
         this.isLoading = false;
         Swal.fire({
-          title: "Registration Successful!",
-          text: "Your registration was successful! Your account will now be processed for verification. You will receive an email notification once the verification is complete.",
+          title: "Verify your Email!",
+          text: "Check your email for your verification! In addition, your account will now be processed for verification. You will receive an email notification once the verification is complete.",
           icon: "success",
           confirmButtonColor: "#428eba",
         });

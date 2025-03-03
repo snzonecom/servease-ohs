@@ -71,7 +71,7 @@ export class AuthService {
     return this.http.post(`${this.apiUrl}/reset-password`, data);
   }
 
-  verifyEmail(data: any): Observable<any> {
-    return this.http.get(`${this.apiUrl}/email/verify/${data.id}/${data.hash}`);
-  }
+  verifyEmail(token: string): Observable<any> {
+    return this.http.get(`${this.apiUrl}/verify-email?token=${token}`);
+  }  
 }

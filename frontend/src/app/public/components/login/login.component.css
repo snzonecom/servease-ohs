@@ -43,6 +43,16 @@
     transition: .3s;
 }
 
+.toggle-password-icon {
+    position: absolute;
+    right: 20px;
+    top: 40%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    font-size: 18px;
+    color: #888;
+}
+
 ::placeholder {
     font-weight: 500;
     color: #222;
@@ -171,8 +181,8 @@ section a {
     text-align: center;
     transition: all 0.3s ease;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  }
-  
+}
+
 
 /* Mobile Responsive */
 @media (max-width: 768px) {

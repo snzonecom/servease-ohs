@@ -13,6 +13,8 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
+use Illuminate\Auth\Events\Verified;
+use Illuminate\Auth\Events\Registered;
 
 
 class AuthController extends Controller
@@ -50,6 +52,7 @@ class AuthController extends Controller
                 'role' => 'customer',
                 'created_at' => now(),
                 'updated_at' => now(),
+                'email_verified_at' => null,
             ]);
 
             // ✅ Insert Customer Info Only If User Was Successfully Created
@@ -67,6 +70,11 @@ class AuthController extends Controller
             ]);
 
             DB::commit();
+
+            $user = User::find($userId); // Retrieve user as an Eloquent model
+            return $this->sendVerificationEmail(new Request(['email' => $user->email]));
+
+
             return response()->json(['message' => 'Registration successful'], 201);
         } catch (\Exception $e) {
             DB::rollBack();
@@ -149,6 +157,11 @@ class AuthController extends Controller
             ]);
 
             DB::commit();
+
+            $user = User::find($userId);
+            return $this->sendVerificationEmail(new Request(['email' => $user->email]));
+
+
             return response()->json(['message' => 'Registration successful!', 'user_id' => $userId], 201);
         } catch (\Exception $e) {
             DB::rollBack();
@@ -183,6 +196,14 @@ class AuthController extends Controller
         // ✅ Retrieve the authenticated user
         $user = Auth::user();
         $providerId = null; // Default value for non-provider users
+
+        // ❌ Block login if the user has not verified their email
+        if (!$user->email_verified_at) {
+            Auth::logout(); // Logout the user immediately
+            return response()->json([
+                'error' => 'Please verify your email before logging in.'
+            ], 403);
+        }
 
         // ✅ Check if the user is a service provider
         if ($user->role === 'provider') {
@@ -228,7 +249,7 @@ class AuthController extends Controller
         );
 
         // ✅ Construct the Angular Reset Password URL
-        $frontendUrl = env('FRONTEND_URL', 'http://localhost:4200');
+        $frontendUrl = env('FRONTEND_URL');
         $resetLink = "{$frontendUrl}/reset-password?token={$token}&email={$request->email}";
 
         // ✅ Email Subject & HTML Content
@@ -349,14 +370,148 @@ class AuthController extends Controller
         return response()->json(['message' => 'Password reset successful. You can now login.']);
     }
 
+    public function sendVerificationEmail(Request $request)
+    {
+        $user = User::where('email', $request->email)->first();
+
+        if (!$user) {
+            return response()->json(['message' => 'User not found'], 404);
+        }
+
+        // ✅ Remove existing token before generating a new one
+        DB::table('email_verification_tokens')->where('email', $user->email)->delete();
+
+        // ✅ Generate a new verification token
+        $token = Str::random(64);
+
+        // ✅ Store the token in the database
+        DB::table('email_verification_tokens')->insert([
+            'email' => $user->email,
+            'token' => $token,
+            'created_at' => now()
+        ]);
+
+        // ✅ Construct the Verification URL
+        $frontendUrl = env('FRONTEND_URL');
+        $verificationUrl = "{$frontendUrl}/verify-email?token={$token}";
+
+        // ✅ Email Subject & HTML Content
+        $subject = "Verify Your Email Address";
+        $emailBody = "
+        <html>
+        <head>
+            <link href='https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap' rel='stylesheet'>
+            <style>
+                body { 
+                    font-family: 'Poppins', Arial, sans-serif; 
+                    background-color: #f4f4f4; 
+                    margin: 0; 
+                    padding: 0; 
+                }
+                .container { 
+                    max-width: 600px; 
+                    margin: 20px auto; 
+                    background-color: #ffffff; 
+                    padding: 20px;
+                    border-radius: 8px; 
+                    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1); 
+                    text-align: center; 
+                }
+                h2 { 
+                    color: #333; 
+                    font-weight: 600;
+                }
+                p { 
+                    color: #555; 
+                    font-size: 16px; 
+                    font-weight: 400;
+                }
+                .btn { 
+                    display: inline-block; 
+                    background-color: #428eba; 
+                    color: white !important; 
+                    text-decoration: none !important;
+                    padding: 12px 20px;
+                    border-radius: 5px; 
+                    font-size: 16px; 
+                    font-weight: 600;
+                    margin-top: 15px; 
+                }
+                .btn:hover { 
+                    background-color: #356a8a; 
+                }
+                .footer { 
+                    margin-top: 20px; 
+                    font-size: 14px; 
+                    color: #777; 
+                    font-weight: 300;
+                }
+                .footer a { 
+                    color: #428eba; 
+                    text-decoration: none; 
+                    font-weight: 400;
+                }
+                .footer a:hover { 
+                    text-decoration: underline; 
+                }
+            </style>
+        </head>
+        <body>
+            <div class='container'>
+                <h2>Email Verification</h2>
+                <p>Hello,</p>
+                <p>Thank you for signing up! Please verify your email address by clicking the button below:</p>
+                
+                <a href='{$verificationUrl}' class='btn' style='color: white !important; text-decoration: none !important;'>Verify Email</a>
+    
+                <p>If you did not create an account, please ignore this email.</p>
+    
+                <div class='footer'>
+                    <p>Need help? Contact us at <a href='mailto:phservease@gmail.com'>phservease@gmail.com</a></p>
+                    <p>&copy; " . date('Y') . " SERVEASE. All rights reserved.</p>
+                </div>
+            </div>
+        </body>
+        </html>
+        ";
+
+        // ✅ Send Email Using `html()`
+        Mail::html($emailBody, function ($message) use ($user, $subject) {
+            $message->to($user->email)
+                ->subject($subject);
+        });
+
+        return response()->json(['message' => 'Verification email sent.']);
+    }
 
     public function verifyEmail(Request $request)
     {
-        if ($request->user()->hasVerifiedEmail()) {
-            return response()->json(['message' => 'Email already verified']);
+        $token = $request->query('token'); // Get token from query parameters
+
+        if (!$token) {
+            return response()->json(['message' => 'Token is required'], 400);
         }
 
-        $request->user()->markEmailAsVerified();
+        // ✅ Find the token record
+        $record = DB::table('email_verification_tokens')->where('token', $token)->first();
+
+        if (!$record) {
+            return response()->json(['message' => 'Invalid or expired token'], 400);
+        }
+
+        // ✅ Find the user by email
+        $user = User::where('email', $record->email)->first();
+
+        if (!$user) {
+            return response()->json(['message' => 'User not found'], 404);
+        }
+
+        // ✅ Mark the email as verified
+        $user->email_verified_at = now();
+        $user->save();
+
+        // ✅ Remove the used token
+        DB::table('email_verification_tokens')->where('email', $user->email)->delete();
 
         return response()->json(['message' => 'Email verified successfully']);
     }
@@ -497,5 +652,4 @@ class AuthController extends Controller
 
         return response()->json(['message' => 'No file uploaded.'], 400);
     }
-
 }
