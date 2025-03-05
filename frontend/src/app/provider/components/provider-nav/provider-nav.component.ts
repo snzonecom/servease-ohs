@@ -87,7 +87,7 @@ export class ProviderNavComponent implements OnInit {
               title: "Logout Failed!",
               text: "Something went wrong. Please try again.",
               icon: "error",
-              confirmButtonColor: "#e74c3c",
+              confirmButtonColor: "#428eba",
             });
           }
         });

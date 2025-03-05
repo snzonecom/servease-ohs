@@ -76,7 +76,7 @@ export class ServiceCategoriesComponent implements OnInit {
       text: 'Are you sure you want to delete this category?',
       icon: 'warning',
       showCancelButton: true,
-      confirmButtonColor: '#d33',
+      confirmButtonColor: '#428eba',
       cancelButtonColor: '#3085d6',
       confirmButtonText: 'Yes, delete it!',
       cancelButtonText: 'Cancel'
@@ -92,7 +92,7 @@ export class ServiceCategoriesComponent implements OnInit {
               title: 'Deleted!',
               text: 'The category has been deleted successfully.',
               icon: 'success',
-              confirmButtonColor: '#3085d6'
+              confirmButtonColor: '#428eba'
             });
           }, error => {
             console.error('Error deleting category', error);
@@ -100,7 +100,7 @@ export class ServiceCategoriesComponent implements OnInit {
               title: 'Error!',
               text: 'There was an error deleting the category.',
               icon: 'error',
-              confirmButtonColor: '#d33'
+              confirmButtonColor: '#428eba'
             });
           });
       }

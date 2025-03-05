@@ -357,7 +357,12 @@ export class UserProfileComponent implements OnInit {
         if (this.selectedProfilePhoto) {
           this.uploadProfilePhoto();
         } else {
-          Swal.fire('Success', 'Profile updated successfully!', 'success');
+          Swal.fire({
+            title: "Success!",
+            text: "Profile updated successfully!",
+            icon: "success",
+            confirmButtonColor: "#428eba",
+          });
           this.isEditing = false;
           this.fetchUserProfile();
         }
@@ -375,7 +380,12 @@ export class UserProfileComponent implements OnInit {
           });
 
         } else {
-          Swal.fire('Error', 'Failed to update profile.', 'error');
+          Swal.fire({
+            title: "Error!",
+            text: "Failed to update profile.",
+            icon: "error",
+            confirmButtonColor: "#428eba",
+          });
         }
       }
     );
@@ -394,13 +404,23 @@ export class UserProfileComponent implements OnInit {
     }).subscribe(
       (response) => {
         console.log('Profile photo uploaded:', response);
-        Swal.fire('Success', 'Profile photo updated successfully!', 'success');
+        Swal.fire({
+          title: "Success!",
+          text: "Profile photo updated successfully!",
+          icon: "success",
+          confirmButtonColor: "#428eba",
+        });
         this.isEditing = false;
         this.fetchUserProfile();
       },
       (error) => {
         console.error('Error uploading profile photo:', error);
-        Swal.fire('Error', 'Failed to upload profile photo.', 'error');
+        Swal.fire({
+          title: "Error!",
+          text: "Failed to upload profile photo.",
+          icon: "error",
+          confirmButtonColor: "#428eba",
+        });
       }
     );
   }

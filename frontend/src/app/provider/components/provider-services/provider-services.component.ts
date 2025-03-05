@@ -35,7 +35,12 @@ export class ProviderServicesComponent implements OnInit {
     const providerId = localStorage.getItem('provider_id');
 
     if (!providerId) {
-      Swal.fire('Error!', 'Provider ID not found. Please log in again.', 'error');
+      Swal.fire({
+        title: "Error!",
+        text: "Provider ID not found. Please log in again.",
+        icon: "error",
+        confirmButtonColor: "#428eba",
+      });
       return;
     }
 
@@ -52,7 +57,12 @@ export class ProviderServicesComponent implements OnInit {
         console.error('Error fetching services:', error);
 
         // ✅ Improved error handling
-        Swal.fire('Error!', 'Failed to fetch services. Please try again later.', 'error');
+        Swal.fire({
+          title: "Error!",
+          text: "Failed to fetch services. Please try again later.",
+          icon: "error",
+          confirmButtonColor: "#428eba",
+        });
       }
     );
   }
@@ -83,7 +93,12 @@ export class ProviderServicesComponent implements OnInit {
 
     if (!providerId) {
       this.dialogVisible = false;
-      Swal.fire('Error!', 'Provider ID not found.', 'error');
+      Swal.fire({
+        title: "Error!",
+        text: "Provider ID not found.",
+        icon: "error",
+        confirmButtonColor: "#428eba",
+      });
       return;
     }
 
@@ -106,7 +121,12 @@ export class ProviderServicesComponent implements OnInit {
         (error) => {
           console.error(error);
           this.dialogVisible = false;
-          Swal.fire('Error!', 'Failed to update service.', 'error');
+          Swal.fire({
+            title: "Error!",
+            text: "Failed to update service.",
+            icon: "error",
+            confirmButtonColor: "#428eba",
+          });
         }
       );
     } else {
@@ -169,7 +189,12 @@ export class ProviderServicesComponent implements OnInit {
           },
           (error) => {
             console.error(error);
-            Swal.fire('Error!', 'Failed to delete service.', 'error');
+            Swal.fire({
+              title: "Error!",
+              text: "Failed to delete service.",
+              icon: "error",
+              confirmButtonColor: "#428eba",
+            });
           }
         );
       }

@@ -55,13 +55,23 @@ export class PendingApplicationsComponent implements OnInit {
     this.http.post(`${this.approveUrl}/${providerId}/approve`, {}).subscribe(
       () => {
         // ✅ Success: Hide loading, show success message
-        Swal.fire('Success!', 'Application approved.', 'success');
+        Swal.fire({
+          title: "Success!",
+          text: "Application approved.",
+          icon: "success",
+          confirmButtonColor: "#428eba",
+        });
         this.fetchPendingProviders(); // Refresh the list
         this.visible = false;
       },
       (error) => {
         // ✅ Error: Hide loading, show error message
-        Swal.fire('Error!', 'Failed to approve the application.', 'error');
+        Swal.fire({
+          title: "Error!",
+          text: "Failed to approve the application.",
+          icon: "error",
+          confirmButtonColor: "#428eba",
+        });
       },
       () => {
         this.isLoading = false; // ✅ Reset loading state
@@ -76,13 +86,13 @@ export class PendingApplicationsComponent implements OnInit {
       text: 'This will reject the application and send an email notification.',
       icon: 'warning',
       showCancelButton: true,
-      confirmButtonColor: '#d33',
+      confirmButtonColor: '#428eba',
       cancelButtonColor: '#3085d6',
       confirmButtonText: 'Yes, Reject'
     }).then((result) => {
       if (result.isConfirmed) {
         this.isRejecting = true; // ✅ Start loading state
-  
+
         Swal.fire({
           title: 'Rejecting...',
           text: 'Please wait while we process the rejection.',
@@ -91,17 +101,27 @@ export class PendingApplicationsComponent implements OnInit {
             Swal.showLoading(); // ✅ Show SweetAlert2 loading
           }
         });
-  
+
         // ✅ Use POST instead of DELETE
         this.http.post(`${this.rejectUrl}/${providerId}/reject`, {}).subscribe(
           () => {
-            Swal.fire('Success!', 'Application rejected, soft deleted, and email sent.', 'success');
+            Swal.fire({
+              title: "Success!",
+              text: "Application rejected, soft deleted, and email sent.",
+              icon: "success",
+              confirmButtonColor: "#428eba",
+            });
             this.fetchPendingProviders(); // Refresh list
             this.visible = false;
           },
           (error) => {
             console.error('Rejection failed', error);
-            Swal.fire('Error!', error?.error?.message || 'Failed to reject the application.', 'error');
+            Swal.fire({
+              title: "Error!",
+              text: error?.error?.message || "Failed to reject the application.",
+              icon: "error",
+              confirmButtonColor: "#428eba",
+            });
           },
           () => {
             this.isRejecting = false; // ✅ Reset loading state
@@ -110,8 +130,8 @@ export class PendingApplicationsComponent implements OnInit {
       }
     });
   }
-  
-  
+
+
 
   // ✅ Open Application Details Dialog
   showDialog(applicant: any): void {

@@ -32,30 +32,35 @@ export class ResetPasswordComponent implements OnInit {
   ngOnInit() {
     this.token = this.route.snapshot.queryParams['token'] || '';
     this.email = this.route.snapshot.queryParams['email'] || '';
-  
+
     console.log('Extracted Token:', this.token); // ✅ Debugging
     console.log('Extracted Email:', this.email); // ✅ Debugging
-  
+
     if (!this.token || !this.email) {
-      Swal.fire('Error', 'Invalid password reset link.', 'error');
+      Swal.fire({
+        title: "Error!",
+        text: "Invalid password reset link.",
+        icon: "error",
+        confirmButtonColor: "#428eba",
+      });
       this.router.navigate(['/forgot-password']);
       return;
     }
-  
+
     // ✅ Make sure the values are being set properly
     this.resetPasswordForm.patchValue({
       token: this.token,
       email: this.email
     });
-  
+
     console.log('Form After Patch:', this.resetPasswordForm.value); // ✅ Debugging
   }
-  
+
 
   resetPassword() {
     if (this.resetPasswordForm.invalid) {
       let errorMessage = 'Please fill in all required fields.';
-  
+
       // ✅ Check for specific password errors
       if (this.resetPasswordForm.get('password')?.hasError('minlength')) {
         errorMessage = 'Password must be at least 8 characters long.';
@@ -64,26 +69,41 @@ export class ResetPasswordComponent implements OnInit {
       } else if (this.resetPasswordForm.hasError('notMatching')) {
         errorMessage = 'Passwords do not match.';
       }
-  
-      Swal.fire('Error', errorMessage, 'error');
+
+      Swal.fire({
+        title: "Error!",
+        text: errorMessage,
+        icon: "error",
+        confirmButtonColor: "#428eba",
+      });
       return;
     }
-  
+
     this.isLoading = true;
-  
+
     this.http.post('http://127.0.0.1:8000/api/reset-password', this.resetPasswordForm.value).subscribe({
       next: () => {
-        Swal.fire('Success', 'Your password has been reset. You can now log in.', 'success');
+        Swal.fire({
+          title: "Success!",
+          text: "Your password has been reset. You can now log in.",
+          icon: "success",
+          confirmButtonColor: "#428eba",
+        });
         this.router.navigate(['/login']);
       },
       error: () => {
-        Swal.fire('Error', 'Invalid token or email. Try again.', 'error');
+        Swal.fire({
+          title: "Error!",
+          text: "Invalid token or email. Try again.",
+          icon: "error",
+          confirmButtonColor: "#428eba",
+        });
       },
       complete: () => {
         this.isLoading = false;
       }
     });
   }
-  
-  
+
+
 }

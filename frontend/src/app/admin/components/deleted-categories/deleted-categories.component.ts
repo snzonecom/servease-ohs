@@ -62,7 +62,12 @@ export class DeletedCategoriesComponent implements OnInit {
           },
           (error) => {
             console.error('❌ Error restoring category:', error);
-            Swal.fire('Error', 'Failed to restore category.', 'error');
+            Swal.fire({
+              title: "Error",
+              text: "Failed to restore category.",
+              icon: "error",
+              confirmButtonColor: "#428eba",
+          });
           }
         );
       }

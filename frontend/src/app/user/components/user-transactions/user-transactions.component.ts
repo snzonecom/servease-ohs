@@ -127,10 +127,10 @@ export class UserTransactionsComponent implements OnInit {
 
   cancelBooking(bookingId: number) {
     const token = localStorage.getItem('authToken');
-  
+
     this.pendingDialogVisible = false; // Close the dialog before processing
     this.isCancelling = true; // ✅ Start loader
-  
+
     Swal.fire({
       title: 'Cancelling Booking...',
       text: 'Please wait while we process your request.',
@@ -139,13 +139,13 @@ export class UserTransactionsComponent implements OnInit {
         Swal.showLoading(); // ✅ Show loading indicator
       }
     });
-  
+
     this.http.post(`http://127.0.0.1:8000/api/bookings/${bookingId}/cancel`, {}, {
       headers: { Authorization: `Bearer ${token}` }
     }).subscribe(
       (response: any) => {
         console.log('Booking cancelled successfully:', response);
-  
+
         Swal.fire({
           title: 'Cancelled!',
           text: 'Booking has been cancelled successfully.',
@@ -160,12 +160,18 @@ export class UserTransactionsComponent implements OnInit {
       },
       (error) => {
         console.error('Error cancelling booking:', error);
-        Swal.fire('Error', 'Failed to cancel booking.', 'error');
+        Swal.fire({
+          title: "Error!",
+          text: "Failed to cancel booking.",
+          icon: "error",
+          confirmButtonColor: "#428eba",
+        });
+
         this.isCancelling = false; // ✅ Reset loader
       }
     );
   }
-  
+
 
 
 
@@ -241,7 +247,12 @@ export class UserTransactionsComponent implements OnInit {
 
     if (!this.selectedBooking.booking_id) {
       console.error('Booking ID is missing.');
-      Swal.fire('Error!', 'Booking ID is missing.', 'error');
+      Swal.fire({
+        title: "Error!",
+        text: "Booking ID is missing.",
+        icon: "error",
+        confirmButtonColor: "#428eba",
+      });
       return;
     }
 
@@ -270,7 +281,12 @@ export class UserTransactionsComponent implements OnInit {
       },
       (error) => {
         console.error('Error submitting rating:', error);
-        Swal.fire('Error', 'Failed to submit rating. Please try again later.', 'error');
+        Swal.fire({
+          title: "Error",
+          text: "Failed to submit rating. Please try again later.",
+          icon: "error",
+          confirmButtonColor: "#428eba",
+        });
       }
     );
   }

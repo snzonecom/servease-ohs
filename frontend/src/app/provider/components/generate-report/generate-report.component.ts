@@ -125,9 +125,10 @@ export class GenerateReportComponent implements OnInit {
   generateReport() {
     if (!this.startDate || !this.endDate) {
       Swal.fire({
-        icon: 'warning',
-        title: 'Missing Date',
-        text: 'Please select both Start Date and End Date to generate the report.',
+        title: "Missing Date",
+        text: "Please select both Start Date and End Date to generate the report.",
+        icon: "warning",
+        confirmButtonColor: "#428eba",
       });
       return;
     }

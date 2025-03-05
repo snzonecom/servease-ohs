@@ -350,6 +350,7 @@ export class ProviderProfileComponent implements OnInit {
         title: "Validation Error!",
         html: `<strong>The following fields are required:</strong><br> ${missingFields.join("<br>")}`,
         icon: "error",
+        confirmButtonColor: "#428eba",
       });
       return false;
     }
@@ -359,6 +360,7 @@ export class ProviderProfileComponent implements OnInit {
         title: "Invalid Password",
         text: "Password must be at least 8 characters long.",
         icon: "error",
+        confirmButtonColor: "#428eba",
       });
       return false;
     }
@@ -421,7 +423,12 @@ export class ProviderProfileComponent implements OnInit {
       },
       (error) => {
         console.error('Error updating profile:', error);
-        Swal.fire('Error', 'Failed to update profile.', 'error');
+        Swal.fire({
+          title: "Error!",
+          text: "Failed to update profile.",
+          icon: "error",
+          confirmButtonColor: "#428eba",
+        });
       }
     );
   }
@@ -450,7 +457,12 @@ export class ProviderProfileComponent implements OnInit {
       },
       (error) => {
         console.error('Error uploading profile picture:', error);
-        Swal.fire('Error', 'Failed to upload profile picture.', 'error');
+        Swal.fire({
+          title: "Error!",
+          text: "Failed to upload profile picture.",
+          icon: "error",
+          confirmButtonColor: "#428eba",
+        });
       }
     );
   }

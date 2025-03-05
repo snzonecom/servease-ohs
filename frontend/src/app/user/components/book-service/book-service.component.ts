@@ -34,7 +34,12 @@ export class BookServiceComponent implements OnInit {
       this.fetchProviderDetails(providerId);
       this.fetchProviderFeedbacks(providerId);
     } else {
-      Swal.fire('Error!', 'Provider ID is missing from the URL.', 'error');
+      Swal.fire({
+        title: "Error!",
+        text: "Provider ID is missing from the URL.",
+        icon: "error",
+        confirmButtonColor: "#428eba",
+      });
     }
 
     this.updateDisplayedFeedbacks();
@@ -106,15 +111,30 @@ export class BookServiceComponent implements OnInit {
 
   showConfirmation() {
     if (!this.isServiceSelected) {
-      Swal.fire('Warning!', 'Please select at least one service before proceeding.', 'warning');
+      Swal.fire({
+        title: "Warning!",
+        text: "Please select at least one service before proceeding.",
+        icon: "warning",
+        confirmButtonColor: "#428eba",
+      });
       return;
     }
     if (!this.bookingDate) {
-      Swal.fire('Warning!', 'Please select a booking date before proceeding.', 'warning');
+      Swal.fire({
+        title: "Warning!",
+        text: "Please select a booking date before proceeding.",
+        icon: "warning",
+        confirmButtonColor: "#428eba",
+      });
       return;
     }
     if (!this.bookingTime) {
-      Swal.fire('Warning!', 'Please select a booking time before proceeding.', 'warning');
+      Swal.fire({
+        title: "Warning!",
+        text: "Please select a booking time before proceeding.",
+        icon: "warning",
+        confirmButtonColor: "#428eba",
+      });
       return;
     }
     if (!this.agreedToTnC) {
@@ -122,7 +142,7 @@ export class BookServiceComponent implements OnInit {
         title: 'Warning!',
         text: 'You must agree to the Terms and Conditions before submitting.',
         icon: 'warning',
-        confirmButtonColor: '#66b9e1',
+        confirmButtonColor: '#428eba',
         confirmButtonText: 'OK'
       });
       return;
@@ -135,7 +155,7 @@ export class BookServiceComponent implements OnInit {
       showCancelButton: true,
       confirmButtonText: 'Yes, submit it',
       cancelButtonText: 'No, cancel',
-      confirmButtonColor: '#66b9e1',
+      confirmButtonColor: '#428eba',
       cancelButtonColor: '#d33',
     }).then((result) => {
       if (result.isConfirmed) {
@@ -176,7 +196,12 @@ export class BookServiceComponent implements OnInit {
       },
       (error) => {
         console.error('Booking failed:', error);
-        Swal.fire('Error!', 'Failed to submit booking.', 'error');
+        Swal.fire({
+          title: "Error!",
+          text: "Failed to submit booking.",
+          icon: "error",
+          confirmButtonColor: "#428eba",
+        });
       }
     );
   }
@@ -194,7 +219,7 @@ export class BookServiceComponent implements OnInit {
       text: 'Your booking has been successfully submitted.',
       icon: 'success',
       confirmButtonText: 'Okay',
-      confirmButtonColor: '#2980b9',
+      confirmButtonColor: '#428eba',
     });
   }
 }

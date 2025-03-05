@@ -14,7 +14,7 @@ export class DeletedProvidersComponent implements OnInit {
   selectedProvider: any = null;
   private apiUrl = 'http://127.0.0.1:8000/api/deleted-providers'; // ✅ Updated API endpoint
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   ngOnInit(): void {
     this.fetchDeletedProviders();
@@ -53,12 +53,22 @@ export class DeletedProvidersComponent implements OnInit {
       () => {
         this.deletedProviders = this.deletedProviders.filter(p => p.provider_id !== providerId);
         this.visible = false;
-        Swal.fire('Success!', 'Provider restored and set to pending.', 'success');
+        Swal.fire({
+          title: "Success!",
+          text: "Provider restored and set to pending.",
+          icon: "success",
+          confirmButtonColor: "#428eba",
+        });
       },
       (error) => {
-        Swal.fire('Error!', error?.error?.message || 'Failed to restore the provider.', 'error');
+        Swal.fire({
+          title: "Error!",
+          text: error?.error?.message || "Failed to restore the provider.",
+          icon: "error",
+          confirmButtonColor: "#428eba",
+        });
       }
     );
   }
-  
+
 }

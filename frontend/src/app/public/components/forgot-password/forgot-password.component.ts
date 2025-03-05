@@ -21,7 +21,12 @@ export class ForgotPasswordComponent {
 
   sendResetLink() {
     if (this.forgotPasswordForm.invalid) {
-      Swal.fire('Error', 'Please enter a valid email address', 'error');
+      Swal.fire({
+        title: "Error!",
+        text: "Please enter a valid email address.",
+        icon: "error",
+        confirmButtonColor: "#428eba",
+      });
       return;
     }
 
@@ -29,11 +34,21 @@ export class ForgotPasswordComponent {
 
     this.http.post('http://127.0.0.1:8000/api/forgot-password', this.forgotPasswordForm.value).subscribe({
       next: () => {
-        Swal.fire('Success', 'A password reset link has been sent to your email.', 'success');
+        Swal.fire({
+          title: "Success!",
+          text: "A password reset link has been sent to your email.",
+          icon: "success",
+          confirmButtonColor: "#428eba",
+        });
         this.forgotPasswordForm.reset();
       },
       error: () => {
-        Swal.fire('Error', 'Email not found or server error. Try again later.', 'error');
+        Swal.fire({
+          title: "Error!",
+          text: "Email not found or server error. Try again later.",
+          icon: "error",
+          confirmButtonColor: "#428eba",
+        });
       },
       complete: () => {
         this.isLoading = false;

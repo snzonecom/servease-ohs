@@ -76,7 +76,7 @@ export class SystemDetailsComponent implements OnInit {
             title: "Update Failed!",
             text: "There was an error updating the logo. Please try again.",
             icon: "error",
-            confirmButtonColor: "#e74c3c",
+            confirmButtonColor: "#428eba",
           });
         }
       });
@@ -121,7 +121,7 @@ export class SystemDetailsComponent implements OnInit {
         title: "Warning!",
         text: "Both Question and Answer fields are required.",
         icon: "warning",
-        confirmButtonColor: "#f39c12", // Yellow warning color
+        confirmButtonColor: "#428eba", // Yellow warning color
       });
       return;
     }
@@ -198,7 +198,7 @@ export class SystemDetailsComponent implements OnInit {
         title: "Warning!",
         text: "Please enter a valid contact before adding.",
         icon: "warning",
-        confirmButtonColor: "#f39c12",
+        confirmButtonColor: "#428eba",
       });
     }
   }

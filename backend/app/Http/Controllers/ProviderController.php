@@ -614,6 +614,7 @@ class ProviderController extends Controller
         $bookings = Booking::with('customer') // ✅ Eager load customer data
             ->where('provider_id', $providerId)
             ->whereDate('book_date', $today)
+            ->where('book_status', 'Ongoing')
             ->get()
             ->map(function ($booking) {
                 // ✅ Decode JSON-encoded service IDs
@@ -640,6 +641,7 @@ class ProviderController extends Controller
 
         return response()->json($bookings);
     }
+
     public function getAdminDashboardStats()
     {
         $pendingProviders = Provider::where('account_status', 'pending')->count();
