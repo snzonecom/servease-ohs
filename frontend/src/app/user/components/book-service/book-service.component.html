@@ -22,7 +22,8 @@
                         <div class="offered-services">
                             <h2>Offered Services</h2>
                             <div class="services">
-                                <p-card *ngFor="let service of availableServices" class="service-card">
+                                <p-card *ngFor="let service of availableServices | slice:0:displayCount"
+                                    class="service-card">
                                     <div class="service-header">
                                         <h3>{{ service.service_name }}</h3>
                                     </div>
@@ -31,6 +32,12 @@
                                     </div>
                                 </p-card>
                             </div>
+
+                            <!-- See More Button -->
+                            <button *ngIf="availableServices.length > displayCount" (click)="showMore()"
+                                class="see-more-button">
+                                See All
+                            </button>
                         </div>
 
                         <!-- Line Separator -->
@@ -40,7 +47,8 @@
                         <div class="feedbacks">
                             <h2>Ratings & Feedbacks</h2>
                             <div class="feedback-cards">
-                                <div *ngFor="let feedback of displayedFeedbacks" class="feedback-card">
+                                <div *ngFor="let feedback of feedbacks | slice:0:displayFeedbackCount"
+                                    class="feedback-card">
                                     <div class="feedback-header">
                                         <h3>{{ feedback.clientName }}</h3>
                                     </div>
@@ -63,7 +71,14 @@
                                     </div>
                                 </div>
                             </div>
+
+                            <!-- See More Button -->
+                            <button *ngIf="feedbacks.length > displayFeedbackCount" (click)="showMoreFeedbacks()"
+                                class="see-more-button">
+                                See More
+                            </button>
                         </div>
+
                     </div>
                 </p-card>
             </div>

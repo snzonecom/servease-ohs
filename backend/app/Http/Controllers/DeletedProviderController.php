@@ -40,6 +40,7 @@ class DeletedProviderController extends Controller
                 'provider_id' => $provider->provider_id,
                 'user_id' => $provider->user_id,
                 'provider_name' => $provider->provider_name,
+                'description' => $provider->description,
                 'profile_pic' => $provider->profile_pic,
                 'contact_no' => $provider->contact_no,
                 'office_add' => $provider->office_add,

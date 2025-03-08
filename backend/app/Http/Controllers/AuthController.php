@@ -378,20 +378,20 @@ class AuthController extends Controller
             return response()->json(['message' => 'User not found'], 404);
         }
 
-        // ✅ Remove existing token before generating a new one
+        // Remove existing token before generating a new one
         DB::table('email_verification_tokens')->where('email', $user->email)->delete();
 
-        // ✅ Generate a new verification token
+        // Generate a new verification token
         $token = Str::random(64);
 
-        // ✅ Store the token in the database
+        // Store the token in the database
         DB::table('email_verification_tokens')->insert([
             'email' => $user->email,
             'token' => $token,
             'created_at' => now()
         ]);
 
-        // ✅ Construct the Verification URL
+        // Construct the Verification URL
         $frontendUrl = env('FRONTEND_URL');
         $verificationUrl = "{$frontendUrl}/verify-email?token={$token}";
 
@@ -475,7 +475,7 @@ class AuthController extends Controller
         </html>
         ";
 
-        // ✅ Send Email Using `html()`
+        // Send Email Using `html()`
         Mail::html($emailBody, function ($message) use ($user, $subject) {
             $message->to($user->email)
                 ->subject($subject);
@@ -492,25 +492,25 @@ class AuthController extends Controller
             return response()->json(['message' => 'Token is required'], 400);
         }
 
-        // ✅ Find the token record
+        // Find the token record
         $record = DB::table('email_verification_tokens')->where('token', $token)->first();
 
         if (!$record) {
             return response()->json(['message' => 'Invalid or expired token'], 400);
         }
 
-        // ✅ Find the user by email
+        // Find the user by email
         $user = User::where('email', $record->email)->first();
 
         if (!$user) {
             return response()->json(['message' => 'User not found'], 404);
         }
 
-        // ✅ Mark the email as verified
+        // Mark the email as verified
         $user->email_verified_at = now();
         $user->save();
 
-        // ✅ Remove the used token
+        // Remove the used token
         DB::table('email_verification_tokens')->where('email', $user->email)->delete();
 
         return response()->json(['message' => 'Email verified successfully']);

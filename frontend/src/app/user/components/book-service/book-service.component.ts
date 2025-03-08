@@ -222,4 +222,16 @@ export class BookServiceComponent implements OnInit {
       confirmButtonColor: '#428eba',
     });
   }
+
+  displayCount = 3; // Initially show only 3 services
+
+  showMore() {
+    this.displayCount = this.availableServices.length; // Show all services
+  }
+
+  displayFeedbackCount = 3; // Initially show only 3 feedbacks
+
+  showMoreFeedbacks() {
+    this.displayFeedbackCount = this.feedbacks.length; // Show all feedbacks
+  }
 }
