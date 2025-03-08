@@ -281,8 +281,17 @@ h2 {
   background-color: #b8dbf1;
 }
 
-.custom-card:hover {
+/* .custom-card:hover {
   background-color: #b8dbf1;
+} */
+
+.alert-card {
+  color: whitesmoke;
+  background-color: rgb(233, 69, 69);
+}
+
+.alert-count i {
+  color: rgb(255, 255, 255);
 }
 
 /* Title */

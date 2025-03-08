@@ -263,6 +263,7 @@ export class UserRegisterComponent {
   photoPreview: string | null = null;
   selectedFile: File | null = null;
   isLoading: boolean = false;
+  showDisclaimer: boolean = true;
 
   provinces = locations;
   cities: any[] = [];
@@ -378,13 +379,18 @@ export class UserRegisterComponent {
     }
 
     // Password Validation
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{12,}$/;
+
     if (!this.formData.password || !this.formData.confirmPassword) {
+      this.showDisclaimer = false;
       this.validationErrors['password'] = "Password and confirmation are required.";
       missingFields.push("Password");
-    } else if (this.formData.password.length < 8) {
-      this.validationErrors['password'] = "Password must be at least 8 characters long.";
-      missingFields.push("Password (Minimum 8 characters)");
+    } else if (!passwordRegex.test(this.formData.password)) {
+      this.showDisclaimer = false;
+      this.validationErrors['password'] = "Password must be at least 12 characters long and include an uppercase letter, lowercase letter, number, and special character.";
+      missingFields.push("Password (Strong Format Required)");
     } else if (this.formData.password !== this.formData.confirmPassword) {
+      this.showDisclaimer = false;
       this.validationErrors['password'] = "Passwords do not match.";
       missingFields.push("Matching Passwords");
     }

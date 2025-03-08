@@ -119,6 +119,13 @@
                     <i class="toggle-password-icon" [ngClass]="isPasswordVisible ? 'pi pi-eye-slash' : 'pi pi-eye'"
                         (click)="togglePasswordVisibility()"></i>
                 </div>
+                <div class="disclaimer-message" *ngIf="showDisclaimer">
+                    <p>Password must be at least 12 characters long and include an uppercase letter, lowercase letter,
+                        number, and special character.</p>
+                </div>
+                <div class="error-message" *ngIf="validationErrors['password']" style="padding-inline: 0.5rem;">
+                    {{ validationErrors['password'] }}
+                </div>
 
                 <!-- Confirm Password Field -->
                 <div class="info-row" style="position: relative;">

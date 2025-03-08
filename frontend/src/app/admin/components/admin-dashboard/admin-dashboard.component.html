@@ -7,13 +7,13 @@
   <!-- Cards Container for Application Status -->
   <div class="cards-container">
     <!-- Card 1: Pending Applications -->
-    <div class="custom-card">
+    <div class="custom-card" [ngClass]="{'alert-card': dashboardStats.pending_providers > 0}">
       <div class="card-row">
         <div class="number-container">
           <h2>{{ dashboardStats.pending_providers }}</h2> <!-- Replace this number with dynamic data -->
         </div>
-        <div class="icon-container">
-          <i class="pi pi-file-o"></i> <!-- Replace icon as needed -->
+        <div class="icon-container" [ngClass]="{'alert-count': dashboardStats.pending_providers > 0}">
+          <i class="pi pi-bell"></i> <!-- Replace icon as needed -->
         </div>
       </div>
       <div class="card-row">
@@ -64,7 +64,7 @@
           <h2>{{ dashboardStats.registered_users }}</h2> <!-- Replace this number with dynamic data -->
         </div>
         <div class="icon-container">
-          <i class="pi pi-bell"></i> <!-- Replace icon as needed -->
+          <i class="pi pi-users"></i> <!-- Replace icon as needed -->
         </div>
       </div>
       <div class="card-row">
