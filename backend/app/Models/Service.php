@@ -13,6 +13,7 @@ class Service extends Model
         'provider_id',
         'service_name',
         'service_description',
-        'price_start'
+        'price_start',
+        'price_max'
     ];
 }

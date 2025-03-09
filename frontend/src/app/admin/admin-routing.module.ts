@@ -11,6 +11,7 @@ import { ListProvidersComponent } from './components/list-providers/list-provide
 import { DeletedCategoriesComponent } from './components/deleted-categories/deleted-categories.component';
 import { DeletedProvidersComponent } from './components/deleted-providers/deleted-providers.component';
 import { SystemDetailsComponent } from './components/system-details/system-details.component';
+import { AddServiceComponent } from './components/add-service/add-service.component';
 
 const routes: Routes = [
   {
@@ -25,6 +26,7 @@ const routes: Routes = [
       {path: 'deleted-categories', component: DeletedCategoriesComponent},
       {path: 'deleted-providers', component: DeletedProvidersComponent},
       {path: 'system-details', component: SystemDetailsComponent},
+      {path: 'add-service', component: AddServiceComponent},
     ]
   }
 ];

@@ -25,11 +25,16 @@ export const adminLinks = [
         label: 'Service Categories'
     },
     {
+        routeLink: '/admin/add-service',
+        icon: 'pi pi-pen-to-square',
+        label: 'Add New Service'
+    },
+    {
         routeLink: '/admin/deleted-categories',
         icon: 'pi pi-trash',
         label: 'Deleted Categories'
     },
-    
+
     {
         routeLink: '/admin/system-details',
         icon: 'pi pi-cog',

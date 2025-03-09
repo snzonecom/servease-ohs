@@ -20,6 +20,7 @@ import { ListProvidersComponent } from './components/list-providers/list-provide
 import { DeletedCategoriesComponent } from './components/deleted-categories/deleted-categories.component';
 import { DeletedProvidersComponent } from './components/deleted-providers/deleted-providers.component';
 import { SystemDetailsComponent } from './components/system-details/system-details.component';
+import { AddServiceComponent } from './components/add-service/add-service.component';
 
 @NgModule({
   declarations: [
@@ -31,7 +32,8 @@ import { SystemDetailsComponent } from './components/system-details/system-detai
     ListProvidersComponent,
     DeletedCategoriesComponent,
     DeletedProvidersComponent,
-    SystemDetailsComponent
+    SystemDetailsComponent,
+    AddServiceComponent
   ],
   imports: [
     CommonModule,

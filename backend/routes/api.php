@@ -9,6 +9,7 @@ use App\Http\Controllers\BookingController;
 use App\Http\Controllers\DeletedProviderController;
 use Illuminate\Http\Request;
 use App\Http\Controllers\SystemInfoController;
+use App\Http\Controllers\OfferedServiceController;
 
 
 // Authentication Routes
@@ -93,6 +94,14 @@ Route::middleware('auth:sanctum')->get('/user/{userId}/bookings', [BookingContro
 
 // Get all services
 Route::get('/services', [ServiceController::class, 'getAllServices']);
+
+// For all offered services added by Admin
+Route::get('/offered-services', [OfferedServiceController::class, 'index']);
+Route::post('/offered-services', [OfferedServiceController::class, 'store']);
+Route::put('/offered-services/{id}', [OfferedServiceController::class, 'update']);
+Route::delete('/offered-services/{id}', [OfferedServiceController::class, 'destroy']);
+Route::get('/provider/{providerId}/offered-services', [OfferedServiceController::class, 'getOfferedServicesByProvider']);
+
 
 // Submit a rating attached to a booking transaction
 Route::post('/bookings/{id}/rate', [BookingController::class, 'submitRating']);

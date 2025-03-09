@@ -98,7 +98,7 @@
                                 <div *ngFor="let service of availableServices" [class.selected]="service.isSelected"
                                     class="book-now-service-card" (click)="toggleServiceSelection(service)">
                                     <h3>{{ service.service_name }}</h3>
-                                    <span class="price">Starting price <br> ₱{{ service.price_start }}</span>
+                                    <span class="price">Price Range<br> ₱{{ service.price_start }} to ₱{{ service.price_max }}</span>
                                 </div>
                             </div>
                         </div>

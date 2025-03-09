@@ -12,14 +12,19 @@ export class ProviderServicesComponent implements OnInit {
   searchTerm: string = '';
   dialogVisible: boolean = false;
   isEditMode: boolean = false;
+
   selectedService: any = {};
+  offeredServices: any[] = [];
 
   private apiUrl = 'http://127.0.0.1:8000/api/provider';
+  private offeredUrl = 'http://127.0.0.1:8000/api';
 
   constructor(private http: HttpClient) { }
 
   ngOnInit(): void {
     this.fetchServices();
+    this.fetchOfferedServices();
+    this.fetchOfferedServicesByProvider();
   }
 
   // ✅ Get Token from localStorage
@@ -67,7 +72,6 @@ export class ProviderServicesComponent implements OnInit {
     );
   }
 
-
   filteredServices() {
     return this.services.filter(service =>
       service.service_name.toLowerCase().includes(this.searchTerm.toLowerCase())
@@ -76,7 +80,7 @@ export class ProviderServicesComponent implements OnInit {
 
   openAddDialog() {
     this.isEditMode = false;
-    this.selectedService = { service_name: '', service_description: '', price_start: 0 };
+    this.selectedService = { service_name: '', service_description: '' };
     this.dialogVisible = true;
   }
 
@@ -201,6 +205,52 @@ export class ProviderServicesComponent implements OnInit {
     });
   }
 
+  fetchOfferedServices(): void {
+    this.http.get<any[]>(`${this.offeredUrl}/offered-services`).subscribe(
+      (data) => {
+        console.log("Retrieved Offered Services:", data);
+        this.offeredServices = data;
+      },
+      (error) => {
+        console.error('Error fetching offered services:', error);
+        Swal.fire("Error!", "Failed to fetch offered services.", "error");
+      }
+    );
+  }
 
+  onServiceSelect(event: Event): void {
+    const selectedServiceId = Number((event.target as HTMLSelectElement).value);
+    this.selectedService = this.offeredServices.find(service => service.offered_service_id === selectedServiceId) || {};
+    console.log("Selected Service:", this.selectedService); // ✅ Debugging line
+  }
 
+  fetchOfferedServicesByProvider(): void {
+    const providerId = localStorage.getItem('provider_id');
+
+    if (!providerId) {
+      Swal.fire({
+        title: "Error!",
+        text: "Provider ID not found. Please log in again.",
+        icon: "error",
+        confirmButtonColor: "#428eba",
+      });
+      return;
+    }
+
+    this.http.get<any[]>(`${this.apiUrl}/${providerId}/offered-services`, { headers: this.getAuthHeaders() }).subscribe(
+      (data) => {
+        console.log("Filtered Offered Services:", data);
+        this.offeredServices = data;
+      },
+      (error) => {
+        console.error('Error fetching offered services:', error);
+        Swal.fire({
+          title: "Error!",
+          text: "Failed to fetch offered services. Please try again later.",
+          icon: "error",
+          confirmButtonColor: "#428eba",
+        });
+      }
+    );
+  }
 }

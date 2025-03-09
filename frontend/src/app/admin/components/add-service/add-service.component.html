@@ -1,0 +1,93 @@
+<body>
+    <!-- Header Section: A short message to welcome the user -->
+    <div class="header-message">
+        <p>List of Offered Services</p>
+    </div>
+
+    <!-- Search Bar and Button -->
+    <div class="search-add-container">
+        <input type="text" class="search-bar" [(ngModel)]="searchTerm" placeholder="Search for a service name..." />
+        <button class="add-button" (click)="openAddServiceDialog()">Add a New Service</button>
+    </div>
+
+    <!-- Cards Container for Service Categories -->
+    <div class="cards-container">
+        <div *ngFor="let service of filteredServices()" class="custom-card">
+            <div class="card-row">
+                <div class="number-container">
+                    <h2>{{ service.service_name }}</h2>
+                </div>
+                <div class="icon-container">
+                    <i class="pi pi-th-large"></i>
+                </div>
+            </div>
+            <div class="card-row">
+                <div class="description-container">
+                    <p>{{ service.service_description }}</p>
+                </div>
+            </div>
+            <div class="button-row">
+                <button class="edit-button" (click)="openEditServiceDialog(service)">Edit this Service</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Service Dialog -->
+    <p-dialog header="Add New Service" [(visible)]="displayDialog" [modal]="true" [style]="{ width: '40rem' }">
+        <div class="flex flex-column align-items-start gap-3 mb-3">
+            <label class="font-semibold">Service Category</label>
+            <select [(ngModel)]="newService.category_id" class="custom-select">
+                <option [ngValue]="null" disabled selected>Select a category</option>
+                <option *ngFor="let category of serviceCategories" [ngValue]="category.category_id">
+                    {{ category.category_name }}
+                </option>
+            </select>
+        </div>
+
+        <div class="flex flex-column align-items-start gap-3 mb-3">
+            <label class="font-semibold">Service Name</label>
+            <input pInputText [(ngModel)]="newService.service_name" placeholder="Enter service name" class="w-full" />
+        </div>
+
+        <div class="flex flex-column align-items-start gap-3 mb-3">
+            <label class="font-semibold">Service Description</label>
+            <textarea pInputText [(ngModel)]="newService.service_description" placeholder="Enter service description"
+                class="w-full"></textarea>
+        </div>
+
+        <div class="flex justify-content-end gap-2">
+            <button pButton class="cancel-button" (click)="displayDialog = false">Cancel</button>
+            <button pButton class="submit-button" (click)="saveService()">Add Service</button>
+        </div>
+    </p-dialog>
+
+    <!-- Edit Service Dialog -->
+    <p-dialog header="Edit Service" [(visible)]="displayEditDialog" [modal]="true" [style]="{ width: '40rem' }">
+        <div class="flex flex-column align-items-start gap-3 mb-3">
+            <label class="font-semibold">Service Category</label>
+            <select [(ngModel)]="selectedService.category_id" class="custom-select">
+                <option *ngFor="let category of serviceCategories" [ngValue]="category.category_id">
+                    {{ category.category_name }}
+                </option>
+            </select>
+        </div>
+
+        <div class="flex flex-column align-items-start gap-3 mb-3">
+            <label class="font-semibold">Service Name</label>
+            <input pInputText [(ngModel)]="selectedService.service_name" placeholder="Enter service name"
+                class="w-full" />
+        </div>
+
+        <div class="flex flex-column align-items-start gap-3 mb-3">
+            <label class="font-semibold">Service Description</label>
+            <textarea pInputText [(ngModel)]="selectedService.service_description"
+                placeholder="Enter service description" class="w-full"></textarea>
+        </div>
+
+        <div class="flex justify-content-end gap-2">
+            <button pButton class="cancel-button"
+                (click)="deleteService(selectedService.offered_service_id)">Delete</button>
+            <button pButton class="submit-button" (click)="updateService()">Save Changes</button>
+        </div>
+    </p-dialog>
+</body>

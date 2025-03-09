@@ -44,6 +44,7 @@ class ServiceController extends Controller
             'service_name' => 'required|string|max:255',
             'service_description' => 'nullable|string',
             'price_start' => 'required|numeric',
+            'price_max' => 'required|numeric',
         ]);
 
         $providerId = Auth::user()->provider->provider_id;
@@ -53,6 +54,7 @@ class ServiceController extends Controller
             'service_name' => $request->service_name,
             'service_description' => $request->service_description,
             'price_start' => $request->price_start,
+            'price_max' => $request->price_max,
         ]);
 
         return response()->json(['message' => 'Service added successfully!', 'service' => $service], 201);
@@ -74,6 +76,7 @@ class ServiceController extends Controller
             'service_name' => 'required|string|max:255',
             'service_description' => 'nullable|string',
             'price_start' => 'required|numeric',
+            'price_max' => 'required|numeric',
         ]);
 
         $service->update($request->all());
