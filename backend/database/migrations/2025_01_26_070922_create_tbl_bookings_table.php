@@ -18,6 +18,7 @@ return new class extends Migration {
             $table->date('book_date');
             $table->string('book_time');
             $table->string('book_status');
+            $table->string('booking_address');
             $table->decimal('price', 6, 2)->nullable();
             // $table->decimal('provider_rate', 8, 2)->nullable();
             // $table->text('provider_feedback')->nullable();

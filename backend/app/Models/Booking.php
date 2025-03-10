@@ -18,6 +18,7 @@ class Booking extends Model
         'book_status',
         'provider_rate',
         'provider_feedback',
+        'booking_address'
     ];
 
     protected $casts = [

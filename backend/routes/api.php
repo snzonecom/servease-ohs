@@ -10,8 +10,15 @@ use App\Http\Controllers\DeletedProviderController;
 use Illuminate\Http\Request;
 use App\Http\Controllers\SystemInfoController;
 use App\Http\Controllers\OfferedServiceController;
+use App\Http\Controllers\PaymentController;
 
 Route::get('/generate-report-pdf', [ProviderController::class, 'generateReportPDF']);
+Route::get('/admin/generate-report', [ProviderController::class, 'generateReport']);
+
+Route::get('/booked-dates', [BookingController::class, 'getFullyBookedDates']);
+Route::get('/booked-slots', [BookingController::class, 'getBookedSlots']);
+
+Route::post('/payment/create-link', [PaymentController::class, 'createPaymentLink']);
 
 // Authentication Routes
 Route::post('/register', [AuthController::class, 'register']);

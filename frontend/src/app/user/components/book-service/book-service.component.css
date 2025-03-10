@@ -23,6 +23,71 @@
     margin-bottom: 20px;
 }
 
+/* Style the radio button container */
+.radio-group {
+    display: flex;
+    gap: 15px;
+    margin-top: 8px;
+}
+
+/* Style for each radio button label */
+.radio-option {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: #f8f9fa;
+    padding: 10px 15px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: 0.3s ease;
+}
+
+/* Change background on hover */
+.radio-option:hover {
+    background: #e9ecef;
+}
+
+/* Hide default radio button */
+.radio-option input[type="radio"] {
+    appearance: none;
+    width: 16px;
+    height: 16px;
+    border: 2px solid #428eba;
+    border-radius: 50%;
+    outline: none;
+    cursor: pointer;
+    position: relative;
+}
+
+.address-fields {
+    margin-bottom: 10px;
+}
+
+/* Custom checked radio button */
+.radio-option input[type="radio"]:checked::before {
+    content: "";
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    background: #428eba;
+    border-radius: 50%;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+/* Spacing for form sections */
+.address-form {
+    margin-top: 15px;
+}
+
+.book-now-btn:disabled {
+    background-color: grey !important;
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+
 .see-more-button {
     background-color: #428eba;
     color: white;

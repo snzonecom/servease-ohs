@@ -177,10 +177,12 @@
             <span class="label-text">
                 <i class="pi pi-map-marker"></i> Address
             </span>
-            <input pInputText id="address" [value]="(selectedBooking.customer?.house_add || 'N/A') + ', ' +
-           (selectedBooking.customer?.brgy || 'N/A') + ', ' +
-           (selectedBooking.customer?.city || 'N/A') + ', ' +
-           (selectedBooking.customer?.province || 'N/A')" [disabled]="true" class="field-input" />
+            <input pInputText id="address" [value]="selectedBooking.booking_address 
+                ? selectedBooking.booking_address 
+                : (selectedBooking.customer?.house_add || 'N/A') + ', ' +
+                  (selectedBooking.customer?.brgy || 'N/A') + ', ' +
+                  (selectedBooking.customer?.city || 'N/A') + ', ' +
+                  (selectedBooking.customer?.province || 'N/A')" [disabled]="true" class="field-input" />
         </label>
     </div>
 
@@ -231,8 +233,8 @@
 
     <!-- ✅ Action Buttons -->
     <div class="flex-right">
-        <button pButton label="Reject Booking" class="reject-button" (click)="rejectBooking()"></button>
-        <button pButton label="Accept Booking" class="approve-button" (click)="acceptBooking()"></button>
+        <!-- <button pButton label="Reject Booking" class="reject-button" (click)="rejectBooking()"></button> -->
+        <button pButton label="Proceed with this Booking" class="approve-button" (click)="acceptBooking()"></button>
     </div>
 </p-dialog>
 
@@ -284,10 +286,12 @@
             <span class="label-text">
                 <i class="pi pi-map-marker"></i> Address
             </span>
-            <input pInputText id="address" [value]="(selectedBooking.customer?.house_add || 'N/A') + ', ' +
-               (selectedBooking.customer?.brgy || 'N/A') + ', ' +
-               (selectedBooking.customer?.city || 'N/A') + ', ' +
-               (selectedBooking.customer?.province || 'N/A')" [disabled]="true" class="field-input" />
+            <input pInputText id="address" [value]="selectedBooking.booking_address 
+                ? selectedBooking.booking_address 
+                : (selectedBooking.customer?.house_add || 'N/A') + ', ' +
+                  (selectedBooking.customer?.brgy || 'N/A') + ', ' +
+                  (selectedBooking.customer?.city || 'N/A') + ', ' +
+                  (selectedBooking.customer?.province || 'N/A')" [disabled]="true" class="field-input" />
         </label>
     </div>
 
@@ -398,10 +402,12 @@
             <span class="label-text">
                 <i class="pi pi-map-marker"></i> Address
             </span>
-            <input pInputText id="address" [value]="(selectedBooking.customer?.house_add || 'N/A') + ', ' +
-               (selectedBooking.customer?.brgy || 'N/A') + ', ' +
-               (selectedBooking.customer?.city || 'N/A') + ', ' +
-               (selectedBooking.customer?.province || 'N/A')" [disabled]="true" class="field-input" />
+            <input pInputText id="address" [value]="selectedBooking.booking_address && selectedBooking.booking_address.trim() !== '' 
+                ? selectedBooking.booking_address 
+                : (selectedBooking.customer?.house_add || 'N/A') + ', ' +
+                  (selectedBooking.customer?.brgy || 'N/A') + ', ' +
+                  (selectedBooking.customer?.city || 'N/A') + ', ' +
+                  (selectedBooking.customer?.province || 'N/A')" [disabled]="true" class="field-input" />
         </label>
     </div>
 

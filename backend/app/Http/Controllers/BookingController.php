@@ -14,6 +14,27 @@ use Carbon\Carbon;
 
 class BookingController extends Controller
 {
+    // Get Fully Booked Dates
+    public function getFullyBookedDates()
+    {
+        $fullyBookedDates = DB::table('tbl_bookings')
+            ->select('book_date')
+            ->groupBy('book_date')
+            ->havingRaw('COUNT(DISTINCT book_time) = 3') // If all 3 slots are booked
+            ->pluck('book_date');
+
+        return response()->json($fullyBookedDates);
+    }
+
+    // Get Booked Slots for a Specific Date
+    public function getBookedSlots(Request $request)
+    {
+        $bookedSlots = DB::table('tbl_bookings')
+            ->where('book_date', $request->query('date'))
+            ->pluck('book_time');
+
+        return response()->json($bookedSlots);
+    }
 
     /**
      * ✅ Fetch Bookings for a Specific User
@@ -35,42 +56,50 @@ class BookingController extends Controller
             'services' => 'required|array|min:1',
             'book_date' => 'required|date',
             'book_time' => 'required|string',
+            'use_another_address' => 'required|boolean',
         ]);
-
+    
         $userId = Auth::id();
         $user = Auth::user();
-
+    
         // ✅ Fetch Provider's Email Correctly
         $provider = DB::table('tbl_provider_info')
             ->join('users', 'tbl_provider_info.user_id', '=', 'users.id')
             ->where('tbl_provider_info.provider_id', $request->provider_id)
             ->select('users.email', 'tbl_provider_info.provider_name')
             ->first();
-
+    
         if (!$provider || !$provider->email) {
             return response()->json(['error' => 'Provider not found or missing email.'], 404);
         }
-
-        // ✅ Fetch Customer Name from `tbl_customer_info`
+    
+        // ✅ Fetch Customer Name & Default Address
         $customer = DB::table('tbl_customer_info')
             ->where('user_id', $userId)
-            ->select('customer_name')
+            ->select('customer_name', 'house_add', 'brgy', 'city', 'province')
             ->first();
-
+    
         if (!$customer) {
             return response()->json(['error' => 'Customer information not found.'], 404);
         }
-
+    
+        // ✅ Determine Final Address
+        if ($request->use_another_address) {
+            $finalAddress = trim("{$request->new_address}, {$request->new_brgy}, {$request->new_city}, {$request->new_province}", ", ");
+        } else {
+            $finalAddress = trim("{$customer->house_add}, {$customer->brgy}, {$customer->city}, {$customer->province}", ", ");
+        }
+    
         // ✅ Fetch Service Names
         $serviceNames = DB::table('tbl_services')
             ->whereIn('service_id', $request->services)
             ->pluck('service_name')
             ->toArray();
-
+    
         if (empty($serviceNames)) {
             return response()->json(['error' => 'Invalid service selection.'], 400);
         }
-
+    
         // ✅ Create Booking
         Booking::create([
             'user_id' => $userId,
@@ -79,12 +108,13 @@ class BookingController extends Controller
             'book_date' => $request->book_date,
             'book_time' => $request->book_time,
             'book_status' => 'Pending',
+            'booking_address' => $finalAddress, // ✅ Store the final address
         ]);
-
+    
         // ✅ Correct Email Variables
-        $servicesList = implode(', ', $serviceNames); // ✅ Fix this: Use service names, not IDs
-        $customerName = $customer->customer_name; // ✅ Fix this: Fetch from `tbl_customer_info`
-
+        $servicesList = implode(', ', $serviceNames);
+        $customerName = $customer->customer_name;
+    
         // ✅ Prepare Email Body
         $subject = "New Booking Request from {$customerName}";
         $emailBody = "
@@ -109,11 +139,12 @@ class BookingController extends Controller
                 <h2>New Booking Request</h2>
                 <p><strong>Customer:</strong> {$customerName}</p>
                 <p><strong>Services:</strong> {$servicesList}</p>
+                <p><strong>Address:</strong> {$finalAddress}</p>
                 <p><strong>Date Requested:</strong> {$request->book_date}</p>
                 <p><strong>Time Requested:</strong> {$request->book_time}</p>
-
+    
                 <p>Please confirm or reject the booking request in your dashboard.</p>
-
+    
                 <div class='footer'>
                     <p>Need help? Contact us at <a href='mailto:phservease@gmail.com'>phservease@gmail.com</a></p>
                     <p>&copy; " . date('Y') . " SERVEASE. All rights reserved.</p>
@@ -121,16 +152,17 @@ class BookingController extends Controller
             </div>
         </body>
         </html>
-    ";
-
+        ";
+    
         // ✅ Send Email to Provider
         Mail::html($emailBody, function ($message) use ($provider, $subject) {
             $message->to($provider->email)
                 ->subject($subject);
         });
-
+    
         return response()->json(['message' => 'Booking submitted successfully.'], 201);
     }
+    
 
     // ✅ Get bookings for the logged-in user
     public function getUserBookings($userId)

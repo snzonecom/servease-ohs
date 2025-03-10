@@ -98,47 +98,85 @@
                                 <div *ngFor="let service of availableServices" [class.selected]="service.isSelected"
                                     class="book-now-service-card" (click)="toggleServiceSelection(service)">
                                     <h3>{{ service.service_name }}</h3>
-                                    <span class="price">Price Range<br> ₱{{ service.price_start }} to ₱{{ service.price_max }}</span>
+                                    <span class="price">Price Range<br> ₱{{ service.price_start }} to ₱{{
+                                        service.price_max }}</span>
                                 </div>
                             </div>
+                        </div>
+
+                        <!-- Select Address Section -->
+                        <div class="book-now-form-group">
+                            <label class="form-label">Select Address</label>
+                            <div class="radio-group">
+                                <label class="radio-option">
+                                    <input type="radio" name="addressType" [(ngModel)]="addressType" value="current" />
+                                    <span>Use my Current Address</span>
+                                </label>
+                                <label class="radio-option">
+                                    <input type="radio" name="addressType" [(ngModel)]="addressType" value="another" />
+                                    <span>Use another address</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Conditional Address Fields -->
+                        <div *ngIf="addressType === 'another'" class="book-now-form-group">
+                            <label for="homeAddress">Home & Street Address</label>
+                            <input type="text" id="homeAddress" class="address-fields" [(ngModel)]="homeAddress"
+                                required />
+
+                            <!-- Province Dropdown -->
+                            <label for="province">Province</label>
+                            <select id="province" class="address-fields" [(ngModel)]="selectedProvince"
+                                (change)="onProvinceChange()" required>
+                                <option value="" disabled selected>Select Province</option>
+                                <option *ngFor="let province of provinces" [value]="province.province">{{
+                                    province.province }}</option>
+                            </select>
+
+                            <!-- City Dropdown -->
+                            <label for="city">City / Municipality</label>
+                            <select id="city" class="address-fields" [(ngModel)]="selectedCity"
+                                (change)="onCityChange()" [disabled]="!selectedProvince" required>
+                                <option value="" disabled selected>Select City</option>
+                                <option *ngFor="let city of cities" [value]="city.name">{{ city.name }}</option>
+                            </select>
+
+                            <!-- Barangay Dropdown -->
+                            <label for="barangay">Barangay</label>
+                            <select id="barangay" class="address-fields" [(ngModel)]="selectedBarangay"
+                                [disabled]="!selectedCity" required>
+                                <option value="" disabled selected>Select Barangay</option>
+                                <option *ngFor="let barangay of barangays" [value]="barangay">{{ barangay }}</option>
+                            </select>
+
+                            <hr>
                         </div>
 
                         <!-- Select Date Section -->
                         <div class="book-now-form-group">
                             <label for="booking-date">Select Date</label>
-                            <input type="date" id="booking-date" class="form-control" [disabled]="!isServiceSelected"
-                                [(ngModel)]="bookingDate" />
+                            <input type="date" id="booking-date" class="form-control"
+                                [disabled]="!isServiceSelected || fullyBookedDates.includes(bookingDate)"
+                                [(ngModel)]="bookingDate" [min]="minDate" (change)="getBookedSlots(bookingDate)" />
                         </div>
 
                         <!-- Select Time Section -->
                         <div class="book-now-form-group">
                             <label for="booking-time">Select Available Time</label>
-                            <select id="booking-time" class="form-control" [disabled]="!bookingDate"
-                                [(ngModel)]="bookingTime">
+                            <select id="booking-time" class="form-control"
+                                [disabled]="!bookingDate || availableSlots.length === 0" [(ngModel)]="bookingTime">
                                 <option value="" disabled selected>Choose a time slot</option>
-                                <option value="Morning (9:00 AM - 12:00 PM)">Morning (9:00 AM - 12:00 PM)</option>
-                                <option value="Afternoon (1:00 PM - 4:00 PM)">Afternoon (1:00 PM - 4:00 PM)</option>
-                                <option value="Evening (5:00 PM - 8:00 PM)">Evening (5:00 PM - 8:00 PM)</option>
+                                <option *ngFor="let slot of availableSlots" [value]="slot">
+                                    {{ slot }}
+                                </option>
                             </select>
-                        </div>
-
-                        <!-- Terms and Conditions -->
-                        <div class="book-now-form-group">
-                            <!-- Terms and Conditions -->
-                            <div class="tnc-container">
-                                <input type="checkbox" id="tnc" [(ngModel)]="agreedToTnC" />
-                                <label for="tnc" class="label">
-                                    By proceeding with this booking, you confirm that you have read, understood, and
-                                    agreed to these
-                                    <a (click)="tncDialogVisible = true">Terms and Conditions.</a>
-                                </label>
-                            </div>
                         </div>
 
                         <!-- Book Now Button -->
                         <!-- Book Now Button (No longer disabled) -->
                         <div class="book-now-form-group">
-                            <button class="book-now-btn" (click)="showConfirmation()">Submit Booking</button>
+                            <button class="book-now-btn" (click)="tncDialogVisible = true">Submit Booking</button>
                         </div>
 
                     </div>
@@ -156,27 +194,33 @@
         <p>By booking a service through our platform, you agree to the following terms and conditions:</p>
         <br>
         <p><strong>1. Booking Confirmation:</strong></p>
-        <p>(a) Your booking request is subject to provider availability and confirmation.</p>
-        <p>(b) The service provider has the right to accept or decline your request.</p>
+        <p>(a) Your booking is automatically confirmed upon successful payment of the <strong>₱100 convenience
+                fee/downpayment</strong>.</p>
+        <p>(b) The service provider will fulfill the booking at the selected date and time.</p>
         <br>
         <p><strong>2. Payments & Pricing:</strong></p>
         <p>(c) The price displayed is an estimate and may vary depending on the final service provided.</p>
         <p>(d) Any additional services requested during the appointment may incur extra charges.</p>
         <br>
-        <p><strong>3. Cancellation & Rescheduling:</strong></p>
-        <p>(e) Cancellations may be made if your booking is still in pending status. However, cancellations or
-            reschedules must be discussed by both parties once the booking was prior accepted.</p>
-        <p>(f) The service provider may cancel a booking due to unforeseen circumstances.</p>
+        <p><strong>3. Service Execution:</strong></p>
+        <p>(e) You must ensure access to your home at the scheduled time.</p>
+        <p>(f) The provider must perform the service professionally and in accordance with industry standards.</p>
         <br>
-        <p><strong>4. Service Execution:</strong></p>
-        <p>(g) You must ensure access to your home at the scheduled time.</p>
-        <p>(h) The provider must perform the service professionally and in accordance with industry standards.</p>
+        <p><strong>4. Liability & Complaints:</strong></p>
+        <p>(g) The platform is not responsible for any damage or disputes between customers and providers.</p>
         <br>
-        <p><strong>5. Liability & Complaints:</strong></p>
-        <p>(i) The platform is not responsible for any damage or disputes between customers and providers.</p>
-        <br>
-        <p><strong>6. Privacy & Customer Conduct:</strong></p>
-        <p>(j) Your personal information will only be shared with the assigned provider.</p>
-        <p>(k) Customers must treat service providers with respect and ensure a safe working environment.</p>
+        <p><strong>5. Privacy & Customer Conduct:</strong></p>
+        <p>(h) Your personal information will only be shared with the assigned provider.</p>
+        <p>(i) Customers must treat service providers with respect and ensure a safe working environment.</p>
     </div>
+    <hr>
+    <input type="checkbox" id="tnc" [(ngModel)]="agreedToTnC" />
+    <label for="tnc" class="label">
+        By proceeding with this booking, you confirm that you have read, understood, and
+        agreed to these Terms and Conditions.
+    </label>
+    <hr>
+    <button style="display: block; margin: auto;" class="book-now-btn" (click)="tncDialogVisible = false"
+        (click)="showConfirmation()">Submit
+        Booking</button>
 </p-dialog>
