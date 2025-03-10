@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\SystemInfoController;
 use App\Http\Controllers\OfferedServiceController;
 
+Route::get('/generate-report-pdf', [ProviderController::class, 'generateReportPDF']);
 
 // Authentication Routes
 Route::post('/register', [AuthController::class, 'register']);
@@ -30,6 +31,7 @@ Route::middleware('auth:sanctum')->group(function () {
 });
 Route::middleware('auth:sanctum')->post('/user/upload-profile-photo', [AuthController::class, 'uploadProfilePhoto']);
 
+Route::get('/admin/generate-report', [ProviderController::class, 'generateReport']);
 
 // Service Categories
 Route::get('/service-category', [ServiceCategoryController::class, 'index']);

@@ -217,6 +217,11 @@ textarea {
     min-height: 100px;
 }
 
+::ng-deep .p-dropdown {
+    width: 100%;
+    padding: 0.5rem;
+}
+
 .reject-button {
     padding: 0.5rem 1rem;
     background-color: #d3504c;

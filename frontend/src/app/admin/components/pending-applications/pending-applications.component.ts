@@ -81,13 +81,23 @@ export class PendingApplicationsComponent implements OnInit {
 
   // ✅ Soft Delete (Reject Application)
   rejectApplication(providerId: number): void {
+    if (!this.selectedRejectionReason) {
+      Swal.fire({
+        title: "Missing Reason!",
+        text: "Please select a reason for rejection.",
+        icon: "warning",
+        confirmButtonColor: "#428eba",
+      });
+      return;
+    }
+
     Swal.fire({
       title: 'Are you sure?',
       text: 'This will reject the application and send an email notification.',
       icon: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#428eba',
-      cancelButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
       confirmButtonText: 'Yes, Reject'
     }).then((result) => {
       if (result.isConfirmed) {
@@ -102,9 +112,15 @@ export class PendingApplicationsComponent implements OnInit {
           }
         });
 
-        // ✅ Use POST instead of DELETE
-        this.http.post(`${this.rejectUrl}/${providerId}/reject`, {}).subscribe(
+        // ✅ Send rejection reason and additional note
+        const rejectionData = {
+          reject_type: this.selectedRejectionReason,
+          reject_description: this.rejectionNote,
+        };
+
+        this.http.post(`${this.rejectUrl}/${providerId}/reject`, rejectionData).subscribe(
           () => {
+            this.visible = false;
             Swal.fire({
               title: "Success!",
               text: "Application rejected, soft deleted, and email sent.",
@@ -112,9 +128,10 @@ export class PendingApplicationsComponent implements OnInit {
               confirmButtonColor: "#428eba",
             });
             this.fetchPendingProviders(); // Refresh list
-            this.visible = false;
+            this.rejectDialogVisible = false; // Close dialog
           },
           (error) => {
+            this.visible = false;
             console.error('Rejection failed', error);
             Swal.fire({
               title: "Error!",
@@ -131,7 +148,14 @@ export class PendingApplicationsComponent implements OnInit {
     });
   }
 
-
+  rejectDialogVisible: boolean = false;
+  selectedRejectionReason: string = '';
+  rejectionNote: string = '';
+  rejectionReasons = [
+    { label: 'Incomplete documents', value: 'Incomplete documents' },
+    { label: 'Business details mismatch', value: 'Business details mismatch' },
+    { label: 'Invalid credentials', value: 'Invalid credentials' },
+  ];
 
   // ✅ Open Application Details Dialog
   showDialog(applicant: any): void {

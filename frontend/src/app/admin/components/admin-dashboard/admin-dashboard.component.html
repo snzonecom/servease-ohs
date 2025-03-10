@@ -75,6 +75,29 @@
     </div>
   </div>
 
+  <!-- Generate Report Area -->
+  <div class="report-container">
+    <!-- Start Date -->
+    <div class="column">
+      <label for="startDate">Start Date:</label>
+      <input type="date" id="startDate" [(ngModel)]="startDate" class="date-input">
+    </div>
+
+    <!-- End Date -->
+    <div class="column">
+      <label for="endDate">End Date:</label>
+      <input type="date" id="endDate" [(ngModel)]="endDate" class="date-input">
+    </div>
+
+    <!-- Generate Report PDF Button -->
+    <div class="column">
+      <label>&nbsp;</label> <!-- Keeps alignment -->
+      <button class="report-btn" (click)="generatePDFReport()">Generate Report PDF</button>
+    </div>
+  </div>
+
+
+
   <!-- Notification and Popular Services Section -->
   <div class="services-container">
     <!-- Left Division: Notifications of Newly Submitted Applications -->
@@ -117,7 +140,8 @@
     <div class="left-division">
       <h3>Service Categories</h3>
       <div>
-        <p-chart type="doughnut" [data]="providerCategoryData" [options]="chartDoughnutOptions" height="400px"></p-chart>
+        <p-chart type="doughnut" [data]="providerCategoryData" [options]="chartDoughnutOptions"
+          height="400px"></p-chart>
       </div>
 
     </div>

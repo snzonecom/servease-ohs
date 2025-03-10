@@ -131,12 +131,49 @@
       <!-- Buttons to approve or reject the application -->
       <div class="mb-3"></div>
       <div class="flex justify-content-end gap-2">
-        <button p-button class="reject-button" (click)="rejectApplication(selectedApplicant.provider_id)"
-          [disabled]="isRejecting">
+        <button p-button class="reject-button" (click)="rejectDialogVisible = true" [disabled]="isRejecting">
           {{ isRejecting ? 'Processing...' : 'Reject Application' }}
         </button>
         <button p-button class="approve-button" (click)="approveApplication(selectedApplicant.provider_id)">
           Approve Application
+        </button>
+      </div>
+    </p-dialog>
+  </div>
+
+  <!-- Dialog for rejection details -->
+  <div class="card flex justify-content-center">
+    <p-dialog header="Reject Application" [modal]="true" [(visible)]="rejectDialogVisible" [style]="{ width: '35rem' }">
+      <span class="p-text-secondary">
+        Please specify the reason for rejecting this application.
+      </span>
+
+      <div class="mb-3"></div>
+
+      <!-- Reason for Rejection -->
+      <div class="flex flex-column align-items-start gap-3 mb-3">
+        <label class="font-semibold">
+          <i class="pi pi-ban" style="margin-right: 10px;"></i> Reason for Rejection
+        </label>
+        <p-dropdown [options]="rejectionReasons" [(ngModel)]="selectedRejectionReason" placeholder="Select a reason"
+          class="w-full rejection-type">
+        </p-dropdown>
+      </div>
+
+      <!-- Additional Information -->
+      <div class="flex flex-column align-items-start gap-3 mb-3">
+        <label class="font-semibold">
+          <i class="pi pi-comment" style="margin-right: 10px;"></i> Provide More Information about your Decision
+        </label>
+        <textarea rows="4" class="w-full" placeholder="Explain here the details for rejecting the application."
+          [(ngModel)]="rejectionNote"></textarea>
+      </div>
+
+      <!-- Buttons -->
+      <div class="mb-3"></div>
+      <div class="flex justify-content-end gap-2">
+        <button p-button class="reject-button" (click)="rejectApplication(selectedApplicant.provider_id)">
+          Reject Application
         </button>
       </div>
     </p-dialog>

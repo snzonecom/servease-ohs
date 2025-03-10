@@ -24,6 +24,9 @@ return new class extends Migration {
             $table->string('attachment');
             $table->string('service_type');
             $table->string('account_status');
+            $table->string('account_status');
+            $table->string('reject_type');
+            $table->string('reject_description');
             $table->timestamps();
         });
 

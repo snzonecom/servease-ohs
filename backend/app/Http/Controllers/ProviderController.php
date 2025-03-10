@@ -17,13 +17,153 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class ProviderController extends Controller
 {
+    public function generateReportPDF(Request $request)
+    {
+        // ✅ Get start_date and end_date
+        $startDate = $request->query('start_date');
+        $endDate = $request->query('end_date');
+
+        // ✅ Fetch data within the date range
+        $registeredProviders = Provider::whereBetween('created_at', [$startDate, $endDate])->get();
+        $totalProviders = $registeredProviders->count();
+
+        $serviceCategories = ServiceCategory::all();
+        $totalCategories = $serviceCategories->count();
+
+        $registeredUsers = User::whereBetween('created_at', [$startDate, $endDate])->count();
+
+        // ✅ Top Providers Query
+        $topProviders = Booking::whereBetween('created_at', [$startDate, $endDate])
+            ->selectRaw('provider_id, COUNT(*) as total_bookings')
+            ->groupBy('provider_id')
+            ->orderByDesc('total_bookings')
+            ->with('provider')
+            ->get()
+            ->map(fn($booking) => [
+                'provider_name' => $booking->provider?->provider_name ?? 'Unknown',
+                'total_bookings' => $booking->total_bookings
+            ]);
+
+        $bookings = Booking::whereBetween('created_at', [$startDate, $endDate])->get();
+
+        $serviceCounts = [];
+
+        foreach ($bookings as $booking) {
+            $services = json_decode($booking->services, true); // Decode JSON
+            if (is_array($services)) {
+                foreach ($services as $serviceId) {
+                    if (!isset($serviceCounts[$serviceId])) {
+                        $serviceCounts[$serviceId] = 0;
+                    }
+                    $serviceCounts[$serviceId]++;
+                }
+            }
+        }
+
+        // Fetch service names based on IDs
+        $popularServices = collect($serviceCounts)
+            ->map(function ($totalBookings, $serviceId) {
+                $service = \App\Models\Service::find($serviceId);
+                return [
+                    'service_name' => $service?->service_name ?? 'Unknown',
+                    'total_bookings' => $totalBookings,
+                ];
+            })
+            ->sortByDesc('total_bookings')
+            ->values(); // Reset array keys
+
+
+        // ✅ HTML Template
+        $html = "
+        <html>
+        <head>
+        <title>Service Report</title>
+        <style>
+        body { font-family: Arial, sans-serif; }
+        h2, h3 { text-align: center; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { border: 1px solid black; padding: 8px; text-align: left; }
+        th { background-color: #f2f2f2; }
+        </style>
+        </head>
+        <body>
+        <h2>SERVEASE System Report</h2>
+        <h3>From $startDate to $endDate</h3>
+
+        <h4>New Registered Providers: $totalProviders</h4>
+        <table>
+        <tr><th>Provider Name</th><th>BRN</th><th>Date Created</th></tr>";
+
+        foreach ($registeredProviders as $provider) {
+            $html .= "<tr>
+                <td>{$provider->provider_name}</td>
+                <td>{$provider->brn}</td>
+                <td>{$provider->created_at}</td>
+            </tr>";
+        }
+
+        $html .= "</table>
+
+        <h4>New Registered Users: $registeredUsers</h4>
+
+        <h4>Popular Services</h4>
+        <table>
+        <tr><th>Service Name</th><th>Total Bookings</th></tr>";
+
+        foreach ($popularServices as $service) {
+            $html .= "<tr>
+                <td>{$service['service_name']}</td>
+                <td>{$service['total_bookings']}</td>
+            </tr>";
+        }
+
+        $html .= "</table>
+
+        <h4>Top Providers</h4>
+        <table>
+        <tr><th>Provider Name</th><th>Total Bookings</th></tr>";
+
+        foreach ($topProviders as $provider) {
+            $html .= "<tr>
+                <td>{$provider['provider_name']}</td>
+                <td>{$provider['total_bookings']}</td>
+            </tr>";
+        }
+
+        $html .= "</table>
+        
+        <h4>Total Service Categories: $totalCategories</h4>
+        <table>
+        <tr><th>Category Name</th></tr>";
+
+        foreach ($serviceCategories as $category) {
+            $html .= "<tr><td>{$category->category_name}</td></tr>";
+        }
+
+        $html .= "</table>
+        
+        </body>
+        </html>";
+
+
+        // ✅ Generate PDF from HTML
+        $pdf = Pdf::loadHTML($html);
+
+        // ✅ Return Streamed PDF Download
+        return response()->streamDownload(function () use ($pdf) {
+            echo $pdf->output();
+        }, 'service_report_' . now()->format('Y-m-d') . '.pdf');
+    }
+
+
     // ✅ List all providers
     public function index()
     {
-        $providers = Provider::with('user', )->get();
+        $providers = Provider::with('user',)->get();
         return response()->json($providers);
     }
 
@@ -319,17 +459,25 @@ class ProviderController extends Controller
         return response()->json(['message' => 'Provider application approved and email sent.']);
     }
 
-    public function reject($id)
+    public function reject(Request $request, $id)
     {
         $provider = Provider::findOrFail($id);
+
+        // ✅ Validate the request (Ensure rejection reason and description are provided)
+        $request->validate([
+            'reject_type' => 'required|string|max:255',
+            'reject_description' => 'nullable|string',
+        ]);
 
         // ✅ Fetch Email from Users Table if Not in Providers Table
         $user = \App\Models\User::where('id', $provider->user_id)->first();
         $email = $user ? $user->email : null;
 
-        DB::transaction(function () use ($provider) {
+        DB::transaction(function () use ($provider, $request) {
             // ✅ Update account status to "rejected"
             $provider->account_status = 'rejected';
+            $provider->reject_type = $request->reject_type;
+            $provider->reject_description = $request->reject_description;
             $provider->save();
 
             // ✅ Soft delete (sets deleted_at)
@@ -358,6 +506,8 @@ class ProviderController extends Controller
                         <h2>Application Rejected</h2>
                         <p>Dear {$provider->provider_name},</p>
                         <p>We regret to inform you that your service provider application has been rejected.</p>
+                        <p><strong>Reason:</strong> {$request->reject_type}</p>
+                        <p><strong>Additional Information:</strong> " . (!empty($request->reject_description) ? $request->reject_description : "No additional details provided.") . "</p>
                         <p>If you have any questions, feel free to contact support.</p>
     
                         <div class='footer'>
@@ -374,8 +524,9 @@ class ProviderController extends Controller
             });
         }
 
-        return response()->json(['message' => 'Provider application rejected, soft deleted, and email sent if available.']);
+        return response()->json(['message' => 'Provider application rejected, reason recorded, soft deleted, and email sent if available.']);
     }
+
 
     // ✅ Count approved service providers
     public function countApprovedProviders()
@@ -698,5 +849,4 @@ class ProviderController extends Controller
 
         return response()->json($deletedProviders);
     }
-
 }

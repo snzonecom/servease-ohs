@@ -35,6 +35,8 @@ class Provider extends Model
         'attachment',
         'service_type',
         'account_status',
+        'reject_type',
+        'reject_description',
         'email_verified'
     ];
 

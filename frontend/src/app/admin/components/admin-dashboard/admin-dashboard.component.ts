@@ -25,6 +25,9 @@ export class AdminDashboardComponent implements OnInit {
   chartDoughnutOptions: any;
   newApplications: any[] = [];
 
+  startDate: string = ''; // Initialize it properly
+  endDate: string = '';   // Initialize it properly
+
   constructor(private http: HttpClient, private router: Router) { }
 
   ngOnInit(): void {
@@ -76,8 +79,8 @@ export class AdminDashboardComponent implements OnInit {
         console.error('❌ Error fetching top providers:', error);
       }
     );
-  }  
-  
+  }
+
 
   /**
    * ✅ Fetch Popular Services for Chart
@@ -195,5 +198,25 @@ export class AdminDashboardComponent implements OnInit {
   goToPendingApplications() {
     this.router.navigate(['/admin/pending-applications']); // ✅ Redirect to Pending Applications Page
   }
+
+  generatePDFReport() {
+    const url = `http://127.0.0.1:8000/api/generate-report-pdf?start_date=${this.startDate}&end_date=${this.endDate}`;
+
+    this.http.get(url, { responseType: 'blob' }).subscribe(
+      (response) => {
+        const blob = new Blob([response], { type: 'application/pdf' });
+        const link = document.createElement('a');
+        link.href = window.URL.createObjectURL(blob);
+        link.download = `Service_Report_${this.startDate}_to_${this.endDate}.pdf`;
+        link.click();
+      },
+      (error) => {
+        console.error('❌ Error generating report:', error);
+        alert('Failed to generate PDF. Check console for details.');
+      }
+    );
+  }
+
+
 
 }
