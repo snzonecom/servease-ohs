@@ -13,6 +13,9 @@ return new class extends Migration {
         Schema::table('tbl_bookings', function (Blueprint $table) {
             $table->decimal('provider_rate', 3, 2)->nullable()->after('price');  // Rating out of 5
             $table->text('provider_feedback')->nullable()->after('provider_rate');
+            $table->string('proof')->nullable()->after('provider_feedback');
+            $table->boolean('isRated')->after('proof');
+            $table->string('comment')->nullable()->after('isRated');
         });
     }
 

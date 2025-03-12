@@ -92,6 +92,37 @@
                 <p class="no-bookings-found">No completed bookings found.</p>
             </ng-template>
         </p-tabPanel>
+
+        <!-- Rated Bookings Tab -->
+        <p-tabPanel header="Rated Bookings">
+            <div class="dashboard-header">
+                <h1 class="dashboard-title">Rated Bookings</h1>
+                <p class="dashboard-description">Review your rated service bookings.</p>
+            </div>
+
+            <div class="pending-bookings-content" *ngIf="ratedBookings.length > 0; else noRated">
+                <div class="columns-container">
+                    <div *ngFor="let booking of ratedBookings" class="card">
+                        <div class="card-content">
+                            <h3>{{ booking.provider?.provider_name || 'N/A' }}</h3>
+                            <div class="info">
+                                <i class="pi pi-calendar"></i>
+                                <p>{{ booking.book_date || 'N/A' }}</p>
+                            </div>
+                            <div class="info">
+                                <i class="pi pi-clock"></i>
+                                <p>{{ booking.book_time || 'N/A' }}</p>
+                            </div>
+                            <button class="see-booking-btn" (click)="showRatedBookingDetails(booking)">View
+                                Details</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <ng-template #noRated>
+                <p class="no-bookings-found">No rated bookings found.</p>
+            </ng-template>
+        </p-tabPanel>
     </p-tabView>
 </div>
 
@@ -161,11 +192,11 @@
         </label>
     </div>
 
-    <div class="flex-right">
+    <!-- <div class="flex-right">
         <button pButton label="{{ isCancelling ? 'Cancelling...' : 'Cancel Booking' }}" class="reject-button"
             (click)="cancelBooking(selectedBooking.booking_id)" [disabled]="isCancelling">
         </button>
-    </div>
+    </div> -->
 </p-dialog>
 
 <!-- Ongoing Booking Dialog -->
@@ -310,9 +341,111 @@
 
     <!-- Action Buttons for Rate Provider -->
     <div class="flex-right">
-        <button pButton label="Rate Provider" class="rate-button" (click)="openRatingDialog()"></button>
+        <button pButton label="Rate Provider" class="rate-button" (click)="openRatingDialog()"
+            [disabled]="hasSubmittedRating"></button>
     </div>
 </p-dialog>
+
+<!-- Rated Booking Dialog -->
+<p-dialog header="Rated Transaction Details" [modal]="true" [(visible)]="ratedDialogVisible"
+    [style]="{ width: '40rem'}">
+    <span class="review-text">
+        Review the detailed information for this specific rated transaction.
+    </span>
+
+    <!-- ✅ Service Provider Name -->
+    <div class="flex flex-column gap-3 mb-3">
+        <label for="serviceProvider" class="field-label">
+            <span class="label-text"><i class="pi pi-id-card"></i> Service Provider</span>
+            <input pInputText id="serviceProvider" [value]="selectedBooking.provider?.provider_name || 'N/A'"
+                [disabled]="true" class="field-input" />
+        </label>
+    </div>
+
+    <!-- ✅ Service Provider Contact -->
+    <div class="flex flex-column gap-3 mb-3">
+        <label for="serviceProviderContact" class="field-label">
+            <span class="label-text"><i class="pi pi-id-card"></i> Service Provider Contact</span>
+            <input pInputText id="serviceProvider" [value]="selectedBooking.provider?.contact_no || 'N/A'"
+                [disabled]="true" class="field-input" />
+        </label>
+    </div>
+
+    <!-- ✅ Services Availed -->
+    <div class="flex flex-column gap-3 mb-3" *ngIf="selectedBooking.services?.length">
+        <label class="field-label">
+            <span class="label-text"><i class="pi pi-wrench"></i> Services Availed</span>
+        </label>
+        <ul class="services-availed">
+            <li *ngFor="let serviceId of selectedBooking.services">
+                {{ getServiceName(serviceId) }}
+            </li>
+        </ul>
+    </div>
+
+    <!-- ✅ Booked Time -->
+    <div class="flex flex-column gap-3 mb-3">
+        <label for="bookTime" class="field-label">
+            <span class="label-text"><i class="pi pi-clock"></i> Booked Time</span>
+            <input pInputText id="bookTime" [(ngModel)]="selectedBooking.book_time" [disabled]="true"
+                class="field-input" />
+        </label>
+    </div>
+
+    <!-- ✅ Booked Date -->
+    <div class="flex flex-column gap-3 mb-3">
+        <label for="bookDate" class="field-label">
+            <span class="label-text"><i class="pi pi-calendar"></i> Booked Date</span>
+            <input pInputText id="bookDate" [(ngModel)]="selectedBooking.book_date" [disabled]="true"
+                class="field-input" />
+        </label>
+    </div>
+
+    <!-- Star Rating -->
+    <div class="rating-section">
+        <label class="field-label">
+            <span class="label-text">Rate Service</span>
+        </label>
+        <div class="stars">
+            <i class="pi pi-star-fill" *ngFor="let star of [1, 2, 3, 4, 5]"
+                [ngClass]="{ 'selected': selectedBooking.provider_rate >= star }">
+            </i>
+        </div>
+    </div>
+
+    <!-- Feedback Section -->
+    <div class="flex flex-column gap-3 mb-3">
+        <label class="field-label">
+            <span class="label-text"><i class="pi pi-comment"></i> Feedback</span>
+        </label>
+        <textarea pInputTextarea class="field-input" rows="4" placeholder="Provide your feedback here..."
+            disabled>{{ selectedBooking.provider_feedback }}</textarea>
+    </div>
+
+    <!-- ✅ Price Paid -->
+    <div class="flex flex-column gap-3 mb-3">
+        <label for="price" class="field-label">
+            <span class="label-text"><i class="pi pi-calendar"></i> Price Paid</span>
+            <input pInputText id="price" [(ngModel)]="selectedBooking.price" [disabled]="true" class="field-input" />
+        </label>
+    </div>
+
+    <!-- ✅ Status -->
+    <div class="flex flex-column gap-3 mb-3">
+        <label for="status" class="field-label">
+            <span class="label-text"><i class="pi pi-info-circle"></i> Status</span>
+            <input pInputText id="status" [(ngModel)]="selectedBooking.book_status" [disabled]="true"
+                class="field-input" />
+        </label>
+    </div>
+
+    <!-- Action Buttons for Rate Provider -->
+    <div class="flex-right">
+        <button pButton label="Change Rating" class="change-button" (click)="openRatingDialog()"
+            [disabled]="hasSubmittedRating"></button>
+    </div>
+</p-dialog>
+
 
 <!-- Rating Service Provider Dialog -->
 <p-dialog header="Rate Service Provider" [modal]="true" [(visible)]="ratingDialogVisible" [style]="{ width: '40rem'}">
@@ -361,6 +494,15 @@
         <textarea pInputTextarea [(ngModel)]="ratingFeedback" class="field-input" rows="4"
             placeholder="Provide your feedback here..."></textarea>
     </div>
+
+    <!-- Proof Attachment -->
+    <div class="flex flex-column gap-3 mb-3">
+        <label class="field-label">
+            <span class="label-text"><i class="pi pi-paperclip"></i> Attach Proof (required)</span>
+        </label>
+        <input type="file" (change)="onFileSelected($event)" accept="image/*" [disabled]="hasSubmittedRating" />
+    </div>
+
 
     <div class="flex-right">
         <button pButton label="Submit Rating" class="approve-button" (click)="submitRating()"></button>

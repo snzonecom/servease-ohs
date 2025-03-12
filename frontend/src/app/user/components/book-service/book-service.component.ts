@@ -425,7 +425,9 @@ export class BookServiceComponent implements OnInit, AfterViewInit {
         this.feedbacks = feedbacks.map(feedback => ({
           clientName: feedback.clientName || 'Anonymous',
           reviewText: feedback.reviewText || '',
+          comment: feedback.comment || '',
           rating: Math.round(feedback.rating),
+          proof: feedback.proof || null,
         }));
         this.displayedFeedbacks = this.feedbacks.slice(0, 3);
       },

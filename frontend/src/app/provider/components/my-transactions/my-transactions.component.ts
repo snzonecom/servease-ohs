@@ -15,6 +15,12 @@ export class MyTransactionsComponent implements OnInit {
   filteredPendingBookings: any[] = [];
   filteredOngoingBookings: any[] = [];
   filteredCompletedBookings: any[] = [];
+  filteredRatedBookings: any[] = [];
+  ratedDialogVisible: boolean = false; // Add this line to declare the property
+  commentDialogVisible: boolean = false;
+  ratingFeedback: string = '';
+  bookingId: number | null = null;
+
 
   searchQuery: string = '';
   startDate: string = '';
@@ -28,6 +34,7 @@ export class MyTransactionsComponent implements OnInit {
   selectedBooking: any = {};
   reportTitle: string = '';
   reportDescription: string = '';
+  ratedBookings: any[] = [];
 
   servicesMap: { [key: number]: string } = {};
 
@@ -39,6 +46,44 @@ export class MyTransactionsComponent implements OnInit {
     this.fetchProviderBookings();
     this.fetchServices();
   }
+
+  openCommentDialog(bookingId: number): void {
+    this.bookingId = bookingId;  // Store the selected booking ID
+    this.commentDialogVisible = true;  // Open the comment dialog
+  }
+
+  submitRating() {
+    const commentData = {
+      bookingId: this.bookingId,
+      comment: this.ratingFeedback
+    };
+
+    // Send the comment to the backend API
+    this.http.post('http://127.0.0.1:8000/api/submit-comment', commentData).subscribe(
+      (response) => {
+        this.commentDialogVisible = false;  // Close the dialog
+        this.ratedDialogVisible = false;
+        Swal.fire({
+          title: 'Success!',
+          text: 'Your comment has been submitted successfully.',
+          icon: 'success',
+          confirmButtonColor: '#428eba',
+          confirmButtonText: 'OK'
+        });
+      },
+      (error) => {
+        Swal.fire({
+          title: 'Error!',
+          text: 'There was an error submitting your comment. Please try again.',
+          icon: 'error',
+          confirmButtonColor: '#428eba',
+          confirmButtonText: 'OK'
+        });
+      }
+    );
+  }
+
+
 
   // ✅ Fetch Bookings for Service Provider
   fetchProviderBookings() {
@@ -80,6 +125,7 @@ export class MyTransactionsComponent implements OnInit {
     this.filteredPendingBookings = [...this.pendingBookings];
     this.filteredOngoingBookings = [...this.ongoingBookings];
     this.filteredCompletedBookings = [...this.completedBookings];
+    this.ratedBookings = this.completedBookings.filter((booking) => booking.book_status === 'Completed' && booking.isRated === 1);
   }
 
   filterBookings() {
@@ -114,6 +160,38 @@ export class MyTransactionsComponent implements OnInit {
     this.filteredCompletedBookings = this.completedBookings.filter(matchesCriteria);
   }
 
+  showRatedBookingDetails(booking: any) {
+    this.selectedBooking = {
+      ...booking,
+      provider: booking.provider || { provider_name: 'N/A' },
+      services: this.parseServices(booking.services)
+    };
+
+    // Fetch and populate the rating data for the selected booking
+    this.getBookingRating(this.selectedBooking.booking_id);
+
+    // Open the rated booking details dialog
+    this.ratedDialogVisible = true;
+  }
+
+  getBookingRating(bookingId: string) {
+    // Using fetch API to get the rating data
+    fetch(`http://127.0.0.1:8000/api/bookings/${bookingId}/rating`)
+      .then(response => response.json())
+      .then(ratingData => {
+        // Populate the selectedBooking object with rating info
+        this.selectedBooking = {
+          ...this.selectedBooking,
+          provider_rate: ratingData.provider_rate || 0,
+          provider_feedback: ratingData.provider_feedback || '',
+          proof: ratingData.proof || null
+        };
+        console.log('Existing Rating Data:', ratingData);
+      })
+      .catch(error => {
+        console.error('Error fetching rating:', error);
+      });
+  }
 
 
   // ✅ Show Booking Details
@@ -175,7 +253,7 @@ export class MyTransactionsComponent implements OnInit {
 
   updateBookingStatus(book_status: string) {
     const token = localStorage.getItem('authToken');
-    
+
     this.pendingDialogVisible = false;
     this.ongoingDialogVisible = false;
     this.completedDialogVisible = false;

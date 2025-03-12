@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Storage;
 
 class BookingController extends Controller
 {
@@ -109,6 +110,7 @@ class BookingController extends Controller
             'book_time' => $request->book_time,
             'book_status' => 'Pending',
             'booking_address' => $finalAddress, // ✅ Store the final address
+            'isRated' => 0,
         ]);
     
         // ✅ Correct Email Variables
@@ -292,21 +294,56 @@ class BookingController extends Controller
         $request->validate([
             'provider_rate' => 'required|numeric|min:1|max:5',
             'provider_feedback' => 'nullable|string',
+            'proof' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
-
+        
         $booking = Booking::findOrFail($id);
-
+        
         // ✅ Check if the booking is completed before allowing a rating
         if ($booking->book_status !== 'Completed') {
             return response()->json(['error' => 'You can only rate completed bookings.'], 403);
         }
+        
+        // ✅ Handle Image Upload (if provided)
+        $proofFilename = $booking->proof; // Keep existing proof by default
+        
+        if ($request->hasFile('proof')) {
+            if (!empty($booking->proof)) {
+                $oldPath = str_replace('storage/', 'public/', $booking->proof);
+                if (Storage::exists($oldPath)) {
+                    Storage::delete($oldPath);
+                }
+            }
 
+            // Store new proof
+            $proofPath = $request->file('proof')->store('proof', 'public');
+        }
+        
         $booking->update([
             'provider_rate' => $request->provider_rate,
             'provider_feedback' => $request->provider_feedback,
+            'isRated' => 1,
+            'proof' => $proofPath,
         ]);
-
+        
         return response()->json(['message' => 'Rating submitted successfully.']);
+    }
+
+    public function getBookingRating($id)
+    {
+    $booking = Booking::findOrFail($id);
+
+    // Check if the booking has a rating (provider_rate)
+    if (!$booking->provider_rate) {
+        return response()->json(['error' => 'No rating available for this booking.'], 404);
+    }
+
+    // Return the existing rating details along with proof if available
+    return response()->json([
+        'provider_rate' => $booking->provider_rate,
+        'provider_feedback' => $booking->provider_feedback,
+        'proof' => $booking->proof ? asset('storage/proofs/' . $booking->proof) : null, // Return proof image URL
+    ]);
     }
 
     // ✅ Get bookings for the logged-in provider
@@ -501,5 +538,26 @@ class BookingController extends Controller
             });
 
         return response()->json($pendingBookings);
+    }
+
+    public function submitComment(Request $request)
+    {
+        // Validate the incoming request
+        $request->validate([
+            'bookingId' => 'required|integer|exists:tbl_bookings,booking_id',
+            'comment' => 'required|string|max:500'
+        ]);
+    
+        // Retrieve the booking by ID
+        $booking = Booking::findOrFail($request->bookingId);
+    
+        // Add the comment to the booking
+        $booking->comment = $request->comment;
+    
+        // Save the updated booking
+        $booking->save();
+    
+        // Return a success response
+        return response()->json(['message' => 'Comment submitted successfully!']);
     }
 }

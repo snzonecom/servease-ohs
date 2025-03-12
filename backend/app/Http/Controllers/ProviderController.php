@@ -723,17 +723,18 @@ class ProviderController extends Controller
     public function getProviderFeedbacks($providerId)
     {
         $feedbacks = Booking::where('provider_id', $providerId)
-            ->whereNotNull('provider_rate') // ✅ Only get bookings with feedback
-            ->with('customer')                 // ✅ Fetch customer info using hasOne
+            ->whereNotNull('provider_rate')
+            ->with('customer')
             ->get()
             ->map(function ($booking) {
                 return [
-                    'clientName' => $booking->customer->customer_name ?? 'Anonymous', // ✅ Display customer name
+                    'clientName' => $booking->customer->customer_name ?? 'Anonymous',
                     'rating' => $booking->provider_rate,
                     'reviewText' => $booking->provider_feedback,
+                    'comment' => $booking->comment,
+                    'proof' => $booking->proof ? asset('storage/' . $booking->proof) : null,
                 ];
             });
-
         return response()->json($feedbacks);
     }
 

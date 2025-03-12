@@ -128,8 +128,143 @@
                 <p class="no-bookings-found">No completed bookings found.</p>
             </ng-template>
         </p-tabPanel>
+
+        <!-- Rated Bookings Tab -->
+        <p-tabPanel header="My Ratings">
+            <div class="dashboard-header">
+                <h1 class="dashboard-title">Rated Bookings</h1>
+                <p class="dashboard-description">Review your rated service bookings.</p>
+            </div>
+
+            <div class="pending-bookings-content" *ngIf="ratedBookings.length > 0; else noRated">
+                <div class="columns-container">
+                    <div *ngFor="let booking of ratedBookings" class="card">
+                        <div class="card-content">
+                            <h3>{{ booking.customer.customer_name || 'N/A' }}</h3>
+                            <div class="info">
+                                <i class="pi pi-calendar"></i>
+                                <p>{{ booking.book_date || 'N/A' }}</p>
+                            </div>
+                            <div class="info">
+                                <i class="pi pi-clock"></i>
+                                <p>{{ booking.book_time || 'N/A' }}</p>
+                            </div>
+                            <button class="see-booking-btn" (click)="showRatedBookingDetails(booking)">View
+                                Details</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <ng-template #noRated>
+                <p class="no-bookings-found">No rated bookings found.</p>
+            </ng-template>
+        </p-tabPanel>
+
     </p-tabView>
 </div>
+
+<!-- Rated Booking Details Dialog -->
+<p-dialog header="Rated Transaction Details" [modal]="true" [(visible)]="ratedDialogVisible"
+    [style]="{ width: '40rem'}">
+    <span class="review-text">
+        Review the detailed information for this specific rated transaction.
+    </span>
+
+    <!-- ✅ Customer Photo -->
+    <div class="customer-photo-container">
+        <span class="label-text">
+            <i class="pi pi-image"></i> Customer Photo
+        </span>
+        <img *ngIf="selectedBooking.customer?.profile_photo"
+            [src]="'http://127.0.0.1:8000/storage/' + selectedBooking.customer.profile_photo" alt="Customer Photo"
+            class="customer-photo">
+        <p *ngIf="!selectedBooking.customer?.profile_photo" class="no-photo">No photo available</p>
+    </div>
+
+    <!-- ✅ Customer Name -->
+    <div class="flex flex-column gap-3 mb-3">
+        <label for="customerName" class="field-label">
+            <span class="label-text">
+                <i class="pi pi-user"></i> Customer Name
+            </span>
+            <input pInputText id="customerName" [value]="selectedBooking.customer?.customer_name || 'N/A'"
+                [disabled]="true" class="field-input" />
+        </label>
+    </div>
+
+    <!-- ✅ Services Availed -->
+    <div class="flex flex-column gap-3 mb-3" *ngIf="selectedBooking.services?.length">
+        <label class="field-label">
+            <span class="label-text"><i class="pi pi-wrench"></i> Services Availed</span>
+        </label>
+        <ul class="services-availed">
+            <li *ngFor="let serviceId of selectedBooking.services">
+                {{ getServiceName(serviceId) }}
+            </li>
+        </ul>
+    </div>
+
+    <!-- ✅ Booked Time -->
+    <div class="flex flex-column gap-3 mb-3">
+        <label for="bookTime" class="field-label">
+            <span class="label-text"><i class="pi pi-clock"></i> Booked Time</span>
+            <input pInputText id="bookTime" [(ngModel)]="selectedBooking.book_time" [disabled]="true"
+                class="field-input" />
+        </label>
+    </div>
+
+    <!-- ✅ Booked Date -->
+    <div class="flex flex-column gap-3 mb-3">
+        <label for="bookDate" class="field-label">
+            <span class="label-text"><i class="pi pi-calendar"></i> Booked Date</span>
+            <input pInputText id="bookDate" [(ngModel)]="selectedBooking.book_date" [disabled]="true"
+                class="field-input" />
+        </label>
+    </div>
+
+    <!-- Star Rating -->
+    <div class="rating-section">
+        <label class="field-label">
+            <span class="label-text">Rate Service</span>
+        </label>
+        <div class="stars">
+            <i class="pi pi-star-fill" *ngFor="let star of [1, 2, 3, 4, 5]"
+                [ngClass]="{ 'selected': selectedBooking.provider_rate >= star }">
+            </i>
+        </div>
+    </div>
+
+    <!-- Feedback Section -->
+    <div class="flex flex-column gap-3 mb-3">
+        <label class="field-label">
+            <span class="label-text"><i class="pi pi-comment"></i> Feedback</span>
+        </label>
+        <textarea pInputTextarea class="field-input" rows="4" placeholder="Provide your feedback here..."
+            disabled>{{ selectedBooking.provider_feedback }}</textarea>
+    </div>
+
+    <!-- ✅ Price Paid -->
+    <div class="flex flex-column gap-3 mb-3">
+        <label for="price" class="field-label">
+            <span class="label-text"><i class="pi pi-calendar"></i> Price Paid</span>
+            <input pInputText id="price" [(ngModel)]="selectedBooking.price" [disabled]="true" class="field-input" />
+        </label>
+    </div>
+
+    <!-- ✅ Status -->
+    <div class="flex flex-column gap-3 mb-3">
+        <label for="status" class="field-label">
+            <span class="label-text"><i class="pi pi-info-circle"></i> Status</span>
+            <input pInputText id="status" [(ngModel)]="selectedBooking.book_status" [disabled]="true"
+                class="field-input" />
+        </label>
+    </div>
+
+    <!-- Action Buttons for Rate Provider -->
+    <div class="flex-right">
+        <button pButton label="Reply to this Rating" class="change-button" (click)="openCommentDialog(selectedBooking.booking_id)"></button>
+    </div>
+</p-dialog>
 
 <!-- Pending Booking Dialog -->
 <p-dialog header="Pending Booking Details" [modal]="true" [(visible)]="pendingDialogVisible"
@@ -456,47 +591,24 @@
     </div>
 </p-dialog>
 
+<!-- Comment Dialog -->
+<p-dialog header="Comment to this Feedback" [modal]="true" [(visible)]="commentDialogVisible"
+    [style]="{ width: '40rem'}">
+    <span class="review-text">
+        Provide feedback and rate your service provider to improve service quality and enhance customer satisfaction.
+    </span>
 
-<!-- Report User Dialog -->
-<p-dialog header="Report User" [modal]="true" [(visible)]="reportDialogVisible" [style]="{ width: '40rem'}">
-    <div class="flex flex-column gap-3 mb-3">
-        <label for="reportTitle" class="field-label">
-            <span class="label-text">
-                <i class="pi pi-book"></i> Report Title
-            </span>
-            <input pInputText id="reportTitle" [(ngModel)]="reportTitle" placeholder="Enter report title"
-                class="field-input" />
-        </label>
-    </div>
-
-    <div class="flex flex-column gap-3 mb-3">
-        <label for="reportDescription" class="field-label">
-            <span class="label-text">
-                <i class="pi pi-comment"></i> Description of Report
-            </span>
-            <textarea pInputTextarea id="reportDescription" [(ngModel)]="reportDescription"
-                placeholder="Enter report description" class="field-input" rows="4"></textarea>
-        </label>
-    </div>
-
-    <!-- Proof Attachments -->
+    <!-- Comment Section -->
     <div class="flex flex-column gap-3 mb-3">
         <label class="field-label">
-            <span class="label-text">
-                <i class="pi pi-paperclip"></i> Attach Proof (Images)
-            </span>
-            <input type="file" multiple (change)="handleFileUpload($event)" class="file-input" />
+            <span class="label-text"><i class="pi pi-comment"></i> Comment</span>
         </label>
-        <div class="preview-container">
-            <div *ngFor="let file of attachedProofs; let i = index" class="image-preview">
-                <img [src]="file.preview" alt="Proof Image" class="preview-image">
-                <button class="remove-image" (click)="removeAttachment(i)">×</button>
-            </div>
-        </div>
+        <textarea pInputTextarea [(ngModel)]="ratingFeedback" class="field-input" rows="4"
+            placeholder="Provide your comment here..."></textarea>
     </div>
 
+
     <div class="flex-right">
-        <button pButton label="Submit Report" class="approve-button" (click)="submitReport()"></button>
-        <button pButton label="Cancel" class="reject-button" (click)="closeReportDialog()"></button>
+        <button pButton label="Submit Comment" class="approve-button" (click)="submitRating()"></button>
     </div>
 </p-dialog>

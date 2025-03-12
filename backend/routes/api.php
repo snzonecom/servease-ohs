@@ -20,6 +20,9 @@ Route::get('/booked-slots', [BookingController::class, 'getBookedSlots']);
 
 Route::post('/payment/create-link', [PaymentController::class, 'createPaymentLink']);
 
+Route::get('/bookings/{id}/rating', [BookingController::class, 'getBookingRating']);
+Route::post('/submit-comment', [BookingController::class, 'submitComment']);
+
 // Authentication Routes
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/register-provider', [AuthController::class, 'registerProvider']);

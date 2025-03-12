@@ -67,6 +67,12 @@
 
                                         <div class="feedback-text">
                                             <p>{{ feedback.reviewText }}</p>
+                                            <img [src]="feedback.proof" alt="Proof Image" class="proof-image">
+                                        </div>
+
+                                        <!-- Display comment if exists -->
+                                        <div *ngIf="feedback.comment" class="feedback-comment">
+                                            <p><strong>Provider Commented in this Feedback</strong> <br> {{ feedback.comment }}</p>
                                         </div>
                                     </div>
                                 </div>
@@ -78,6 +84,7 @@
                                 See More
                             </button>
                         </div>
+
 
                     </div>
                 </p-card>

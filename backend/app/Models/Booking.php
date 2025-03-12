@@ -18,6 +18,9 @@ class Booking extends Model
         'book_status',
         'provider_rate',
         'provider_feedback',
+        'proof',
+        'isRated',
+        'comment',
         'booking_address'
     ];
 

@@ -88,6 +88,27 @@
     font-weight: bold;
 }
 
+.stars {
+    display: flex;
+    gap: 5px;
+    cursor: pointer;
+    /* Makes it clear they are clickable */
+    margin-bottom: 15px;
+}
+
+.pi-star-fill {
+    font-size: 24px;
+    /* Adjust size as needed */
+    color: gray;
+    /* Default unselected color */
+    transition: color 0.3s ease;
+}
+
+.pi-star-fill.selected {
+    color: gold;
+    /* Selected star color */
+}
+
 /* Booking Button */
 .see-booking-btn {
     margin-top: 0.8rem;
@@ -102,6 +123,16 @@
 
 .see-booking-btn:hover {
     background-color: #357a96;
+}
+
+.change-button {
+    padding: 0.5rem 1.5rem;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: 0.2s ease;
+    background-color: #428eba;
 }
 
 /* Mobile Responsiveness */

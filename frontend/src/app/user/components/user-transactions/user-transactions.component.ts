@@ -15,6 +15,7 @@ export class UserTransactionsComponent implements OnInit {
   pendingDialogVisible: boolean = false;
   ongoingDialogVisible: boolean = false;
   completedDialogVisible: boolean = false;
+  ratedDialogVisible: boolean = false;
 
   // ✅ Report Fields
   reportTitle: string = '';
@@ -29,6 +30,10 @@ export class UserTransactionsComponent implements OnInit {
   pendingBookings: any[] = [];
   ongoingBookings: any[] = [];
   completedBookings: any[] = [];
+  ratedBookings: any[] = [];
+
+  hasSubmittedRating: boolean = false;
+  selectedFile: File | null = null;
 
   selectedBooking: any = {};
 
@@ -90,7 +95,8 @@ export class UserTransactionsComponent implements OnInit {
   categorizeBookings(bookings: any[]) {
     this.pendingBookings = bookings.filter(b => b.book_status === 'Pending');
     this.ongoingBookings = bookings.filter(b => b.book_status === 'Ongoing');
-    this.completedBookings = bookings.filter(b => b.book_status === 'Completed');
+    this.completedBookings = bookings.filter(b => b.book_status === 'Completed' && b.isRated === 0);
+    this.ratedBookings = bookings.filter(b => b.book_status === 'Completed' && b.isRated === 1);
   }
 
   /**
@@ -121,6 +127,37 @@ export class UserTransactionsComponent implements OnInit {
       services: this.parseServices(booking.services)
     };
     this.completedDialogVisible = true;
+  }
+
+  showRatedBookingDetails(booking: any) {
+    this.selectedBooking = {
+      ...booking,
+      provider: booking.provider || { provider_name: 'N/A' },
+      services: this.parseServices(booking.services)
+    };
+    this.getBookingRating(this.selectedBooking.booking_id);
+    this.ratedDialogVisible = true;
+  }
+
+  getBookingRating(bookingId: string) {
+    // Using fetch API to call the route
+    fetch(`http://127.0.0.1:8000/api/bookings/${bookingId}/rating`)
+      .then(response => response.json())
+      .then(ratingData => {
+        // Update selectedBooking with the rating, feedback, and proof (if any)
+        this.selectedBooking = {
+          ...this.selectedBooking,
+          provider_rate: ratingData.provider_rate || 0,
+          provider_feedback: ratingData.provider_feedback || '',
+          proof: ratingData.proof || null
+        };
+
+        // Optionally log or handle the response here
+        console.log('Existing Rating Data:', ratingData);
+      })
+      .catch(error => {
+        console.error('Error fetching rating:', error);
+      });
   }
 
   isCancelling = false; // ✅ Define loader state
@@ -239,6 +276,13 @@ export class UserTransactionsComponent implements OnInit {
     this.rating = star;
   }
 
+  onFileSelected(event: any) {
+    const file = event.target.files[0];
+    if (file) {
+      this.selectedFile = file;
+    }
+  }
+
   /**
    * ✅ Submit Rating
    */
@@ -256,17 +300,21 @@ export class UserTransactionsComponent implements OnInit {
       return;
     }
 
-    const ratingData = {
-      provider_rate: this.rating,
-      provider_feedback: this.ratingFeedback
-    };
+    const formData = new FormData();
+    formData.append('provider_rate', this.rating.toString());
+    formData.append('provider_feedback', this.ratingFeedback);
 
-    this.http.post(`http://127.0.0.1:8000/api/bookings/${this.selectedBooking.booking_id}/rate`, ratingData, {
+    if (this.selectedFile) {
+      formData.append('proof', this.selectedFile);
+    }
+
+    this.http.post(`http://127.0.0.1:8000/api/bookings/${this.selectedBooking.booking_id}/rate`, formData, {
       headers: { Authorization: `Bearer ${token}` }
     }).subscribe(
       (response) => {
         console.log('⭐ Rating Submitted:', response);
         this.ratingDialogVisible = false;
+        this.ratedDialogVisible = false;
         Swal.fire({
           title: 'Success!',
           text: 'Your rating has been submitted successfully.',
